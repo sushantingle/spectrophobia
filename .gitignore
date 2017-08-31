@@ -1,0 +1,5 @@
+*.bin
+Temp/
+Library/
+obj/
+.vs/

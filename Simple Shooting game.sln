@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2017
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simple Shooting game.Plugins", "Simple Shooting game.Plugins.csproj", "{C963D3CD-E6D6-AEC0-02B3-7B477561E126}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simple Shooting game", "Simple Shooting game.csproj", "{FFD2368F-0CE7-C1FC-EFF0-8055772D04CD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simple Shooting game.Editor", "Simple Shooting game.Editor.csproj", "{EDF69F6B-C13F-A4C5-C96B-EE89CD41E129}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C963D3CD-E6D6-AEC0-02B3-7B477561E126}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C963D3CD-E6D6-AEC0-02B3-7B477561E126}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C963D3CD-E6D6-AEC0-02B3-7B477561E126}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C963D3CD-E6D6-AEC0-02B3-7B477561E126}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFD2368F-0CE7-C1FC-EFF0-8055772D04CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFD2368F-0CE7-C1FC-EFF0-8055772D04CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFD2368F-0CE7-C1FC-EFF0-8055772D04CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFD2368F-0CE7-C1FC-EFF0-8055772D04CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EDF69F6B-C13F-A4C5-C96B-EE89CD41E129}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDF69F6B-C13F-A4C5-C96B-EE89CD41E129}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDF69F6B-C13F-A4C5-C96B-EE89CD41E129}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDF69F6B-C13F-A4C5-C96B-EE89CD41E129}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
