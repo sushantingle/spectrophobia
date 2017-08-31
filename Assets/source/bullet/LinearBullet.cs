@@ -28,7 +28,7 @@ public class LinearBullet : BulletBase {
 
     public void setup(Vector3 direction, float speed)
 	{
-		m_direction = direction;
+		m_direction = (direction == Vector3.zero) ? Vector3.right : direction;
 		m_speed = speed;
         float angle = Vector3.Angle(transform.right, direction);
         angle = Vector3.Cross(transform.right, direction).z < 0 ? (360.0f - angle) % 360.0f : angle;
