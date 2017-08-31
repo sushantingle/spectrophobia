@@ -42,7 +42,7 @@ public class SineBullet : BulletBase {
 
     public void setup(Vector3 direction, float speed, float amplitude, float lifeStartPoint = Mathf.PI)
     {
-        m_direction = direction;
+        m_direction = (direction == Vector3.zero) ? Vector3.right : direction;
         m_speed = speed;
         m_amplitude = amplitude;
         m_life = lifeStartPoint;
