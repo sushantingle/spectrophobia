@@ -113,6 +113,7 @@ public class GameManager : MonoBehaviour {
         EnemyManager.getInstance().setPlayer(obj.transform);
         StateManager.getInstance().pushState(StateManager.MenuState.STATE_HUD);
         ItemManager.getInstance().usedCandy(PlayerDefs.CONST_START_GAME_PRICE);
+        BulletManager.getInstance().setOnlineManager(obj);
     }
 
     private void reset()

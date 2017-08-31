@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using System.Runtime.CompilerServices;
 
 [System.Serializable]
 public class BulletDictionary : DictionaryTemplate<BulletManager.BulletType, GameObject> { }
@@ -24,6 +25,7 @@ public class BulletManager : NetworkBehaviour {
     private static BulletManager m_instance;
     public List<BulletDictionary> m_bulletPrefabs;
     public int m_preloadCount = 1000;
+    private OnlineBulletManager m_onlineBulletManager = null;
 
     public static BulletManager getInstance()
     {
@@ -50,6 +52,11 @@ public class BulletManager : NetworkBehaviour {
 
     }
 
+    public void setOnlineManager(GameObject obj)
+    {
+        m_onlineBulletManager = obj.GetComponent<OnlineBulletManager>();
+    }
+
     public GameObject getBulletPrefab(BulletType id)
     {
         var obj = m_bulletPrefabs.Find(item => item._key == id);
@@ -67,7 +74,7 @@ public class BulletManager : NetworkBehaviour {
             if(GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.SINGLE_PLAYER)
                 Local_LinearBullet(_type, layer, _spawner.position, _direction, _speed);
             else if(GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.MULTIPLAYER)
-                Cmd_LinearBullet(_type, layer, _spawner.position, _direction, _speed);
+                m_onlineBulletManager.Cmd_LinearBullet(_type, layer, _spawner.position, _direction, _speed);
         }
     }
 
@@ -80,7 +87,7 @@ public class BulletManager : NetworkBehaviour {
             if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.SINGLE_PLAYER)
                 Local_LinearBullet(_type, layer, _spawner.position, _direction, _speed);
             else if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.MULTIPLAYER)
-                Cmd_LinearBullet(_type, layer, _spawner.position, _direction, _speed);
+                m_onlineBulletManager.Cmd_LinearBullet(_type, layer, _spawner.position, _direction, _speed);
         }
         else if (_type == BulletType.BULLET_MISSILE)
         {
@@ -90,7 +97,7 @@ public class BulletManager : NetworkBehaviour {
             {
                 NetworkIdentity netIdentity =_lookAt.GetComponent<NetworkIdentity>();
                 if(netIdentity != null) // This is network object
-                    Cmd_MissileBullet(_type, layer, _spawner.position, netIdentity.netId, _speed);
+                    m_onlineBulletManager.Cmd_MissileBullet(_type, layer, _spawner.position, netIdentity.netId, _speed);
             }
         }
     }
@@ -128,7 +135,7 @@ public class BulletManager : NetworkBehaviour {
             if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.SINGLE_PLAYER)
                 Local_LinearBullet(_type, layer, _spawner.position, newDirection.normalized, _speed);
             else if(GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.MULTIPLAYER)
-                Cmd_LinearBullet(_type, layer, _spawner.position, newDirection.normalized, _speed);
+                m_onlineBulletManager.Cmd_LinearBullet(_type, layer, _spawner.position, newDirection.normalized, _speed);
             angle += angleFactor;
         }
     }
@@ -141,7 +148,7 @@ public class BulletManager : NetworkBehaviour {
         }
         else if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.MULTIPLAYER)
         {
-            Cmd_ProjectileBullet(_type, layer, _spawner.position, _direction, _distance, _time, _gravity, _angle);
+            m_onlineBulletManager.Cmd_ProjectileBullet(_type, layer, _spawner.position, _direction, _distance, _time, _gravity, _angle);
         }
     }
 
@@ -158,11 +165,11 @@ public class BulletManager : NetworkBehaviour {
         }
         else if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.MULTIPLAYER)
         {
-            Cmd_ProjectileBullet(_type, layer, _spawner.position, ProjectileBullet.Direction.DIRECTION_RIGHT, _distance, _time, _gravity, _angle);
-            Cmd_ProjectileBullet(_type, layer, _spawner.position, ProjectileBullet.Direction.DIRECTION_RIGHT, _distance + 1.0f, _time, _gravity - 1.0f, _angle + 10.0f);
+            m_onlineBulletManager.Cmd_ProjectileBullet(_type, layer, _spawner.position, ProjectileBullet.Direction.DIRECTION_RIGHT, _distance, _time, _gravity, _angle);
+            m_onlineBulletManager.Cmd_ProjectileBullet(_type, layer, _spawner.position, ProjectileBullet.Direction.DIRECTION_RIGHT, _distance + 1.0f, _time, _gravity - 1.0f, _angle + 10.0f);
 
-            Cmd_ProjectileBullet(_type, layer, _spawner.position, ProjectileBullet.Direction.DIRECTION_LEFT, _distance, _time, _gravity, _angle);
-            Cmd_ProjectileBullet(_type, layer, _spawner.position, ProjectileBullet.Direction.DIRECTION_LEFT, _distance + 1.0f, _time, _gravity - 1.0f, _angle + 10.0f);
+            m_onlineBulletManager.Cmd_ProjectileBullet(_type, layer, _spawner.position, ProjectileBullet.Direction.DIRECTION_LEFT, _distance, _time, _gravity, _angle);
+            m_onlineBulletManager.Cmd_ProjectileBullet(_type, layer, _spawner.position, ProjectileBullet.Direction.DIRECTION_LEFT, _distance + 1.0f, _time, _gravity - 1.0f, _angle + 10.0f);
         }
     }
 
@@ -174,7 +181,7 @@ public class BulletManager : NetworkBehaviour {
             if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.SINGLE_PLAYER)
                 Local_SineBullet(_type, layer, _spawner.position, _direction, _speed, _amplitude, _startPoint);
             else if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.MULTIPLAYER)
-                Cmd_SineBullet(_type, layer, _spawner.position, _direction, _speed, _amplitude, _startPoint);
+                m_onlineBulletManager.Cmd_SineBullet(_type, layer, _spawner.position, _direction, _speed, _amplitude, _startPoint);
         }
         else if (_type == BulletType.BULLET_SPIRAL)
         {
@@ -184,112 +191,35 @@ public class BulletManager : NetworkBehaviour {
     }
 
     // Linear Bullets
-    private void Local_LinearBullet(BulletType _type, int layer, Vector3 _position, Vector3 _direction, float _speed)
+    public void Local_LinearBullet(BulletType _type, int layer, Vector3 _position, Vector3 _direction, float _speed)
     {
         GameObject bullet = (GameObject)ObjectPool.Spawn(getBulletPrefab(_type), _position, Quaternion.identity);
         bullet.layer = layer;// LayerMask.NameToLayer("enemybullet");
         bullet.GetComponent<LinearBullet>().setup(_direction.normalized, _speed);
     }
 
-    [Command]
-    private void Cmd_LinearBullet(BulletType _type, int layer, Vector3 _position, Vector3 _direction, float _speed)
-    {
-        //if (!isServer)
-        //    return;
-        CustomDebug.Log("Command Spawn Linear Bullet");
-        Local_LinearBullet(_type, layer, _position, _direction, _speed);
-        Rpc_LinearBullet(_type, layer, _position, _direction, _speed);
-    }
-
-    [ClientRpc]
-    private void Rpc_LinearBullet(BulletType _type, int layer, Vector3 _position, Vector3 _direction, float _speed)
-    {
-        //if (isServer)
-        //    return;
-        CustomDebug.Log("Rpc Spawn Linear Bullet");
-        Local_LinearBullet(_type, layer, _position, _direction, _speed);
-    }
-
     // Missile Bullets
-    private void Local_MissileBullet(BulletType _type, int layer, Vector3 _position, Transform _lookAt, float _speed)
+    public void Local_MissileBullet(BulletType _type, int layer, Vector3 _position, Transform _lookAt, float _speed)
     {
         GameObject bullet = (GameObject)ObjectPool.Spawn(getBulletPrefab(_type), _position, Quaternion.identity);
         bullet.layer = layer; // LayerMask.NameToLayer("enemybullet");
         bullet.GetComponent<MissileBullet>().setup(_lookAt, _speed);
     }
 
-    [Command]
-    private void Cmd_MissileBullet(BulletType _type, int layer, Vector3 _position, NetworkInstanceId _netId, float _speed)
-    {
-        //if (!isServer)
-        //    return;
-
-        GameObject _lookAt = ClientScene.FindLocalObject(_netId);
-        if (_lookAt != null)
-        {
-            Local_MissileBullet(_type, layer, _position, _lookAt.transform, _speed);
-            Rpc_MissileBullet(_type, layer, _position, _netId, _speed);
-        }
-    }
-
-    [ClientRpc]
-    private void Rpc_MissileBullet(BulletType _type, int layer, Vector3 _position, NetworkInstanceId _netId, float _speed)
-    {
-        //if (isServer)
-        //    return;
-        GameObject _lookAt = ClientScene.FindLocalObject(_netId);
-        if (_lookAt != null)
-            Local_MissileBullet(_type, layer, _position, _lookAt.transform, _speed);
-    }
-
     // projectile bullets
-    private void Local_ProjectileBullet(BulletType _type, int layer, Vector3 _position, ProjectileBullet.Direction _direction, float _distance, float _time, float _gravity, float _angle)
+    public void Local_ProjectileBullet(BulletType _type, int layer, Vector3 _position, ProjectileBullet.Direction _direction, float _distance, float _time, float _gravity, float _angle)
     {
         GameObject bullet = (GameObject)ObjectPool.Spawn(getBulletPrefab(_type), _position, Quaternion.identity);
         bullet.layer = layer;// LayerMask.NameToLayer("enemybullet");
         bullet.GetComponent<ProjectileBullet>().setup(_direction, _distance, _time, _gravity, _angle);
     }
 
-    [Command]
-    private void Cmd_ProjectileBullet(BulletType _type, int layer, Vector3 _position, ProjectileBullet.Direction _direction, float _distance, float _time, float _gravity, float _angle)
-    {
-        //if (!isServer)
-        //    return;
-        Local_ProjectileBullet(_type, layer, _position, _direction, _distance, _time, _gravity, _angle);
-        Rpc_ProjectileBullet(_type, layer, _position, _direction, _distance, _time, _gravity, _angle);
-    }
-
-    [ClientRpc]
-    private void Rpc_ProjectileBullet(BulletType _type, int layer, Vector3 _position, ProjectileBullet.Direction _direction, float _distance, float _time, float _gravity, float _angle)
-    {
-        //if (isServer)
-        //    return;
-        Local_ProjectileBullet(_type, layer, _position, _direction, _distance, _time, _gravity, _angle);
-    }
-
     // Sine Bullets
-    private void Local_SineBullet(BulletType _type, int layer, Vector3 _position, Vector3 _direction, float _speed, float _amplitude, float _startPoint = Mathf.PI)
+    public void Local_SineBullet(BulletType _type, int layer, Vector3 _position, Vector3 _direction, float _speed, float _amplitude, float _startPoint = Mathf.PI)
     {
         GameObject bullet = (GameObject)ObjectPool.Spawn(getBulletPrefab(_type), _position, Quaternion.identity);
         bullet.layer = layer;// LayerMask.NameToLayer("enemybullet");
         bullet.GetComponent<SineBullet>().setup(new Vector3(_direction.x, 0, 0).normalized, _speed, _amplitude, _startPoint);
-    }
-
-    [Command]
-    private void Cmd_SineBullet(BulletType _type, int layer, Vector3 _position, Vector3 _direction, float _speed, float _amplitude, float _startPoint)
-    {
-        //if (!isServer)
-        //    return;
-        Local_SineBullet(_type, layer, _position, _direction, _speed, _amplitude, _startPoint);
-        Rpc_SineBullet(_type, layer, _position, _direction, _speed, _amplitude, _startPoint);
-    }
-
-    [ClientRpc]
-    private void Rpc_SineBullet(BulletType _type, int layer, Vector3 _position, Vector3 _direction, float _speed, float _amplitude, float _startPoint)
-    {
-        //if (isServer)
-        //    return;
-        Local_SineBullet(_type, layer, _position, _direction, _speed, _amplitude, _startPoint);
     }
 
     public void onDestroyBullet(GameObject obj)
