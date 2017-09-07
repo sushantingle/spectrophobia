@@ -66,44 +66,43 @@ public class BulletManager : NetworkBehaviour {
     }
 
     // for linear bullet
-    public void initBullet(BulletType _type, int layer, Transform _spawner, Vector3 _direction, float _speed)
+    public void initBullet(BulletType _type, int layer, Transform _spawner, Vector3 _direction, float _speed, NetworkInstanceId _parentNetId)
     {
         if (_type == BulletType.BULLET_LINEAR)
         {
-            CustomDebug.Log("Init Bullet");
             if(GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.SINGLE_PLAYER)
-                Local_LinearBullet(_type, layer, _spawner.position, _direction, _speed);
+                Local_LinearBullet(_type, layer, _spawner.position, _direction, _speed, _parentNetId);
             else if(GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.MULTIPLAYER)
-                m_onlineBulletManager.Cmd_LinearBullet(_type, layer, _spawner.position, _direction, _speed);
+                m_onlineBulletManager.Cmd_LinearBullet(_type, layer, _spawner.position, _direction, _speed, _parentNetId);
         }
     }
 
-    public void initBullet(BulletType _type, int layer, Transform _spawner, Transform _lookAt, float _speed)
+    public void initBullet(BulletType _type, int layer, Transform _spawner, Transform _lookAt, float _speed, NetworkInstanceId _parentNetId)
     {
         if (_type == BulletType.BULLET_LINEAR)
         {
             Vector3 _direction = (_lookAt.position - _spawner.position).normalized;
 
             if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.SINGLE_PLAYER)
-                Local_LinearBullet(_type, layer, _spawner.position, _direction, _speed);
+                Local_LinearBullet(_type, layer, _spawner.position, _direction, _speed, _parentNetId);
             else if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.MULTIPLAYER)
-                m_onlineBulletManager.Cmd_LinearBullet(_type, layer, _spawner.position, _direction, _speed);
+                m_onlineBulletManager.Cmd_LinearBullet(_type, layer, _spawner.position, _direction, _speed, _parentNetId);
         }
         else if (_type == BulletType.BULLET_MISSILE)
         {
             if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.SINGLE_PLAYER)
-                Local_MissileBullet(_type, layer, _spawner.position, _lookAt, _speed);
+                Local_MissileBullet(_type, layer, _spawner.position, _lookAt, _speed, _parentNetId);
             else if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.MULTIPLAYER)
             {
                 NetworkIdentity netIdentity =_lookAt.GetComponent<NetworkIdentity>();
                 if(netIdentity != null) // This is network object
-                    m_onlineBulletManager.Cmd_MissileBullet(_type, layer, _spawner.position, netIdentity.netId, _speed);
+                    m_onlineBulletManager.Cmd_MissileBullet(_type, layer, _spawner.position, netIdentity.netId, _speed, _parentNetId);
             }
         }
     }
 
     // for linear bullet N
-    public void initBullet(BulletType _type, int layer, Transform _spawner, Vector3 _direction, float _speed, int _count)
+    public void initBullet(BulletType _type, int layer, Transform _spawner, Vector3 _direction, float _speed, int _count, NetworkInstanceId _parentNetId)
     {
         float sector;
         float angleFactor = 0;
@@ -133,93 +132,95 @@ public class BulletManager : NetworkBehaviour {
             Vector3 newDirection = new Vector3(x1, y1, direction.z);
 
             if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.SINGLE_PLAYER)
-                Local_LinearBullet(_type, layer, _spawner.position, newDirection.normalized, _speed);
+                Local_LinearBullet(_type, layer, _spawner.position, newDirection.normalized, _speed, _parentNetId);
             else if(GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.MULTIPLAYER)
-                m_onlineBulletManager.Cmd_LinearBullet(_type, layer, _spawner.position, newDirection.normalized, _speed);
+                m_onlineBulletManager.Cmd_LinearBullet(_type, layer, _spawner.position, newDirection.normalized, _speed, _parentNetId);
             angle += angleFactor;
         }
     }
     // for projectile bullet
-    public void initBullet(BulletType _type, int layer, Transform _spawner, ProjectileBullet.Direction _direction, float _distance, float _time, float _gravity, float _angle)
+    public void initBullet(BulletType _type, int layer, Transform _spawner, ProjectileBullet.Direction _direction, float _distance, float _time, float _gravity, float _angle, NetworkInstanceId _parentNetId)
     {
         if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.SINGLE_PLAYER)
         {
-            Local_ProjectileBullet(_type, layer, _spawner.position, _direction, _distance, _time, _gravity, _angle);
+            Local_ProjectileBullet(_type, layer, _spawner.position, _direction, _distance, _time, _gravity, _angle, _parentNetId);
         }
         else if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.MULTIPLAYER)
         {
-            m_onlineBulletManager.Cmd_ProjectileBullet(_type, layer, _spawner.position, _direction, _distance, _time, _gravity, _angle);
+            m_onlineBulletManager.Cmd_ProjectileBullet(_type, layer, _spawner.position, _direction, _distance, _time, _gravity, _angle, _parentNetId);
         }
     }
 
     // for projectile bullet 4
-    public void initBullet(BulletType _type, int layer, Transform _spawner, float _distance, float _time, float _gravity, float _angle)
+    public void initBullet(BulletType _type, int layer, Transform _spawner, float _distance, float _time, float _gravity, float _angle, NetworkInstanceId _parentNetId)
     {
         if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.SINGLE_PLAYER)
         {
-            Local_ProjectileBullet(_type, layer, _spawner.position, ProjectileBullet.Direction.DIRECTION_RIGHT, _distance, _time, _gravity, _angle);
-            Local_ProjectileBullet(_type, layer, _spawner.position, ProjectileBullet.Direction.DIRECTION_RIGHT, _distance + 1.0f, _time, _gravity - 1.0f, _angle + 10.0f);
+            Local_ProjectileBullet(_type, layer, _spawner.position, ProjectileBullet.Direction.DIRECTION_RIGHT, _distance, _time, _gravity, _angle, _parentNetId);
+            Local_ProjectileBullet(_type, layer, _spawner.position, ProjectileBullet.Direction.DIRECTION_RIGHT, _distance + 1.0f, _time, _gravity - 1.0f, _angle + 10.0f, _parentNetId);
 
-            Local_ProjectileBullet(_type, layer, _spawner.position, ProjectileBullet.Direction.DIRECTION_LEFT, _distance, _time, _gravity, _angle);
-            Local_ProjectileBullet(_type, layer, _spawner.position, ProjectileBullet.Direction.DIRECTION_LEFT, _distance + 1.0f, _time, _gravity - 1.0f, _angle + 10.0f);
+            Local_ProjectileBullet(_type, layer, _spawner.position, ProjectileBullet.Direction.DIRECTION_LEFT, _distance, _time, _gravity, _angle, _parentNetId);
+            Local_ProjectileBullet(_type, layer, _spawner.position, ProjectileBullet.Direction.DIRECTION_LEFT, _distance + 1.0f, _time, _gravity - 1.0f, _angle + 10.0f, _parentNetId);
         }
         else if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.MULTIPLAYER)
         {
-            m_onlineBulletManager.Cmd_ProjectileBullet(_type, layer, _spawner.position, ProjectileBullet.Direction.DIRECTION_RIGHT, _distance, _time, _gravity, _angle);
-            m_onlineBulletManager.Cmd_ProjectileBullet(_type, layer, _spawner.position, ProjectileBullet.Direction.DIRECTION_RIGHT, _distance + 1.0f, _time, _gravity - 1.0f, _angle + 10.0f);
+            m_onlineBulletManager.Cmd_ProjectileBullet(_type, layer, _spawner.position, ProjectileBullet.Direction.DIRECTION_RIGHT, _distance, _time, _gravity, _angle, _parentNetId);
+            m_onlineBulletManager.Cmd_ProjectileBullet(_type, layer, _spawner.position, ProjectileBullet.Direction.DIRECTION_RIGHT, _distance + 1.0f, _time, _gravity - 1.0f, _angle + 10.0f, _parentNetId);
 
-            m_onlineBulletManager.Cmd_ProjectileBullet(_type, layer, _spawner.position, ProjectileBullet.Direction.DIRECTION_LEFT, _distance, _time, _gravity, _angle);
-            m_onlineBulletManager.Cmd_ProjectileBullet(_type, layer, _spawner.position, ProjectileBullet.Direction.DIRECTION_LEFT, _distance + 1.0f, _time, _gravity - 1.0f, _angle + 10.0f);
+            m_onlineBulletManager.Cmd_ProjectileBullet(_type, layer, _spawner.position, ProjectileBullet.Direction.DIRECTION_LEFT, _distance, _time, _gravity, _angle, _parentNetId);
+            m_onlineBulletManager.Cmd_ProjectileBullet(_type, layer, _spawner.position, ProjectileBullet.Direction.DIRECTION_LEFT, _distance + 1.0f, _time, _gravity - 1.0f, _angle + 10.0f, _parentNetId);
         }
     }
 
     // for Sine / Spiral
-    public void initBullet(BulletType _type, int layer, Transform _spawner, Vector3 _direction, float _speed, float _amplitude, float _startPoint = Mathf.PI)
+    public void initBullet(BulletType _type, int layer, Transform _spawner, Vector3 _direction, float _speed, float _amplitude, NetworkInstanceId _parentNetId, float _startPoint = Mathf.PI)
     {
         if (_type == BulletType.BULLET_SINE)
         {
             if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.SINGLE_PLAYER)
-                Local_SineBullet(_type, layer, _spawner.position, _direction, _speed, _amplitude, _startPoint);
+                Local_SineBullet(_type, layer, _spawner.position, _direction, _speed, _amplitude, _parentNetId, _startPoint);
             else if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.MULTIPLAYER)
-                m_onlineBulletManager.Cmd_SineBullet(_type, layer, _spawner.position, _direction, _speed, _amplitude, _startPoint);
+                m_onlineBulletManager.Cmd_SineBullet(_type, layer, _spawner.position, _direction, _speed, _amplitude, _parentNetId, _startPoint);
         }
         else if (_type == BulletType.BULLET_SPIRAL)
         {
-            initBullet(BulletManager.BulletType.BULLET_SINE, layer, _spawner, _direction, _speed, _amplitude, Mathf.PI);
-            initBullet(BulletManager.BulletType.BULLET_SINE, layer, _spawner, _direction, _speed, _amplitude, Mathf.PI * 2.0f);
+            initBullet(BulletManager.BulletType.BULLET_SINE, layer, _spawner, _direction, _speed, _amplitude, _parentNetId, Mathf.PI);
+            initBullet(BulletManager.BulletType.BULLET_SINE, layer, _spawner, _direction, _speed, _amplitude, _parentNetId, Mathf.PI * 2.0f);
         }
     }
 
+    // TODO: Remove public access of these functions
+
     // Linear Bullets
-    public void Local_LinearBullet(BulletType _type, int layer, Vector3 _position, Vector3 _direction, float _speed)
+    public void Local_LinearBullet(BulletType _type, int layer, Vector3 _position, Vector3 _direction, float _speed, NetworkInstanceId _parentNetId)
     {
         GameObject bullet = (GameObject)ObjectPool.Spawn(getBulletPrefab(_type), _position, Quaternion.identity);
         bullet.layer = layer;// LayerMask.NameToLayer("enemybullet");
-        bullet.GetComponent<LinearBullet>().setup(_direction.normalized, _speed);
+        bullet.GetComponent<LinearBullet>().setup(_direction.normalized, _speed, _parentNetId);
     }
 
     // Missile Bullets
-    public void Local_MissileBullet(BulletType _type, int layer, Vector3 _position, Transform _lookAt, float _speed)
+    public void Local_MissileBullet(BulletType _type, int layer, Vector3 _position, Transform _lookAt, float _speed, NetworkInstanceId _parentNetId)
     {
         GameObject bullet = (GameObject)ObjectPool.Spawn(getBulletPrefab(_type), _position, Quaternion.identity);
         bullet.layer = layer; // LayerMask.NameToLayer("enemybullet");
-        bullet.GetComponent<MissileBullet>().setup(_lookAt, _speed);
+        bullet.GetComponent<MissileBullet>().setup(_lookAt, _speed, _parentNetId);
     }
 
     // projectile bullets
-    public void Local_ProjectileBullet(BulletType _type, int layer, Vector3 _position, ProjectileBullet.Direction _direction, float _distance, float _time, float _gravity, float _angle)
+    public void Local_ProjectileBullet(BulletType _type, int layer, Vector3 _position, ProjectileBullet.Direction _direction, float _distance, float _time, float _gravity, float _angle, NetworkInstanceId _parentNetId)
     {
         GameObject bullet = (GameObject)ObjectPool.Spawn(getBulletPrefab(_type), _position, Quaternion.identity);
         bullet.layer = layer;// LayerMask.NameToLayer("enemybullet");
-        bullet.GetComponent<ProjectileBullet>().setup(_direction, _distance, _time, _gravity, _angle);
+        bullet.GetComponent<ProjectileBullet>().setup(_direction, _distance, _time, _gravity, _angle, _parentNetId);
     }
 
     // Sine Bullets
-    public void Local_SineBullet(BulletType _type, int layer, Vector3 _position, Vector3 _direction, float _speed, float _amplitude, float _startPoint = Mathf.PI)
+    public void Local_SineBullet(BulletType _type, int layer, Vector3 _position, Vector3 _direction, float _speed, float _amplitude, NetworkInstanceId _parentNetId, float _startPoint = Mathf.PI)
     {
         GameObject bullet = (GameObject)ObjectPool.Spawn(getBulletPrefab(_type), _position, Quaternion.identity);
         bullet.layer = layer;// LayerMask.NameToLayer("enemybullet");
-        bullet.GetComponent<SineBullet>().setup(new Vector3(_direction.x, 0, 0).normalized, _speed, _amplitude, _startPoint);
+        bullet.GetComponent<SineBullet>().setup(new Vector3(_direction.x, 0, 0).normalized, _speed, _amplitude, _parentNetId, _startPoint);
     }
 
     public void onDestroyBullet(GameObject obj)

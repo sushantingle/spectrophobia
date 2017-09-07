@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Networking;
 
 public class ProjectileBullet : BulletBase {
 
@@ -59,13 +60,14 @@ public class ProjectileBullet : BulletBase {
         transform.position = pos;
 
     }
-    public void setup(Direction d, float distance, float time, float gravity, float angle)
+    public void setup(Direction d, float distance, float time, float gravity, float angle, NetworkInstanceId _parentNetId)
     {
         m_projDirection = d;
         m_maxdistance = distance;
         m_maxtime = time;
         m_gravity = gravity;
         m_projAngle = angle;
+        m_parentNetId = _parentNetId;
         m_vo = m_maxdistance / m_maxtime;
     }
 

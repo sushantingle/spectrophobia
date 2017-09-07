@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class MissileBullet : BulletBase {
     private Transform m_target;
@@ -36,10 +37,11 @@ public class MissileBullet : BulletBase {
         //generateCurve();
     }
 
-    public void setup(Transform _target, float _speed)
+    public void setup(Transform _target, float _speed, NetworkInstanceId _parentNetId)
     {
         m_target = _target;
         m_speed = _speed;
+        m_parentNetId = _parentNetId;
         generateCurve();
     }
 

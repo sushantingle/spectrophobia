@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class SineBullet : BulletBase {
     public float m_amplitude = 0.5f;
@@ -40,12 +41,13 @@ public class SineBullet : BulletBase {
         }
     }
 
-    public void setup(Vector3 direction, float speed, float amplitude, float lifeStartPoint = Mathf.PI)
+    public void setup(Vector3 direction, float speed, float amplitude, NetworkInstanceId _parentNetId, float lifeStartPoint = Mathf.PI)
     {
         m_direction = (direction == Vector3.zero) ? Vector3.right : direction;
         m_speed = speed;
         m_amplitude = amplitude;
         m_life = lifeStartPoint;
+        m_parentNetId = _parentNetId;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

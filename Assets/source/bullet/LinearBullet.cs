@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Networking;
 
 public class LinearBullet : BulletBase {
 	
@@ -26,10 +27,11 @@ public class LinearBullet : BulletBase {
         }
     }
 
-    public void setup(Vector3 direction, float speed)
+    public void setup(Vector3 direction, float speed, NetworkInstanceId parentNetId)
 	{
 		m_direction = (direction == Vector3.zero) ? Vector3.right : direction;
 		m_speed = speed;
+        m_parentNetId = parentNetId;
         float angle = Vector3.Angle(transform.right, direction);
         angle = Vector3.Cross(transform.right, direction).z < 0 ? (360.0f - angle) % 360.0f : angle;
         transform.Rotate(new Vector3(0.0f, 0.0f, angle));

@@ -121,12 +121,13 @@ public class Player : NetworkBehaviour {
 	
     // Fire bullet	
 	void fireBullet(Vector3 direction) {
-        CustomDebug.Log("Fire Bullet");
         int layer = LayerMask.NameToLayer("playerbullet");
-        BulletManager.getInstance().initBullet(BulletManager.BulletType.BULLET_LINEAR, layer, transform, direction, m_bulletSpeed);
+        NetworkInstanceId parentNetId = GetComponent<NetworkIdentity>().netId;
+
+        BulletManager.getInstance().initBullet(BulletManager.BulletType.BULLET_LINEAR, layer, transform, direction, m_bulletSpeed, parentNetId);
         if (ItemManager.getInstance().hasItemActive(ItemManager.ITEM_TYPE.ITEM_S_BULLET))
         {
-            BulletManager.getInstance().initBullet(BulletManager.BulletType.BULLET_LINEAR_N_PI, layer, transform, direction, m_bulletSpeed, 4);
+            BulletManager.getInstance().initBullet(BulletManager.BulletType.BULLET_LINEAR_N_PI, layer, transform, direction, m_bulletSpeed, 4, parentNetId);
         }
 		m_lastFireTime = Time.time;
 	}
