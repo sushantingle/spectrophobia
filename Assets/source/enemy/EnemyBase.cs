@@ -127,7 +127,7 @@ public class EnemyBase : NetworkBehaviour {
     void Update() {
         if (GameManager.getInstance().isGamePaused())
             return;
-        if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.MULTIPLAYER && !GameManager.getInstance().m_player.isServer)
+        if (GameManager.getInstance().isMultiplayer() && !GameManager.getInstance().isServer())
             return;
 
         EUpdate();
@@ -149,7 +149,7 @@ public class EnemyBase : NetworkBehaviour {
         if (GameManager.getInstance().isGamePaused())
             return;
 
-        if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.MULTIPLAYER && !GameManager.getInstance().m_player.isServer)
+        if (GameManager.getInstance().isMultiplayer() && !GameManager.getInstance().isServer())
             return;
 
         int layermask = 1 << LayerMask.NameToLayer("wall");
@@ -255,7 +255,7 @@ public class EnemyBase : NetworkBehaviour {
             //Destroy(col.gameObject);
             BulletManager.getInstance().onDestroyBullet(col.gameObject);
 
-            if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.MULTIPLAYER && isCustomLocalPlayer(col.gameObject) == false)
+            if (GameManager.getInstance().isMultiplayer() && isCustomLocalPlayer(col.gameObject) == false)
             {
                 CustomDebug.Log("Enemy Base Not a local player");
                 return;
@@ -281,7 +281,7 @@ public class EnemyBase : NetworkBehaviour {
     private void onDeath()
     {
         CustomDebug.Log("OnDeath");
-        if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.SINGLE_PLAYER)
+        if (GameManager.getInstance().isSinglePlayer())
         {
             reset();
             if (m_isBoss)
@@ -304,7 +304,7 @@ public class EnemyBase : NetworkBehaviour {
 
     private bool isCustomLocalPlayer(GameObject bullet = null)
     {
-        if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.MULTIPLAYER)
+        if (GameManager.getInstance().isMultiplayer())
         {
             if (bullet == null)
             {
@@ -319,7 +319,7 @@ public class EnemyBase : NetworkBehaviour {
             }
 
             GameObject bulletParent = null;
-            if (GameManager.getInstance().m_player.isServer)
+            if (GameManager.getInstance().isServer())
                 bulletParent = NetworkServer.FindLocalObject(bullet.GetComponent<BulletBase>().getParentNetId());
             else
                 bulletParent = ClientScene.FindLocalObject(bullet.GetComponent<BulletBase>().getParentNetId());
@@ -343,7 +343,7 @@ public class EnemyBase : NetworkBehaviour {
                 if (enemyObj.getParentNetworkId() != NetworkInstanceId.Invalid)
                 {
                     GameObject enemyParentObj = null;
-                    if (GameManager.getInstance().m_player.isServer)
+                    if (GameManager.getInstance().isServer())
                         enemyParentObj = NetworkServer.FindLocalObject(enemyObj.getParentNetworkId());
                     else
                         enemyParentObj = ClientScene.FindLocalObject(enemyObj.getParentNetworkId());
@@ -498,7 +498,7 @@ public class EnemyBase : NetworkBehaviour {
         m_playerInstanceId = netId;
         CustomDebug.Log("OnSetPlayerInstance Id : " + netId.Value+ "    m_playerInstance Id : "+m_playerInstanceId);
         GameObject obj = null;
-        if(GameManager.getInstance().m_player.isServer)
+        if(GameManager.getInstance().isServer())
             obj = NetworkServer.FindLocalObject(netId);
         else
            obj = ClientScene.FindLocalObject(netId);

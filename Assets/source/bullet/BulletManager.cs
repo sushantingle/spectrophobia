@@ -70,9 +70,9 @@ public class BulletManager : NetworkBehaviour {
     {
         if (_type == BulletType.BULLET_LINEAR)
         {
-            if(GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.SINGLE_PLAYER)
+            if(GameManager.getInstance().isSinglePlayer())
                 Local_LinearBullet(_type, layer, _spawner.position, _direction, _speed, _parentNetId);
-            else if(GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.MULTIPLAYER)
+            else if(GameManager.getInstance().isMultiplayer())
                 m_onlineBulletManager.Cmd_LinearBullet(_type, layer, _spawner.position, _direction, _speed, _parentNetId);
         }
     }
@@ -83,16 +83,16 @@ public class BulletManager : NetworkBehaviour {
         {
             Vector3 _direction = (_lookAt.position - _spawner.position).normalized;
 
-            if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.SINGLE_PLAYER)
+            if (GameManager.getInstance().isSinglePlayer())
                 Local_LinearBullet(_type, layer, _spawner.position, _direction, _speed, _parentNetId);
-            else if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.MULTIPLAYER)
+            else if (GameManager.getInstance().isMultiplayer())
                 m_onlineBulletManager.Cmd_LinearBullet(_type, layer, _spawner.position, _direction, _speed, _parentNetId);
         }
         else if (_type == BulletType.BULLET_MISSILE)
         {
-            if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.SINGLE_PLAYER)
+            if (GameManager.getInstance().isSinglePlayer())
                 Local_MissileBullet(_type, layer, _spawner.position, _lookAt, _speed, _parentNetId);
-            else if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.MULTIPLAYER)
+            else if (GameManager.getInstance().isMultiplayer())
             {
                 NetworkIdentity netIdentity =_lookAt.GetComponent<NetworkIdentity>();
                 if(netIdentity != null) // This is network object
@@ -131,9 +131,9 @@ public class BulletManager : NetworkBehaviour {
             float y1 = direction.x * Mathf.Sin(angle) + direction.y * Mathf.Cos(angle);
             Vector3 newDirection = new Vector3(x1, y1, direction.z);
 
-            if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.SINGLE_PLAYER)
+            if (GameManager.getInstance().isSinglePlayer())
                 Local_LinearBullet(_type, layer, _spawner.position, newDirection.normalized, _speed, _parentNetId);
-            else if(GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.MULTIPLAYER)
+            else if(GameManager.getInstance().isMultiplayer())
                 m_onlineBulletManager.Cmd_LinearBullet(_type, layer, _spawner.position, newDirection.normalized, _speed, _parentNetId);
             angle += angleFactor;
         }
@@ -141,11 +141,11 @@ public class BulletManager : NetworkBehaviour {
     // for projectile bullet
     public void initBullet(BulletType _type, int layer, Transform _spawner, ProjectileBullet.Direction _direction, float _distance, float _time, float _gravity, float _angle, NetworkInstanceId _parentNetId)
     {
-        if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.SINGLE_PLAYER)
+        if (GameManager.getInstance().isSinglePlayer())
         {
             Local_ProjectileBullet(_type, layer, _spawner.position, _direction, _distance, _time, _gravity, _angle, _parentNetId);
         }
-        else if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.MULTIPLAYER)
+        else if (GameManager.getInstance().isMultiplayer())
         {
             m_onlineBulletManager.Cmd_ProjectileBullet(_type, layer, _spawner.position, _direction, _distance, _time, _gravity, _angle, _parentNetId);
         }
@@ -154,7 +154,7 @@ public class BulletManager : NetworkBehaviour {
     // for projectile bullet 4
     public void initBullet(BulletType _type, int layer, Transform _spawner, float _distance, float _time, float _gravity, float _angle, NetworkInstanceId _parentNetId)
     {
-        if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.SINGLE_PLAYER)
+        if (GameManager.getInstance().isSinglePlayer())
         {
             Local_ProjectileBullet(_type, layer, _spawner.position, ProjectileBullet.Direction.DIRECTION_RIGHT, _distance, _time, _gravity, _angle, _parentNetId);
             Local_ProjectileBullet(_type, layer, _spawner.position, ProjectileBullet.Direction.DIRECTION_RIGHT, _distance + 1.0f, _time, _gravity - 1.0f, _angle + 10.0f, _parentNetId);
@@ -162,7 +162,7 @@ public class BulletManager : NetworkBehaviour {
             Local_ProjectileBullet(_type, layer, _spawner.position, ProjectileBullet.Direction.DIRECTION_LEFT, _distance, _time, _gravity, _angle, _parentNetId);
             Local_ProjectileBullet(_type, layer, _spawner.position, ProjectileBullet.Direction.DIRECTION_LEFT, _distance + 1.0f, _time, _gravity - 1.0f, _angle + 10.0f, _parentNetId);
         }
-        else if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.MULTIPLAYER)
+        else if (GameManager.getInstance().isMultiplayer())
         {
             m_onlineBulletManager.Cmd_ProjectileBullet(_type, layer, _spawner.position, ProjectileBullet.Direction.DIRECTION_RIGHT, _distance, _time, _gravity, _angle, _parentNetId);
             m_onlineBulletManager.Cmd_ProjectileBullet(_type, layer, _spawner.position, ProjectileBullet.Direction.DIRECTION_RIGHT, _distance + 1.0f, _time, _gravity - 1.0f, _angle + 10.0f, _parentNetId);
@@ -177,9 +177,9 @@ public class BulletManager : NetworkBehaviour {
     {
         if (_type == BulletType.BULLET_SINE)
         {
-            if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.SINGLE_PLAYER)
+            if (GameManager.getInstance().isSinglePlayer())
                 Local_SineBullet(_type, layer, _spawner.position, _direction, _speed, _amplitude, _parentNetId, _startPoint);
-            else if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.MULTIPLAYER)
+            else if (GameManager.getInstance().isMultiplayer())
                 m_onlineBulletManager.Cmd_SineBullet(_type, layer, _spawner.position, _direction, _speed, _amplitude, _parentNetId, _startPoint);
         }
         else if (_type == BulletType.BULLET_SPIRAL)

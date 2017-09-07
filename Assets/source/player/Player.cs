@@ -220,7 +220,7 @@ public class Player : NetworkBehaviour {
 
         GameManager.getInstance().onStartLocalPlayer(gameObject);
 
-        if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.MULTIPLAYER)
+        if (GameManager.getInstance().isMultiplayer())
         {
             if (ClanManager.getInstance().SelectedTeam == Player_Team.TEAM_CT)
             {

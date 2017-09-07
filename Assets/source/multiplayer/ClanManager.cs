@@ -63,9 +63,9 @@ public class ClanManager : NetworkBehaviour {
     {
         CustomDebug.Log("On Client Connect : "+success);
 
-        if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.SINGLE_PLAYER)
+        if (GameManager.getInstance().isSinglePlayer())
             ClientScene.AddPlayer(0);
-        else if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.MULTIPLAYER)
+        else if (GameManager.getInstance().isMultiplayer())
         {
             CustomDebug.Log("Push Team selection");
             StateManager.getInstance().pushState(StateManager.MenuState.STATE_TEAM_SELECTION);

@@ -168,14 +168,14 @@ public class EnemyManager : NetworkBehaviour{
 	public void spawnEnemy(ENEMY_TYPE enemyType, Vector3 position, Quaternion rotation)
 	{
         GameObject e = null;
-        if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.MULTIPLAYER)
+        if (GameManager.getInstance().isMultiplayer())
         {
             GameObject target = getEnemyTarget(enemyType);
             NetworkInstanceId netId = target.GetComponent<NetworkIdentity>().netId;
             NetworkInstanceId parentNetId = m_networkEnemyManager.GetComponent<NetworkIdentity>().netId;
             m_networkEnemyManager.Cmd_SpawnEnemy(enemyType, ClanManager.getInstance().SelectedTeam, position, netId, parentNetId);
         }
-        else if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.SINGLE_PLAYER)
+        else if (GameManager.getInstance().isSinglePlayer())
         {
             e = (GameObject)ObjectPool.Spawn(getEnemyPrefab(enemyType), position, rotation);
             m_spawnedEnemyList.Add(e);
@@ -243,7 +243,7 @@ public class EnemyManager : NetworkBehaviour{
         
         GameManager.getInstance().addScore(obj.GetComponent<EnemyBase>().m_points);
 
-        if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.SINGLE_PLAYER)
+        if (GameManager.getInstance().isSinglePlayer())
         {
             m_spawnedEnemyList.Remove(obj);
             ObjectPool.Despawn(obj);
@@ -267,7 +267,7 @@ public class EnemyManager : NetworkBehaviour{
 		m_deadEnemyCount = 0;
 		m_spawnEnemyCount = 0;
         m_totalEnemyDied += 1;
-        if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.SINGLE_PLAYER)
+        if (GameManager.getInstance().isSinglePlayer())
         {
             m_spawnedEnemyList.Remove(obj);
             ObjectPool.Despawn(obj);
@@ -335,7 +335,7 @@ public class EnemyManager : NetworkBehaviour{
 				}*/
             //spawnEnemy ((ENEMY_TYPE)enemyId, worldPos, Quaternion.identity);
                 
-                if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.MULTIPLAYER)
+                if (GameManager.getInstance().isMultiplayer())
                 {
                     BOSS_TYPE type = (BOSS_TYPE)bossId;
                     GameObject target = getEnemyTarget(type);
@@ -343,7 +343,7 @@ public class EnemyManager : NetworkBehaviour{
                     NetworkInstanceId parentNetId = m_networkEnemyManager.GetComponent<NetworkIdentity>().netId;
                     m_networkEnemyManager.Cmd_SpawnBoss(type, ClanManager.getInstance().SelectedTeam, worldPos, netId, parentNetId);
                 }
-                else if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.SINGLE_PLAYER)
+                else if (GameManager.getInstance().isSinglePlayer())
                 {
                     GameObject e = (GameObject)ObjectPool.Spawn(getBossPrefab((BOSS_TYPE)bossId), worldPos, Quaternion.identity);
                     m_spawnedEnemyList.Add(e);
@@ -390,7 +390,7 @@ public class EnemyManager : NetworkBehaviour{
                 Destroy(obj);
         }*/
 
-        if(GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.SINGLE_PLAYER)
+        if(GameManager.getInstance().isSinglePlayer())
         {
             foreach (GameObject obj in m_spawnedEnemyList)
             {

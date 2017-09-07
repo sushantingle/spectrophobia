@@ -162,14 +162,14 @@ public class SpawnerEnemy : EnemyBase {
 
             float spawnDist = Random.Range(1.0f, 2.0f);
 
-            if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.SINGLE_PLAYER)
+            if (GameManager.getInstance().isSinglePlayer())
             {
                 GameObject prefab = EnemyManager.getInstance().getEnemyPrefab(m_spawnType);
                 GameObject child = (GameObject)ObjectPool.Spawn(prefab, transform.position + (new Vector3(xDir, yDir, 0.0f) * spawnDist), Quaternion.identity);
                 setupChild(m_spawnType, child, GameManager.getInstance().m_player.transform);
                 EnemyManager.getInstance().onCustomEnemySpawned(child);
             }
-            else if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.MULTIPLAYER)
+            else if (GameManager.getInstance().isMultiplayer())
             {
                 NetworkInstanceId parentNetId = gameObject.GetComponent<NetworkIdentity>().netId;
                 NetworkInstanceId targetNetId = EnemyManager.getInstance().getEnemyTarget(m_spawnType).GetComponent<NetworkIdentity>().netId;

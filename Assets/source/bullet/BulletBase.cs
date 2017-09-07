@@ -42,7 +42,7 @@ public class BulletBase : MonoBehaviour {
 
     protected bool isOutsideOfScreen()
     {
-        if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.SINGLE_PLAYER)
+        if (GameManager.getInstance().isSinglePlayer())
         {
             Vector2 screenPos = Camera.main.WorldToScreenPoint(transform.position);
             if (screenPos.x < 0 || screenPos.x > Screen.width)
@@ -61,7 +61,7 @@ public class BulletBase : MonoBehaviour {
 
     protected virtual void BOnTriggerEnter2D(Collider2D collision)
     {
-        if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.SINGLE_PLAYER)
+        if (GameManager.getInstance().isSinglePlayer())
         {
             if (collision.gameObject.layer == LayerMask.NameToLayer("wall"))
             {

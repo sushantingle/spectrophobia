@@ -102,6 +102,21 @@ public class GameManager : MonoBehaviour {
 
     public GameplayMode getGameplayMode() { return m_mode; }
 
+    public bool isMultiplayer()
+    {
+        return (m_mode == GameplayMode.MULTIPLAYER);
+    }
+
+    public bool isSinglePlayer()
+    {
+        return (m_mode == GameplayMode.SINGLE_PLAYER);
+    }
+
+    public bool isServer()
+    {
+        return m_player.isServer;
+    }
+
     public void onStartLocalPlayer(GameObject obj)
     {
         m_player = obj.GetComponent<Player>();
