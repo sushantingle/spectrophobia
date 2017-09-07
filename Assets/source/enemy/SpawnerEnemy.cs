@@ -185,7 +185,8 @@ public class SpawnerEnemy : EnemyBase {
         GameObject prefab = EnemyManager.getInstance().getEnemyPrefab(m_spawnType);
         GameObject obj = (GameObject)Instantiate(prefab, position, Quaternion.identity);
         obj.GetComponent<EnemyBase>().Team = m_team;
-        obj.GetComponent<EnemyBase>().PlayerNetworkId = netId;
+        obj.GetComponent<EnemyBase>().m_playerInstanceId = netId;
+        obj.GetComponent<EnemyBase>().m_parentInstanceId = EnemyManager.getInstance().getNetworkEnemyManager().GetComponent<NetworkIdentity>().netId;
         setupChild(type, obj, targetObj.transform);
         NetworkServer.Spawn(obj);
     }

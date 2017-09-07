@@ -16,10 +16,10 @@ public class NetworkEnemyManager : NetworkBehaviour {
 	}
 
     [Command]
-    public void Cmd_SpawnEnemy(EnemyManager.ENEMY_TYPE type, Player.Player_Team team, Vector3 pos, NetworkInstanceId netId)
+    public void Cmd_SpawnEnemy(EnemyManager.ENEMY_TYPE type, Player.Player_Team team, Vector3 pos, NetworkInstanceId netId, NetworkInstanceId parentNetId)
     {
         CustomDebug.Log("Command Spawn Enemy");
-        EnemyManager.getInstance().CommandSpawnEnemy(type, team, pos, netId);
+        EnemyManager.getInstance().CommandSpawnEnemy(type, team, pos, netId, parentNetId);
     }
 
     [Command]
@@ -33,6 +33,58 @@ public class NetworkEnemyManager : NetworkBehaviour {
         else
         {
             CustomDebug.Log("Spawner not found on host");
+        }
+    }
+
+    [Command]
+    public void Cmd_SpawnBoss(EnemyManager.BOSS_TYPE type, Player.Player_Team team, Vector3 pos, NetworkInstanceId netId, NetworkInstanceId parentNetId)
+    {
+        CustomDebug.Log("On Host Spawn Boss");
+        EnemyManager.getInstance().CommandSpawnBoss(type, team, pos, netId, parentNetId);
+    }
+
+    [Command]
+    public void Cmd_onDeath(NetworkInstanceId netId, bool isBoss)
+    {
+        CustomDebug.Log("Command On Death : "+netId.Value);
+        Rpc_OnDeath(netId, isBoss);
+    }
+
+    [ClientRpc]
+    public void Rpc_OnDeath(NetworkInstanceId netId, bool isBoss)
+    {
+        CustomDebug.Log("RPC Enemy On Death : "+netId.Value);
+        if (isLocalPlayer)
+        {
+            CustomDebug.Log("IsLocalPlayer On Death ");
+            GameObject deadObject = null;
+            if (isServer)
+                deadObject = NetworkServer.FindLocalObject(netId);
+            else
+                deadObject = ClientScene.FindLocalObject(netId);
+
+            if (deadObject != null)
+            {
+                CustomDebug.Log("Dead object found : " + isBoss);
+                if(isBoss)
+                    EnemyManager.getInstance().onBossDead(deadObject);
+                else
+                    EnemyManager.getInstance().OnEnemyDeath(deadObject);
+            }
+            else
+            {
+                CustomDebug.Log("Boss object not found");
+            }
+        }
+    }
+
+    [Command]
+    public void Cmd_destroyObject(NetworkInstanceId netId)
+    {
+        GameObject obj = NetworkServer.FindLocalObject(netId);
+        if (obj != null)
+        {
+            Destroy(obj);
         }
     }
 }

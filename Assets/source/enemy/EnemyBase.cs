@@ -61,18 +61,7 @@ public class EnemyBase : NetworkBehaviour {
 
     protected PathBase m_path = null;
     [SyncVar (hook = "OnSetPlayerInstanceId")]
-    private NetworkInstanceId m_playerInstanceId;
-    public NetworkInstanceId PlayerNetworkId
-    {
-        set
-        {
-            m_playerInstanceId = value;
-        }
-        get
-        {
-            return m_playerInstanceId;
-        }
-    }
+    public NetworkInstanceId m_playerInstanceId;
     
     // Special powers
     public enum SpecialPower
@@ -94,6 +83,8 @@ public class EnemyBase : NetworkBehaviour {
     public float m_explosionDamage;
 
     public int m_points = 0;
+    [SyncVar (hook = "OnSetParentInstanceId")]
+    public NetworkInstanceId m_parentInstanceId = NetworkInstanceId.Invalid;
 
     // Use this for initialization
     protected virtual void EStart() {
@@ -137,8 +128,8 @@ public class EnemyBase : NetworkBehaviour {
         if (GameManager.getInstance().isGamePaused())
             return;
 
-        if (!isLocalPlayer)
-            return;
+        /// TODO: should update if local player only
+
         EUpdate();
     }
 
@@ -157,8 +148,8 @@ public class EnemyBase : NetworkBehaviour {
     {
         if (GameManager.getInstance().isGamePaused())
             return;
-        if (!isLocalPlayer)
-            return;
+
+        // TODO : should update if local player only
 
         int layermask = 1 << LayerMask.NameToLayer("wall");
         //layermask = ~layermask;
@@ -216,6 +207,7 @@ public class EnemyBase : NetworkBehaviour {
         if (m_lookAt == null) // need to add this check because it takes time setup enemy
             return;
         int layer = LayerMask.NameToLayer("enemybullet");
+        NetworkInstanceId parentNetId = GetComponent<NetworkIdentity>().netId;
 
         if (Time.time - m_fireStartTime > m_bulletInterval)
         {
@@ -223,32 +215,32 @@ public class EnemyBase : NetworkBehaviour {
 
             if (m_bulletType == BulletManager.BulletType.BULLET_LINEAR || m_bulletType == BulletManager.BulletType.BULLET_MISSILE)
             {
-                BulletManager.getInstance().initBullet(m_bulletType, layer, transform, m_lookAt, m_bulletSpeed);
+                BulletManager.getInstance().initBullet(m_bulletType, layer, transform, m_lookAt, m_bulletSpeed, parentNetId);
             }
             else if (m_bulletType == BulletManager.BulletType.BULLET_LINEAR_N || m_bulletType == BulletManager.BulletType.BULLET_LINEAR_N_PI)
             {
-                BulletManager.getInstance().initBullet(m_bulletType, layer, transform, m_lookAt.position - transform.position, m_bulletSpeed, m_bulletCount);
+                BulletManager.getInstance().initBullet(m_bulletType, layer, transform, m_lookAt.position - transform.position, m_bulletSpeed, m_bulletCount, parentNetId);
             }
             else if (m_bulletType == BulletManager.BulletType.BULLET_PROJECTILE)
             {
-                BulletManager.getInstance().initBullet(BulletManager.BulletType.BULLET_PROJECTILE, layer, transform, ProjectileBullet.Direction.DIRECTION_RIGHT, m_bulletDistance, m_bulletMaxTime, m_bulletGravity, m_bulletProjectionAngle);
+                BulletManager.getInstance().initBullet(BulletManager.BulletType.BULLET_PROJECTILE, layer, transform, ProjectileBullet.Direction.DIRECTION_RIGHT, m_bulletDistance, m_bulletMaxTime, m_bulletGravity, m_bulletProjectionAngle, parentNetId);
             }
             else if (m_bulletType == BulletManager.BulletType.BULLET_PROJECTILE_4)
             {
-                BulletManager.getInstance().initBullet(BulletManager.BulletType.BULLET_PROJECTILE_4, layer, transform, m_bulletDistance, m_bulletMaxTime, m_bulletGravity, m_bulletProjectionAngle);
+                BulletManager.getInstance().initBullet(BulletManager.BulletType.BULLET_PROJECTILE_4, layer, transform, m_bulletDistance, m_bulletMaxTime, m_bulletGravity, m_bulletProjectionAngle, parentNetId);
             }
             else if (m_bulletType == BulletManager.BulletType.BULLET_SINE || m_bulletType == BulletManager.BulletType.BULLET_SPIRAL)
             {
-                BulletManager.getInstance().initBullet(m_bulletType, layer, transform, m_lookAt.position - transform.position, m_bulletSpeed, m_bulletAmplitude);
+                BulletManager.getInstance().initBullet(m_bulletType, layer, transform, m_lookAt.position - transform.position, m_bulletSpeed, m_bulletAmplitude, parentNetId);
             }
         }
     }
 
     protected virtual void OnETriggerEnter(Collider2D col)
     {
+        
         if (col.gameObject.layer == LayerMask.NameToLayer("playerbullet"))
         {
-
             BulletBase bulletBase = col.gameObject.GetComponent<BulletBase>();
             if (bulletBase)
             {
@@ -261,6 +253,13 @@ public class EnemyBase : NetworkBehaviour {
 
             //Destroy(col.gameObject);
             BulletManager.getInstance().onDestroyBullet(col.gameObject);
+
+            if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.MULTIPLAYER && isCustomLocalPlayer(col.gameObject) == false)
+            {
+                CustomDebug.Log("Enemy Base Not a local player");
+                return;
+            }
+
             m_health--;
             if (m_health <= 0)
             {
@@ -280,13 +279,84 @@ public class EnemyBase : NetworkBehaviour {
 
     private void onDeath()
     {
-        reset();
-        if (m_isBoss)
-            EnemyManager.getInstance().onBossDead(gameObject);
+        CustomDebug.Log("OnDeath");
+        if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.SINGLE_PLAYER)
+        {
+            reset();
+            if (m_isBoss)
+                EnemyManager.getInstance().onBossDead(gameObject);
+            else
+                EnemyManager.getInstance().OnEnemyDeath(gameObject);
+        }
         else
-            EnemyManager.getInstance().OnEnemyDeath(gameObject);
+        {
+            commandOnDeath();
+        }
+    }
 
-        //Destroy(gameObject);
+    public void commandOnDeath()
+    {
+        CustomDebug.Log("Command On Death");
+        reset();
+        GameManager.getInstance().m_player.GetComponent<NetworkEnemyManager>().Cmd_onDeath(netId, m_isBoss);
+    }
+
+    private bool isCustomLocalPlayer(GameObject bullet = null)
+    {
+        if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.MULTIPLAYER)
+        {
+            if (bullet == null)
+            {
+                CustomDebug.Log("No Bullet");
+                return true;
+            }
+
+            if (bullet.GetComponent<BulletBase>().getParentNetId() == NetworkInstanceId.Invalid)
+            {
+                CustomDebug.Log("Bullet parent net id is invalid");
+                return false;
+            }
+
+            GameObject bulletParent = null;
+            if (GameManager.getInstance().m_player.isServer)
+                bulletParent = NetworkServer.FindLocalObject(bullet.GetComponent<BulletBase>().getParentNetId());
+            else
+                bulletParent = ClientScene.FindLocalObject(bullet.GetComponent<BulletBase>().getParentNetId());
+
+            if (bulletParent == null)
+            {
+                CustomDebug.Log("bullet Parent is null");
+                return false;
+            }
+
+            if (bulletParent.GetComponent<Player>() != null && bulletParent.GetComponent<Player>().isLocalPlayer == false)
+            {
+                CustomDebug.Log("Bullet Parent is not local player");
+                return false;
+            }
+
+            if (bulletParent.GetComponent<EnemyBase>() != null)
+            {
+                CustomDebug.Log("Bullet Parent is Enemy");
+                EnemyBase enemyObj = bulletParent.GetComponent<EnemyBase>();
+                if (enemyObj.getParentNetworkId() != NetworkInstanceId.Invalid)
+                {
+                    GameObject enemyParentObj = null;
+                    if (GameManager.getInstance().m_player.isServer)
+                        enemyParentObj = NetworkServer.FindLocalObject(enemyObj.getParentNetworkId());
+                    else
+                        enemyParentObj = ClientScene.FindLocalObject(enemyObj.getParentNetworkId());
+
+                    if (enemyParentObj.GetComponent<NetworkEnemyManager>().isLocalPlayer == false)
+                    {
+                        CustomDebug.Log("Bullet Parent enemy is Not local Enemy");
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
     }
 
     public void reset()
@@ -297,6 +367,13 @@ public class EnemyBase : NetworkBehaviour {
 
     public void onExternalDamage(float damage)
     {
+        if (isCustomLocalPlayer() == false)
+        {
+			// TODO : Need to check
+            CustomDebug.Log("On External Damage Enemy Base Not a local player");
+            return;
+        }
+
         m_health -= damage;
         if (m_health <= 0)
         {
@@ -375,6 +452,7 @@ public class EnemyBase : NetworkBehaviour {
 
     IEnumerator invokeOnExplosion(float time)
     {
+        /// TODO : need to check explosion in multiplayer mode
         yield return new WaitForSeconds(time);
 
         if (Vector3.Distance(transform.position, GameManager.getInstance().m_player.transform.position) < m_explosionRange)
@@ -382,7 +460,15 @@ public class EnemyBase : NetworkBehaviour {
             GameManager.getInstance().m_player.onDamage(m_explosionDamage);
         }
 
-        onDeath();
+        if (isCustomLocalPlayer())
+        {
+            onDeath();
+        }
+        else
+        {
+            CustomDebug.Log("Invoke Explosion Enemy Base Not a local player");
+        }
+
     }
 
     public override void OnStartClient()
@@ -433,6 +519,22 @@ public class EnemyBase : NetworkBehaviour {
             indicator.gameObject.SetActive(true);
             indicator.GetComponent<SpriteRenderer>().material = EnemyManager.getInstance().getMaterial(m_team);
         }
+    }
+
+    public void setParentNetworkId(NetworkInstanceId netId)
+    {
+        m_parentInstanceId = netId;
+    }
+
+    public NetworkInstanceId getParentNetworkId()
+    {
+        return m_parentInstanceId;
+    }
+
+    public void OnSetParentInstanceId(NetworkInstanceId netId)
+    {
+        CustomDebug.Log("On set Parent Instance Id");
+        m_parentInstanceId = netId;
     }
 }
 	

@@ -169,7 +169,8 @@ public class EnemyManager : NetworkBehaviour{
         {
             GameObject target = getEnemyTarget(enemyType);
             NetworkInstanceId netId = target.GetComponent<NetworkIdentity>().netId;
-            m_networkEnemyManager.Cmd_SpawnEnemy(enemyType, ClanManager.getInstance().SelectedTeam, position, netId);
+            NetworkInstanceId parentNetId = m_networkEnemyManager.GetComponent<NetworkIdentity>().netId;
+            m_networkEnemyManager.Cmd_SpawnEnemy(enemyType, ClanManager.getInstance().SelectedTeam, position, netId, parentNetId);
         }
         else if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.SINGLE_PLAYER)
         {
@@ -185,6 +186,13 @@ public class EnemyManager : NetworkBehaviour{
         // TODO : for now, target is current player for all enemy types
         return GameManager.getInstance().m_player.gameObject;
     }
+
+    public GameObject getEnemyTarget(BOSS_TYPE type)
+    {
+        // TODO: For now target is current player
+        return GameManager.getInstance().m_player.gameObject;
+    }
+
     private void setupEnemy(ENEMY_TYPE enemyType, GameObject e)
     {
         switch (enemyType)
@@ -232,8 +240,16 @@ public class EnemyManager : NetworkBehaviour{
         
         GameManager.getInstance().addScore(obj.GetComponent<EnemyBase>().m_points);
 
-        m_spawnedEnemyList.Remove(obj);
-        ObjectPool.Despawn(obj);
+        if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.SINGLE_PLAYER)
+        {
+            m_spawnedEnemyList.Remove(obj);
+            ObjectPool.Despawn(obj);
+        }
+        else
+        {
+            CustomDebug.Log("Destroyed Enemy Object");
+            m_networkEnemyManager.Cmd_destroyObject(obj.GetComponent<NetworkIdentity>().netId);
+        }
     }
 
 	public int getEnemyDeathCount()
@@ -248,8 +264,17 @@ public class EnemyManager : NetworkBehaviour{
 		m_deadEnemyCount = 0;
 		m_spawnEnemyCount = 0;
         m_totalEnemyDied += 1;
-        m_spawnedEnemyList.Remove(obj);
-        ObjectPool.Despawn(obj);
+        if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.SINGLE_PLAYER)
+        {
+            m_spawnedEnemyList.Remove(obj);
+            ObjectPool.Despawn(obj);
+        }
+        else
+        {
+            CustomDebug.Log("Destroying Boss object");
+            //Destroy(obj);
+            m_networkEnemyManager.Cmd_destroyObject(obj.GetComponent<NetworkIdentity>().netId);
+        }
         GameManager.getInstance().incrementXP();
 	}
 	
@@ -309,7 +334,11 @@ public class EnemyManager : NetworkBehaviour{
                 
                 if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.MULTIPLAYER)
                 {
-                    Cmd_SpawnBoss((BOSS_TYPE)bossId, worldPos);
+                    BOSS_TYPE type = (BOSS_TYPE)bossId;
+                    GameObject target = getEnemyTarget(type);
+                    NetworkInstanceId netId = target.GetComponent<NetworkIdentity>().netId;
+                    NetworkInstanceId parentNetId = m_networkEnemyManager.GetComponent<NetworkIdentity>().netId;
+                    m_networkEnemyManager.Cmd_SpawnBoss(type, ClanManager.getInstance().SelectedTeam, worldPos, netId, parentNetId);
                 }
                 else if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.SINGLE_PLAYER)
                 {
@@ -321,20 +350,26 @@ public class EnemyManager : NetworkBehaviour{
         }
     }
     
-    public void CommandSpawnEnemy(ENEMY_TYPE type,Player.Player_Team team, Vector3 pos, NetworkInstanceId netId)
+    public void CommandSpawnEnemy(ENEMY_TYPE type,Player.Player_Team team, Vector3 pos, NetworkInstanceId netId, NetworkInstanceId parentNetId)
     {
         CustomDebug.Log("Command Spawn Enemy : " + netId.Value);
         GameObject obj = (GameObject)Instantiate(getEnemyPrefab(type), pos, Quaternion.identity);
-        obj.GetComponent<EnemyBase>().Team = team;
-        obj.GetComponent<EnemyBase>().PlayerNetworkId = netId;
+        EnemyBase enemyBase = obj.GetComponent<EnemyBase>();
+        enemyBase.Team = team;
+        enemyBase.m_playerInstanceId = netId;
+        enemyBase.m_parentInstanceId = parentNetId;
         //setupEnemy(type, obj);
         NetworkServer.Spawn(obj);
     }
 
-    [Command]
-    private void Cmd_SpawnBoss(BOSS_TYPE type, Vector3 pos)
+    public void CommandSpawnBoss(BOSS_TYPE type, Player.Player_Team team, Vector3 pos, NetworkInstanceId netId, NetworkInstanceId parentNetId)
     {
+        CustomDebug.Log("Instantiating boss");
         GameObject obj = (GameObject)Instantiate(getBossPrefab(type), pos, Quaternion.identity);
+        EnemyBase enemyBase = obj.GetComponent<EnemyBase>();
+        enemyBase.Team = team;
+        enemyBase.m_playerInstanceId = netId;
+        enemyBase.m_parentInstanceId = parentNetId;
         NetworkServer.Spawn(obj);
     }
 

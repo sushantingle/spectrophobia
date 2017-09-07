@@ -72,7 +72,7 @@ public class RandomPath : PathBase {
             PathDefs.AI_Direction direction = (PathDefs.AI_Direction)Mathf.Pow(2, rand);
             if (!isHitStatusSet(direction) && direction != m_lastDirection)
             {
-                CustomDebug.Log("Moving In : " + direction);
+                //CustomDebug.Log("Moving In : " + direction);
                 setMoveStatus(direction);
                 m_lastDirection = direction;
                 break;
