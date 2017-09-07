@@ -9,6 +9,9 @@ public class EnemyDictionary : DictionaryTemplate<EnemyManager.ENEMY_TYPE, GameO
 [System.Serializable]
 public class BossDictionary : DictionaryTemplate<EnemyManager.BOSS_TYPE, GameObject> { }
 
+[System.Serializable]
+public class IndicatorDictionary : DictionaryTemplate<Player.Player_Team, Material> { }
+
 public class EnemyManager : NetworkBehaviour{
 	public enum ENEMY_TYPE {
 		ENEMY_LINEAR = 0,
@@ -47,7 +50,7 @@ public class EnemyManager : NetworkBehaviour{
     public int          m_preloadCount = 30;
 
     private NetworkEnemyManager m_networkEnemyManager = null;
-    public Material[] m_teamMaterial;
+    public List<IndicatorDictionary> m_teamIndicatorMaterial;
 
     public static EnemyManager getInstance() {
 		return m_instance;
@@ -440,10 +443,11 @@ public class EnemyManager : NetworkBehaviour{
         
     }
 
-    public Material getMaterial(Player.Player_Team team)
+    public Material getMaterial(Player.Player_Team id)
     {
-        if(m_teamMaterial.Length >= (int)team)
-            return m_teamMaterial[(int)team];
+        var obj = m_teamIndicatorMaterial.Find(team => team._key == id);
+        if (obj != null)
+            return obj._value;
         return null;
     }
 }

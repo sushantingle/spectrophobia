@@ -61,7 +61,6 @@ public class BulletBase : MonoBehaviour {
 
     protected virtual void BOnTriggerEnter2D(Collider2D collision)
     {
-        CustomDebug.Log("Bullet collided with : " + collision.gameObject.name);
         if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.SINGLE_PLAYER)
         {
             if (collision.gameObject.layer == LayerMask.NameToLayer("wall"))

@@ -10,12 +10,13 @@ using UnityEngine.Networking;
 public class Player : NetworkBehaviour {
     public enum Player_Team
     {
+        TEAM_NONE,
         TEAM_CT,
         TEAM_T,
     }
 
     [SyncVar(hook = "OnSetTeam")]
-    private Player_Team m_team = Player_Team.TEAM_CT;
+    private Player_Team m_team = Player_Team.TEAM_NONE;
     public float 		m_speed 		= 0.1f;
 	public 	float 		m_fireInterval 	= 0.5f;
     public float        m_bulletSpeed   = 0.1f;

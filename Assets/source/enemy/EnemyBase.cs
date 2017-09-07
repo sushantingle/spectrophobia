@@ -11,7 +11,7 @@ public class EnemyBase : NetworkBehaviour {
         set { m_team = value; }
     }
     [SyncVar(hook = "OnSetTeam")]
-    public Player.Player_Team m_team = Player.Player_Team.TEAM_CT;
+    public Player.Player_Team m_team = Player.Player_Team.TEAM_NONE;
 
     [SyncVar]
     public float m_speed = 0.1f;
@@ -127,8 +127,8 @@ public class EnemyBase : NetworkBehaviour {
     void Update() {
         if (GameManager.getInstance().isGamePaused())
             return;
-
-        /// TODO: should update if local player only
+        if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.MULTIPLAYER && !GameManager.getInstance().m_player.isServer)
+            return;
 
         EUpdate();
     }
@@ -149,7 +149,8 @@ public class EnemyBase : NetworkBehaviour {
         if (GameManager.getInstance().isGamePaused())
             return;
 
-        // TODO : should update if local player only
+        if (GameManager.getInstance().getGameplayMode() == GameManager.GameplayMode.MULTIPLAYER && !GameManager.getInstance().m_player.isServer)
+            return;
 
         int layermask = 1 << LayerMask.NameToLayer("wall");
         //layermask = ~layermask;
@@ -474,7 +475,16 @@ public class EnemyBase : NetworkBehaviour {
     public override void OnStartClient()
     {
         base.OnStartClient();
-        CustomDebug.Log("Enemy Base : On Start Client");
+        CustomDebug.Log("Enemy Base : On Start Client : "+m_team);
+        if (m_team != Player.Player_Team.TEAM_NONE)
+        {
+            OnSetTeam(m_team);
+        }
+
+        if (m_parentInstanceId != NetworkInstanceId.Invalid)
+        {
+            OnSetParentInstanceId(m_parentInstanceId);
+        }
     }
 
     public override void OnNetworkDestroy()
