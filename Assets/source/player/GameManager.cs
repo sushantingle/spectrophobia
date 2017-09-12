@@ -28,6 +28,9 @@ public class GameManager : MonoBehaviour {
 
     public List<GameObject> m_particlePrefabList;
     public int m_particlePreloadCount = 100;
+    private NetworkObjectPool m_networkObjectPool;
+
+    public NetworkObjectPool getNetworkPool() { return m_networkObjectPool; }
 
 	public static GameManager getInstance() {
 		return m_instance;
@@ -117,18 +120,36 @@ public class GameManager : MonoBehaviour {
         return m_player.isServer;
     }
 
+    public void onTeamSelect(Player.Player_Team team)
+    {
+        CustomDebug.Log("On Team Select");
+        ClanManager.getInstance().SelectedTeam = team;
+        startGame();
+    }
+
     public void onStartLocalPlayer(GameObject obj)
     {
         m_player = obj.GetComponent<Player>();
+        m_networkObjectPool = m_player.GetComponent<NetworkObjectPool>();
+        EnemyManager.getInstance().preload();
+        if (isSinglePlayer())
+            startGame();
+        else if (isMultiplayer())
+            StateManager.getInstance().pushState(StateManager.MenuState.STATE_TEAM_SELECTION);
+    }
+
+    private void startGame()
+    {
+        CustomDebug.Log("Start Game 1");
         pauseGame(false);
         m_player.onStartGame();
-        m_mainCamera.GetComponent<CameraFollower>().setTarget(obj.transform);
+        m_mainCamera.GetComponent<CameraFollower>().setTarget(m_player.transform);
 
         EnemyManager.getInstance().reset();
-        EnemyManager.getInstance().setPlayer(obj.transform);
+        EnemyManager.getInstance().setPlayer(m_player.transform);
         StateManager.getInstance().pushState(StateManager.MenuState.STATE_HUD);
         ItemManager.getInstance().usedCandy(PlayerDefs.CONST_START_GAME_PRICE);
-        BulletManager.getInstance().setOnlineManager(obj);
+        BulletManager.getInstance().setOnlineManager(m_player.gameObject);
     }
 
     private void reset()

@@ -62,13 +62,14 @@ public class ClanManager : NetworkBehaviour {
     public void OnClientConnect(bool success)
     {
         CustomDebug.Log("On Client Connect : "+success);
-
-        if (GameManager.getInstance().isSinglePlayer())
-            ClientScene.AddPlayer(0);
-        else if (GameManager.getInstance().isMultiplayer())
+        ClientScene.AddPlayer(0);
+        /*if (GameManager.getInstance().isSinglePlayer())
+            
+        else*/ if (GameManager.getInstance().isMultiplayer())
         {
             CustomDebug.Log("Push Team selection");
-            StateManager.getInstance().pushState(StateManager.MenuState.STATE_TEAM_SELECTION);
+
+            //StateManager.getInstance().pushState(StateManager.MenuState.STATE_TEAM_SELECTION);
         }
     }
 
@@ -90,14 +91,17 @@ public class ClanManager : NetworkBehaviour {
 
     public void spawnCT()
     {
-        m_selectedTeam = Player.Player_Team.TEAM_CT;
-        ClientScene.AddPlayer(0);
+        //m_selectedTeam = Player.Player_Team.TEAM_CT;
+        GameManager.getInstance().onTeamSelect(Player.Player_Team.TEAM_CT);
+        ///ClientScene.AddPlayer(0);
     }
 
     public void spawnT()
     {
-        m_selectedTeam = Player.Player_Team.TEAM_T;
-        ClientScene.AddPlayer(0);
+        //m_selectedTeam = Player.Player_Team.TEAM_T;
+        CustomDebug.Log("Spawn T");
+        GameManager.getInstance().onTeamSelect(Player.Player_Team.TEAM_T);
+        //ClientScene.AddPlayer(0);
     }
 
     public List<GameObject> getCtList() { return m_ctList; }

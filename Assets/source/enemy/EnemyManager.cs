@@ -63,13 +63,27 @@ public class EnemyManager : NetworkBehaviour{
     
 	void Awake() {
 		m_instance = this;
+    }
 
+    public void preload()
+    {
         // Preload enemy
-        foreach (var obj in m_enemyPrefabs)
+        if (GameManager.getInstance().isSinglePlayer())
         {
-            ObjectPool.Preload(obj._value, m_preloadCount);
+            foreach (var obj in m_enemyPrefabs)
+            {
+                ObjectPool.Preload(obj._value, m_preloadCount);
+            }
         }
-	}
+        else if (GameManager.getInstance().isMultiplayer())
+        {
+            foreach (var obj in m_enemyPrefabs)
+            {
+                GameManager.getInstance().getNetworkPool().Preload(obj._value, m_preloadCount);
+            }
+        }
+
+    }
 
     public void setPlayer(Transform player)
     {
@@ -356,19 +370,19 @@ public class EnemyManager : NetworkBehaviour{
     public void CommandSpawnEnemy(ENEMY_TYPE type,Player.Player_Team team, Vector3 pos, NetworkInstanceId netId, NetworkInstanceId parentNetId)
     {
         CustomDebug.Log("Command Spawn Enemy : " + netId.Value);
-        GameObject obj = (GameObject)Instantiate(getEnemyPrefab(type), pos, Quaternion.identity);
+        GameObject obj = (GameObject)  GameManager.getInstance().getNetworkPool().Spawn(getEnemyPrefab(type), pos, Quaternion.identity);
         EnemyBase enemyBase = obj.GetComponent<EnemyBase>();
         enemyBase.Team = team;
         enemyBase.m_playerInstanceId = netId;
         enemyBase.m_parentInstanceId = parentNetId;
         //setupEnemy(type, obj);
-        NetworkServer.Spawn(obj);
+        //NetworkServer.Spawn(obj);
     }
 
     public void CommandSpawnBoss(BOSS_TYPE type, Player.Player_Team team, Vector3 pos, NetworkInstanceId netId, NetworkInstanceId parentNetId)
     {
         CustomDebug.Log("Instantiating boss");
-        GameObject obj = (GameObject)Instantiate(getBossPrefab(type), pos, Quaternion.identity);
+        GameObject obj = (GameObject)GameManager.getInstance().getNetworkPool().Spawn(getBossPrefab(type), pos, Quaternion.identity);
         EnemyBase enemyBase = obj.GetComponent<EnemyBase>();
         enemyBase.Team = team;
         enemyBase.m_playerInstanceId = netId;
@@ -390,7 +404,7 @@ public class EnemyManager : NetworkBehaviour{
                 Destroy(obj);
         }*/
 
-        if(GameManager.getInstance().isSinglePlayer())
+        if (GameManager.getInstance().isSinglePlayer())
         {
             foreach (GameObject obj in m_spawnedEnemyList)
             {
@@ -398,6 +412,11 @@ public class EnemyManager : NetworkBehaviour{
                 ObjectPool.Despawn(obj);
             }
         }
+        else if (GameManager.getInstance().isMultiplayer())
+        {
+            // TODO : remove spawned enemy list
+        }
+
         m_spawnedEnemyList.Clear();
         m_player = null;
     }

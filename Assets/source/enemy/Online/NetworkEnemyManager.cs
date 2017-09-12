@@ -32,7 +32,7 @@ public class NetworkEnemyManager : NetworkBehaviour {
         }
         else
         {
-            CustomDebug.Log("Spawner not found on host");
+            CustomDebug.LogError("Spawner not found on host");
         }
     }
 
@@ -54,37 +54,64 @@ public class NetworkEnemyManager : NetworkBehaviour {
     public void Rpc_OnDeath(NetworkInstanceId netId, bool isBoss)
     {
         CustomDebug.Log("RPC Enemy On Death : "+netId.Value);
-        if (isLocalPlayer)
-        {
-            CustomDebug.Log("IsLocalPlayer On Death ");
-            GameObject deadObject = null;
-            if (isServer)
-                deadObject = NetworkServer.FindLocalObject(netId);
-            else
-                deadObject = ClientScene.FindLocalObject(netId);
+        GameObject deadObject = null;
+        if (isServer)
+            deadObject = NetworkServer.FindLocalObject(netId);
+        else
+            deadObject = ClientScene.FindLocalObject(netId);
 
-            if (deadObject != null)
+        if (deadObject != null)
+        {
+            NetworkInstanceId parentNetId = deadObject.GetComponent<EnemyBase>().getParentNetworkId();
+            if (parentNetId == NetworkInstanceId.Invalid)
             {
-                CustomDebug.Log("Dead object found : " + isBoss);
-                if(isBoss)
-                    EnemyManager.getInstance().onBossDead(deadObject);
-                else
-                    EnemyManager.getInstance().OnEnemyDeath(deadObject);
+                CustomDebug.Log("Invalid Parent");
+                return;
             }
+            GameObject parentObj = ClientScene.FindLocalObject(parentNetId);
+            if (parentObj == null)
+            {
+                CustomDebug.Log("Parent object is null");
+                return;
+            }
+
+            if (parentObj.GetComponent<Player>() != null && parentObj.GetComponent<Player>().isLocalPlayer == false)
+            {
+                CustomDebug.Log("Parent is not local player");
+                return;
+            }
+
+            if (parentObj.GetComponent<EnemyBase>() != null)
+            {
+                CustomDebug.Log("Parent is enemy");
+                // TODO : handle if parent is Enemy
+            }
+            CustomDebug.Log("Dead object found : " + isBoss);
+            if(isBoss)
+                EnemyManager.getInstance().onBossDead(deadObject);
             else
-            {
-                CustomDebug.Log("Boss object not found");
-            }
+                EnemyManager.getInstance().OnEnemyDeath(deadObject);
+        }
+        else
+        {
+            CustomDebug.LogError("Boss object not found");
         }
     }
 
     [Command]
     public void Cmd_destroyObject(NetworkInstanceId netId)
     {
+        CustomDebug.Log("Command Destroy Object : " + netId.Value);
         GameObject obj = NetworkServer.FindLocalObject(netId);
         if (obj != null)
         {
-            Destroy(obj);
+            //Destroy(obj);
+            CustomDebug.Log("Command Destroy Object : Despawn Object");
+            GameManager.getInstance().getNetworkPool().Despawn(obj);
+        }
+        else
+        {
+            CustomDebug.LogError("Command Destroy Object : object not found");
         }
     }
 }

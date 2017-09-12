@@ -12,6 +12,12 @@ public class CustomDebug {
         #endif
     }
 
+    public static void LogError(string text) {
+        #if UNITY_DEBUG
+             Debug.LogError(text);
+        #endif
+    }
+
     public static bool isDebugBuild() {
         #if DEBUG_BUILD
             return true;
