@@ -79,14 +79,6 @@ public class SpawnerEnemy : EnemyBase {
         }
     }
 
-    // Update is called once per frame
-    void Update() {
-        if (GameManager.getInstance().isGamePaused())
-            return;
-
-        EUpdate();
-    }
-
     protected override void EUpdate()
     {
         base.EUpdate();
@@ -112,14 +104,6 @@ public class SpawnerEnemy : EnemyBase {
                 onRabbitHide();
             }
         }
-    }
-
-    private void FixedUpdate()
-    {
-        if (GameManager.getInstance().isGamePaused())
-            return;
-
-        EFixedUpdate();
     }
 
     protected override void EFixedUpdate()
@@ -183,12 +167,12 @@ public class SpawnerEnemy : EnemyBase {
     {
         GameObject targetObj = NetworkServer.FindLocalObject(netId);
         GameObject prefab = EnemyManager.getInstance().getEnemyPrefab(m_spawnType);
-        GameObject obj = (GameObject)Instantiate(prefab, position, Quaternion.identity);
+        GameObject obj = (GameObject)GameManager.getInstance().getNetworkPool().Spawn(prefab, position, Quaternion.identity);
         obj.GetComponent<EnemyBase>().Team = m_team;
         obj.GetComponent<EnemyBase>().m_playerInstanceId = netId;
         obj.GetComponent<EnemyBase>().m_parentInstanceId = EnemyManager.getInstance().getNetworkEnemyManager().GetComponent<NetworkIdentity>().netId;
         setupChild(type, obj, targetObj.transform);
-        NetworkServer.Spawn(obj);
+        //NetworkServer.Spawn(obj);
     }
 
     private void setupChild(EnemyManager.ENEMY_TYPE type, GameObject child, Transform target)
@@ -269,12 +253,12 @@ public class SpawnerEnemy : EnemyBase {
     private void enableRenderer(bool value)
     {
         //CustomDebug.Log("Enable Renderer : " + value);
-        GetComponent<SpriteRenderer>().enabled = value;
+        //GetComponent<SpriteRenderer>().enabled = value;
     }
 
     private void enableBoxCollider(bool value)
     {
         //CustomDebug.Log("Enable Box Collider : " + value);
-        GetComponent<PolygonCollider2D>().enabled = value;
+        //GetComponent<PolygonCollider2D>().enabled = value;
     }
 }

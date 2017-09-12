@@ -31,13 +31,6 @@ public class LinearBoss : EnemyBase {
         m_fireStartTime = Time.time;
         m_maxHealth = m_health;
     }
-    // Update is called once per frame
-    void Update () {
-		if (GameManager.getInstance ().isGamePaused ())
-			return;
-
-        EUpdate();
-	}
 
     protected override void EUpdate()
     {
@@ -63,13 +56,6 @@ public class LinearBoss : EnemyBase {
         }
 
         transform.position = pos;
-    }
-
-    void FixedUpdate() {
-        if (GameManager.getInstance().isGamePaused())
-            return;
-
-        EFixedUpdate();
     }
 
     protected override void EFixedUpdate()

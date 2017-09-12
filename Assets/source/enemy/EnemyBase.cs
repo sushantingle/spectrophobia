@@ -124,7 +124,7 @@ public class EnemyBase : NetworkBehaviour {
         }
     }
     // Update is called once per frame
-    void Update() {
+    protected virtual void Update() {
         if (GameManager.getInstance().isGamePaused())
             return;
         if (GameManager.getInstance().isMultiplayer() && !GameManager.getInstance().isServer())
@@ -142,6 +142,14 @@ public class EnemyBase : NetworkBehaviour {
         }
 
         updateSpecialPower();
+    }
+
+    protected virtual void FixedUpdate()
+    {
+        if (GameManager.getInstance().isGamePaused())
+            return;
+
+        EFixedUpdate();
     }
 
     protected virtual void EFixedUpdate()
@@ -485,6 +493,7 @@ public class EnemyBase : NetworkBehaviour {
         {
             OnSetParentInstanceId(m_parentInstanceId);
         }
+        transform.Find("netid").GetComponent<TextMesh>().text = "" + netId.Value;
     }
 
     public override void OnNetworkDestroy()

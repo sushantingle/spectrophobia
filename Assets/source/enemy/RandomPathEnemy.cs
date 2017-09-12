@@ -23,26 +23,10 @@ public class RandomPathEnemy : EnemyBase {
         EStart();
     }
 
-    // Update is called once per frame
-    void Update() {
-        if (GameManager.getInstance().isGamePaused())
-            return;
-
-        EUpdate();
-    }
-
     protected override void EUpdate()
     {
         base.EUpdate();
         m_path.update();
-    }
-
-    private void FixedUpdate()
-    {
-        if (GameManager.getInstance().isGamePaused())
-            return;
-
-        EFixedUpdate();
     }
 
     protected override void EFixedUpdate()

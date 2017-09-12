@@ -18,26 +18,10 @@ public class FollowerEnemy : EnemyBase {
         EStart();
     }
 
-    private void Update()
-    {
-        if (GameManager.getInstance().isGamePaused())
-            return;
-
-        EUpdate();
-    }
-
     protected override void EUpdate()
     {
         base.EUpdate();
         m_path.update();
-    }
-
-    private void FixedUpdate()
-    {
-        if (GameManager.getInstance().isGamePaused())
-            return;
-
-        EFixedUpdate();
     }
 
     protected override void EFixedUpdate()

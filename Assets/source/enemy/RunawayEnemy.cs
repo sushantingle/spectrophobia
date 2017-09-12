@@ -33,26 +33,10 @@ public class RunawayEnemy : EnemyBase {
         m_path.init(transform, m_speed, m_lookAt, m_changeTimeOffset, m_safeDistance);
     }
 
-    private void Update()
-    {
-        if (GameManager.getInstance().isGamePaused())
-            return;
-
-        EUpdate();
-    }
-
     protected override void EUpdate()
     {
         base.EUpdate();
         m_path.update();
-    }
-
-    private void FixedUpdate()
-    {
-        if (GameManager.getInstance().isGamePaused())
-            return;
-
-        EFixedUpdate();
     }
 
     protected override void EFixedUpdate()

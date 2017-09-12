@@ -26,13 +26,6 @@ public class LinearEnemy : EnemyBase {
     }
 
 	// Update is called once per frame
-	void Update () {
-        if (GameManager.getInstance ().isGamePaused ())
-			return;
-
-        EUpdate();
-
-	}
 
     protected override void EUpdate()
     {
@@ -40,17 +33,10 @@ public class LinearEnemy : EnemyBase {
         m_path.update();
     }
 
-    void FixedUpdate() {
-        if (GameManager.getInstance().isGamePaused())
-            return;
-
-        EFixedUpdate();
-        m_path.fixedUpdate();
-    }
-
     protected override void EFixedUpdate()
     {
         base.EFixedUpdate();
+        m_path.fixedUpdate();
     }
 
     void OnTriggerEnter2D(Collider2D col)
