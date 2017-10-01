@@ -20,6 +20,9 @@ public class DerivedNetworManager : NetworkManager
     public OnDisconnect m_onClientDisconnect = null;
     public OnDisconnect m_onStopHost = null;
 
+    public delegate void onServerAddPlayer(NetworkConnection conn);
+    public onServerAddPlayer m_onServerAddPlayer = null;
+
     public static DerivedNetworManager getInstance() {
         return m_instance;
     }
@@ -34,11 +37,12 @@ public class DerivedNetworManager : NetworkManager
         m_ipInfo = m_ipInfo + " : " + networkPort;
     }
 
-    public void setConnectionDelegates(OnConnect serverConnect, OnConnect clientConnect, OnConnect startHost)
+    public void setConnectionDelegates(OnConnect serverConnect, OnConnect clientConnect, OnConnect startHost, onServerAddPlayer serverAddPlayer)
     {
         m_onServerConnect = serverConnect;
         m_onClientConnect = clientConnect;
         m_onStartHost = startHost;
+        m_onServerAddPlayer = serverAddPlayer;
     }
 
     public void setDisconnectionDelegates(OnDisconnect serverDisconnect, OnDisconnect clientDisconnect, OnDisconnect stopHost)
@@ -158,4 +162,11 @@ public class DerivedNetworManager : NetworkManager
         //StopClient();
     }
 
+    public override void OnServerAddPlayer(NetworkConnection conn, short playerControllerId)
+    {
+        base.OnServerAddPlayer(conn, playerControllerId);
+        CustomDebug.Log("On Server Add New Player : " + conn.connectionId);
+        if (m_onServerAddPlayer != null)
+            m_onServerAddPlayer(conn);
+    }
 }

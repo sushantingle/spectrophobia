@@ -40,7 +40,7 @@ public class ClanManager : NetworkBehaviour {
 
     void setNetworkDelegate()
     {
-        DerivedNetworManager.getInstance().setConnectionDelegates(OnServerConnect, OnClientConnect, OnStartHost);
+        DerivedNetworManager.getInstance().setConnectionDelegates(OnServerConnect, OnClientConnect, OnStartHost, onServerAddPlayer);
         DerivedNetworManager.getInstance().setDisconnectionDelegates(OnServerDisconnect, OnClientDisconnect, OnStopHost);
     }
 
@@ -87,6 +87,11 @@ public class ClanManager : NetworkBehaviour {
     {
         CustomDebug.Log("On Stop Host");
         reset();
+    }
+
+    public void onServerAddPlayer(NetworkConnection conn)
+    {
+        GameManager.getInstance().getNetworkPool().OnServerAddPlayer(conn);
     }
 
     public void spawnCT()
