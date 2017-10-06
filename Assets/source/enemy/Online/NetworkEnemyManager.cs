@@ -47,57 +47,21 @@ public class NetworkEnemyManager : NetworkBehaviour {
     public void Cmd_onDeath(NetworkInstanceId netId, bool isBoss)
     {
         CustomDebug.Log("Command On Death : "+netId.Value);
-        Rpc_OnDeath(netId, isBoss);
-    }
 
-    [ClientRpc]
-    public void Rpc_OnDeath(NetworkInstanceId netId, bool isBoss)
-    {
-        CustomDebug.Log("RPC Enemy On Death : "+netId.Value);
-        GameObject deadObject = null;
-        if (isServer)
-            deadObject = NetworkServer.FindLocalObject(netId);
-        else
-            deadObject = ClientScene.FindLocalObject(netId);
-
+        GameObject deadObject = NetworkServer.FindLocalObject(netId);
         if (deadObject != null)
         {
-            NetworkInstanceId parentNetId = deadObject.GetComponent<EnemyBase>().getParentNetworkId();
-            if (parentNetId == NetworkInstanceId.Invalid)
-            {
-                CustomDebug.Log("Invalid Parent");
-                return;
-            }
-            GameObject parentObj = ClientScene.FindLocalObject(parentNetId);
-            if (parentObj == null)
-            {
-                CustomDebug.Log("Parent object is null");
-                return;
-            }
-
-            if (parentObj.GetComponent<Player>() != null && parentObj.GetComponent<Player>().isLocalPlayer == false)
-            {
-                CustomDebug.Log("Parent is not local player");
-                return;
-            }
-
-            if (parentObj.GetComponent<EnemyBase>() != null)
-            {
-                CustomDebug.Log("Parent is enemy");
-                // TODO : handle if parent is Enemy
-            }
-            CustomDebug.Log("Dead object found : " + isBoss);
-            if(isBoss)
+            CustomDebug.LogError("Enemy object found : "+netId.Value);
+            if (isBoss)
                 EnemyManager.getInstance().onBossDead(deadObject);
             else
                 EnemyManager.getInstance().OnEnemyDeath(deadObject);
         }
         else
         {
-            CustomDebug.LogError("Boss object not found");
+            CustomDebug.LogError("Enemy object not found : "+netId.Value);
         }
     }
-
     [Command]
     public void Cmd_destroyObject(NetworkInstanceId netId)
     {
@@ -113,5 +77,20 @@ public class NetworkEnemyManager : NetworkBehaviour {
         {
             CustomDebug.LogError("Command Destroy Object : object not found");
         }
+    }
+
+    [Command]
+    public void Cmd_AddScore(Player.Player_Team playerTeam, int score)
+    {
+        CustomDebug.Log("Command Add Score : " + playerTeam);
+        Rpc_AddScore(playerTeam, score);
+    }
+
+    [ClientRpc]
+    public void Rpc_AddScore(Player.Player_Team team, int score)
+    {
+        CustomDebug.Log("RPC Add score : Local Team : " + ClanManager.getInstance().SelectedTeam + "    Param Teamm : " + team);
+        if(ClanManager.getInstance().SelectedTeam == team)
+            GameManager.getInstance().addScore(score);
     }
 }

@@ -254,16 +254,19 @@ public class EnemyManager : NetworkBehaviour{
 
         if (m_totalEnemyDied % PlayerDefs.CONST_ITEM_SPAWN_RATE == 0)
             ItemManager.getInstance().generateItem();
-        
-        GameManager.getInstance().addScore(obj.GetComponent<EnemyBase>().m_points);
 
         if (GameManager.getInstance().isSinglePlayer())
         {
+            GameManager.getInstance().addScore(obj.GetComponent<EnemyBase>().m_points);
             m_spawnedEnemyList.Remove(obj);
             ObjectPool.Despawn(obj);
         }
         else
         {
+            Player.Player_Team team = ClanManager.getInstance().SelectedTeam == Player.Player_Team.TEAM_CT ? Player.Player_Team.TEAM_T : Player.Player_Team.TEAM_CT;
+            CustomDebug.Log("Sending score to the one who killed the enemy : "+team);
+            m_networkEnemyManager.Cmd_AddScore(team, obj.GetComponent<EnemyBase>().m_points);
+           
             CustomDebug.Log("Destroyed Enemy Object");
             m_networkEnemyManager.Cmd_destroyObject(obj.GetComponent<NetworkIdentity>().netId);
         }

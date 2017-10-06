@@ -299,7 +299,11 @@ public class EnemyBase : NetworkBehaviour {
         }
         else
         {
-            commandOnDeath();
+            //commandOnDeath();
+            if (m_isBoss)
+                EnemyManager.getInstance().onBossDead(gameObject);
+            else
+                EnemyManager.getInstance().OnEnemyDeath(gameObject);
         }
     }
 
@@ -314,40 +318,36 @@ public class EnemyBase : NetworkBehaviour {
     {
         if (GameManager.getInstance().isMultiplayer())
         {
-            if (bullet == null)
-            {
-                CustomDebug.Log("No Bullet");
-                return true;
-            }
+            //return GameManager.getInstance().isServer();
 
-            if (bullet.GetComponent<BulletBase>().getParentNetId() == NetworkInstanceId.Invalid)
+            if (m_parentInstanceId == NetworkInstanceId.Invalid)
             {
-                CustomDebug.Log("Bullet parent net id is invalid");
+                CustomDebug.Log("Enemy parent net id is invalid");
                 return false;
             }
 
-            GameObject bulletParent = null;
+            GameObject enemyParent = null;
             if (GameManager.getInstance().isServer())
-                bulletParent = NetworkServer.FindLocalObject(bullet.GetComponent<BulletBase>().getParentNetId());
+                enemyParent = NetworkServer.FindLocalObject(m_parentInstanceId);
             else
-                bulletParent = ClientScene.FindLocalObject(bullet.GetComponent<BulletBase>().getParentNetId());
+                enemyParent = ClientScene.FindLocalObject(m_parentInstanceId);
 
-            if (bulletParent == null)
+            if (enemyParent == null)
             {
-                CustomDebug.Log("bullet Parent is null");
+                CustomDebug.Log("Enemy Parent is null");
                 return false;
             }
 
-            if (bulletParent.GetComponent<Player>() != null && bulletParent.GetComponent<Player>().isLocalPlayer == false)
+            if (enemyParent.GetComponent<Player>() != null && enemyParent.GetComponent<Player>().isLocalPlayer == false)
             {
-                CustomDebug.Log("Bullet Parent is not local player");
+                CustomDebug.Log("Enemy Parent is not local player");
                 return false;
             }
 
-            if (bulletParent.GetComponent<EnemyBase>() != null)
+            if (enemyParent.GetComponent<EnemyBase>() != null)
             {
                 CustomDebug.Log("Bullet Parent is Enemy");
-                EnemyBase enemyObj = bulletParent.GetComponent<EnemyBase>();
+                EnemyBase enemyObj = enemyParent.GetComponent<EnemyBase>();
                 if (enemyObj.getParentNetworkId() != NetworkInstanceId.Invalid)
                 {
                     GameObject enemyParentObj = null;
