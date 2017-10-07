@@ -12,6 +12,9 @@ public class BossDictionary : DictionaryTemplate<EnemyManager.BOSS_TYPE, GameObj
 [System.Serializable]
 public class IndicatorDictionary : DictionaryTemplate<Player.Player_Team, Material> { }
 
+[System.Serializable]
+public class CardDictionary : DictionaryTemplate<CardBase.CARD_TYPE, GameObject> { }
+
 public class EnemyManager : NetworkBehaviour{
 	public enum ENEMY_TYPE {
 		ENEMY_LINEAR = 0,
@@ -35,6 +38,8 @@ public class EnemyManager : NetworkBehaviour{
     public List<EnemyDictionary> m_enemyPrefabs; // TODO: use this dictionary and remove enemy prefab list
     
 	public List<BossDictionary> m_bossPrefabs;
+    public List<CardDictionary> m_cardPrefabs;
+
 	public GameObject m_spawnAnim;
 	public int m_spawnCount = 1;
 	private Transform m_player = null;
@@ -123,10 +128,52 @@ public class EnemyManager : NetworkBehaviour{
         }
         else if (GameManager.getInstance().isMultiplayer())
         {
-
+            //if (m_spawnEnemyCount < m_spawnCount)
+            {
+                if (Time.time - m_lastSpawnTime > m_enemySpawnSpeed)
+                {
+                    CustomDebug.Log("Spawn Enemy");
+                    m_lastSpawnTime = Time.time;
+                    spawnNPCs();
+                }
+            }
         }
 
-	}
+    }
+
+    public void spawnNPCs()
+    {
+        for (int i = 0; i < m_spawnCount; i++)
+        {
+            int cardId = Random.Range(0, 100);
+            cardId = cardId % (int)m_cardPrefabs.Count;
+
+            bool spawn = true;
+            int count = 0;
+
+            while (spawn)
+            {
+                if (count > 10)
+                    spawn = false;
+                float x = Random.Range(LevelManager.getInstance().getMinX(), LevelManager.getInstance().getMaxX());
+                float y = Random.Range(LevelManager.getInstance().getMinY(), LevelManager.getInstance().getMaxY());
+                Vector3 worldPos = new Vector3(x, y, 1.0f);
+                CustomDebug.Log("Card Type : " + (CardBase.CARD_TYPE)m_cardPrefabs[cardId]._key);
+                CardBase card = m_cardPrefabs[cardId]._value.GetComponent<CardBase>();
+                PolygonCollider2D polyCollider = getEnemyPrefab((ENEMY_TYPE)card.m_enemyType).GetComponent<PolygonCollider2D>();
+                if (polyCollider.bounds.Contains(worldPos))
+                {
+                    count++;
+                    continue;
+                }
+                
+                spawnNPC((ENEMY_TYPE)card.m_enemyType, card.m_npcType, worldPos, Quaternion.identity);
+                // TODO: set NPC type
+                spawn = false;
+                m_spawnEnemyCount++;
+            }
+        }
+    }
 
 	public void spawnEnemies()
 	{
@@ -191,6 +238,14 @@ public class EnemyManager : NetworkBehaviour{
         return null;
     }
 
+    public GameObject getCardPrefab(CardBase.CARD_TYPE id)
+    {
+        var obj = m_cardPrefabs.Find(item => item._key == id);
+        if (obj != null)
+            return obj._value;
+        return null;
+    }
+
 	public void spawnEnemy(ENEMY_TYPE enemyType, Vector3 position, Quaternion rotation)
 	{
         GameObject e = null;
@@ -210,6 +265,13 @@ public class EnemyManager : NetworkBehaviour{
         CustomDebug.Log("Spawned Enemy : " + enemyType);
    }
 
+    public void spawnNPC(ENEMY_TYPE enemyType, CardBase.NPC_TYPE npcType, Vector3 position, Quaternion rotation)
+    {
+        GameObject target = getEnemyTarget(enemyType);
+        NetworkInstanceId netId = target.GetComponent<NetworkIdentity>().netId;
+        NetworkInstanceId parentNetId = m_networkEnemyManager.GetComponent<NetworkIdentity>().netId;
+        m_networkEnemyManager.Cmd_SpawnNPC(enemyType, ClanManager.getInstance().SelectedTeam, position, netId, parentNetId, npcType);
+    }
     public GameObject getEnemyTarget(ENEMY_TYPE enemyType)
     {
         // TODO : for now, target is current player for all enemy types
@@ -382,7 +444,7 @@ public class EnemyManager : NetworkBehaviour{
         }
     }
     
-    public void CommandSpawnEnemy(ENEMY_TYPE type,Player.Player_Team team, Vector3 pos, NetworkInstanceId netId, NetworkInstanceId parentNetId)
+    public void CommandSpawnEnemy(ENEMY_TYPE type,Player.Player_Team team, Vector3 pos, NetworkInstanceId netId, NetworkInstanceId parentNetId, CardBase.NPC_TYPE npcType = CardBase.NPC_TYPE.NPC_NONE)
     {
         CustomDebug.Log("Command Spawn Enemy : " + netId.Value);
         GameObject obj = (GameObject)  GameManager.getInstance().getNetworkPool().Spawn(getEnemyPrefab(type), pos, Quaternion.identity);
@@ -390,6 +452,7 @@ public class EnemyManager : NetworkBehaviour{
         enemyBase.Team = team;
         enemyBase.m_playerInstanceId = netId;
         enemyBase.m_parentInstanceId = parentNetId;
+        enemyBase.m_npcType = npcType;
         //setupEnemy(type, obj);
         //NetworkServer.Spawn(obj);
     }

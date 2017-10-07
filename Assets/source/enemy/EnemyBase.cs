@@ -86,6 +86,7 @@ public class EnemyBase : NetworkBehaviour {
     [SyncVar (hook = "OnSetParentInstanceId")]
     public NetworkInstanceId m_parentInstanceId = NetworkInstanceId.Invalid;
 
+    [SyncVar]
     public CardBase.NPC_TYPE m_npcType = CardBase.NPC_TYPE.NPC_NONE;
 
     // Use this for initialization

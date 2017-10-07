@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CardBase : MonoBehaviour {
     public enum CARD_TYPE {
-        CARD_NPC_NONE,
+        CARD_NPC_NONE = 0,
         CARD_NPC_FOLLOWER_HEALER,
         CARD_NPC_FOLLOWER_KILLER,
         CARD_NPC_FOLLOWER_HEALER_AND_KILLER,
@@ -22,7 +22,6 @@ public class CardBase : MonoBehaviour {
         NPC_COUNT,
     }
 
-    public CARD_TYPE m_type = CARD_TYPE.CARD_NPC_NONE;
     public EnemyManager.ENEMY_TYPE m_enemyType = EnemyManager.ENEMY_TYPE.ENEMY_LINEAR;
     public NPC_TYPE m_npcType = NPC_TYPE.NPC_NONE;
 

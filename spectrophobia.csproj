@@ -154,6 +154,7 @@
     <Compile Include="Assets\source\util\CustomDictionaryTemplate.cs" />
     <Compile Include="Assets\source\util\pool\NetworkObjectConfig.cs" />
     <Compile Include="Assets\source\util\pool\NetworkObjectPool.cs" />
+    <Compile Include="Assets\source\util\pool\NetworkObjectPoolManager.cs" />
     <Compile Include="Assets\source\util\pool\ObjectPool.cs" />
     <Compile Include="Assets\source\util\shape\Polygon.cs" />
     <Compile Include="Assets\source\util\shape\Triangle.cs" />

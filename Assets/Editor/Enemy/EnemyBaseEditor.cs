@@ -26,7 +26,8 @@ public class EnemyBaseEditor : Editor
         m_explosionDelay_Prop,
         m_explosionDamage_Prop,
         m_points_Prop,
-        m_Team_Prop;
+        m_Team_Prop,
+        m_npcType_Prop;
 
     protected virtual void OnEnable()
     {
@@ -49,6 +50,7 @@ public class EnemyBaseEditor : Editor
         m_explosionDamage_Prop = serializedObject.FindProperty("m_explosionDamage");
         m_points_Prop = serializedObject.FindProperty("m_points");
         m_Team_Prop = serializedObject.FindProperty("m_team");
+        m_npcType_Prop = serializedObject.FindProperty("m_npcType");
     }
 
     public override void OnInspectorGUI()
@@ -106,6 +108,7 @@ public class EnemyBaseEditor : Editor
         }
         EditorGUILayout.PropertyField(m_points_Prop);
         EditorGUILayout.PropertyField(m_Team_Prop);
+        EditorGUILayout.PropertyField(m_npcType_Prop);
         serializedObject.ApplyModifiedProperties();
     }
 }
