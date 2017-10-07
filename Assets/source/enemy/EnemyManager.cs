@@ -101,18 +101,30 @@ public class EnemyManager : NetworkBehaviour{
 		if (GameManager.getInstance ().isGamePaused ())
 			return;
 
-		if (m_spawnEnemyCount < m_spawnCount) {
-			if (Time.time - m_lastSpawnTime > m_enemySpawnSpeed) {
-                CustomDebug.Log("Spawn Enemy");
-				m_lastSpawnTime = Time.time;
-				spawnEnemies ();
-			}
-		} else {
-			if (!m_isBossActive) {
-				m_isBossActive = true;
-				spawnBoss ();
-			}
-		}
+        if (GameManager.getInstance().isSinglePlayer())
+        {
+            if (m_spawnEnemyCount < m_spawnCount)
+            {
+                if (Time.time - m_lastSpawnTime > m_enemySpawnSpeed)
+                {
+                    CustomDebug.Log("Spawn Enemy");
+                    m_lastSpawnTime = Time.time;
+                    spawnEnemies();
+                }
+            }
+            else
+            {
+                if (!m_isBossActive)
+                {
+                    m_isBossActive = true;
+                    spawnBoss();
+                }
+            }
+        }
+        else if (GameManager.getInstance().isMultiplayer())
+        {
+
+        }
 
 	}
 
