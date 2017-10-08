@@ -146,7 +146,7 @@ public class EnemyManager : NetworkBehaviour{
         }
         else if (GameManager.getInstance().isMultiplayer())
         {
-            //if (m_spawnEnemyCount < m_spawnCount)
+            if (m_spawnEnemyCount < m_spawnCount)
             {
                 if (Time.time - m_lastSpawnTime > m_enemySpawnSpeed)
                 {

@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Runtime.CompilerServices;
 using UnityEngine.Networking;
-
+using System.Collections.Generic;
 
 public class EnemyBase : NetworkBehaviour {
     [System.Serializable]
@@ -12,7 +12,6 @@ public class EnemyBase : NetworkBehaviour {
         public float m_healFactor = 0.0f;
         public float m_damageFactor = 0.0f;
     }
-
 
     public Player.Player_Team Team
     {
@@ -73,6 +72,9 @@ public class EnemyBase : NetworkBehaviour {
     public NetworkInstanceId m_playerInstanceId;
 
     public float m_damage = 1.0f;
+
+    private List<Transform> m_NPCTargetList = new List<Transform>();
+
     // Special powers
     public enum SpecialPower
     {
@@ -155,6 +157,11 @@ public class EnemyBase : NetworkBehaviour {
         }
 
         updateSpecialPower();
+
+        if (GameManager.getInstance().isMultiplayer())
+        {
+            updateNPCTarget();
+        }
     }
 
     protected virtual void FixedUpdate()
@@ -653,6 +660,84 @@ public class EnemyBase : NetworkBehaviour {
         }
 
         return 0.0f;
+    }
+
+    public void checkForNPCTargets()
+    {
+        m_NPCTargetList.Clear();
+
+        if (isNPCHealer() || isNPCKiller())
+        {
+            List<Transform> targetList = Util.getTransformListWithLayer(LayerMask.NameToLayer("player"));
+            CustomDebug.Log("Player Target List Size : " + targetList.Count);
+            if (m_cardData.m_npcType == CardDataBase.NPC_TYPE.NPC_KILLER) // pick same team mate to kill
+            {
+                foreach (Transform trans in targetList)
+                {
+                    if (trans.gameObject.GetComponent<Player>().getTeam() == Team)
+                        m_NPCTargetList.Add(trans);
+                }
+            }
+
+            if (m_cardData.m_npcType == CardDataBase.NPC_TYPE.NPC_HEALER) // pick opponent to heal
+            {
+                foreach (Transform trans in targetList)
+                {
+                    if (trans.gameObject.GetComponent<Player>().getTeam() != Team)
+                        m_NPCTargetList.Add(trans);
+                }
+            }
+        }
+
+        if (isNPCArmy())
+        {
+            List<Transform> playerTargetList = Util.getTransformListWithLayer(LayerMask.NameToLayer("player"));
+            List<Transform> npcTargetList = Util.getTransformListWithLayer(LayerMask.NameToLayer("enemy"));
+
+            CustomDebug.Log("Player Target List Size : " + playerTargetList.Count);
+            CustomDebug.Log("NPC Target List Size : " + npcTargetList.Count);
+            foreach (Transform trans in playerTargetList)
+            {
+                if (trans.gameObject.GetComponent<Player>().getTeam() != Team)
+                    m_NPCTargetList.Add(trans);
+            }
+
+            foreach (Transform trans in npcTargetList)
+            {
+                if (trans.gameObject.GetComponent<EnemyBase>().Team != Team)
+                    m_NPCTargetList.Add(trans);
+            }
+        }
+    }
+
+    public void updateNPCTarget()
+    {
+        checkForNPCTargets();
+
+        Transform target = null;
+        float minDistance = 9999.0f;
+        CustomDebug.Log("Target List Size : " + m_NPCTargetList.Count);
+
+        foreach (Transform trans in m_NPCTargetList)
+        {
+            float distance = Vector3.Distance(trans.position, transform.position);
+            CustomDebug.Log("Distance from Target : " + distance);
+            if (minDistance > distance)
+            {
+                minDistance = distance;
+                target = trans;
+            }
+        }
+
+        if (target != null)
+        {
+            m_lookAt = target;
+            CustomDebug.Log("Target of :" + transform.name + " IS " + target.name);
+        }
+        else
+        {
+            CustomDebug.Log("Target is null");
+        }
     }
 }
 	
