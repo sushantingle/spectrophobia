@@ -75,6 +75,11 @@ public class EditorSpawnerEnemy : EnemyBaseEditor {
                     EditorGUILayout.PropertyField(m_changeTimeOffset_Prop);
                     EditorGUILayout.PropertyField(m_safeDistance_Prop);
                     break;
+
+                case EnemyManager.ENEMY_TYPE.ENEMY_FOLLOWER:
+                case EnemyManager.ENEMY_TYPE.ENEMY_FOLLOWER_SHOOTER:
+                    EditorGUILayout.PropertyField(m_safeDistance_Prop);
+                    break;
             }
 
             EditorGUILayout.PropertyField(m_childBulletType_Prop);

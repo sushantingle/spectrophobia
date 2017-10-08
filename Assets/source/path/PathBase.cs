@@ -34,6 +34,12 @@ public class PathBase {
         m_lookAt = _lookAt;
     }
 
+    public virtual void init(Transform _transform, float _speed, Transform _lookAt, float _distanceOffset)
+    {
+        init(_transform, _speed);
+        m_lookAt = _lookAt;
+    }
+
     public virtual void init(Transform _transform, float _speed, float _changeDirectionOffset)
     {
         init(_transform, _speed);

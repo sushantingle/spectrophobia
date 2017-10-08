@@ -18,6 +18,7 @@ public class SpawnerEnemy : EnemyBase {
     public float m_spawnTimeInterval;
     public SpawnCondition m_spawnCondition;
     public int m_spawnCount;
+    
     // random path enemy time offset
     public float m_changeTimeOffset;
 
@@ -191,7 +192,7 @@ public class SpawnerEnemy : EnemyBase {
                 child.GetComponent<EnemyBase>().setup(m_childSpeed, m_childHealth, m_childBulletType, m_childBulletPrefab, target, m_childBulletInterval, m_childBulletSpeed);
                 break;
             case EnemyManager.ENEMY_TYPE.ENEMY_FOLLOWER_SHOOTER:
-                child.GetComponent<FollowerEnemy>().setup(m_childSpeed, m_childHealth, target, m_childBulletType, m_childBulletPrefab, m_childBulletInterval, m_childBulletSpeed);
+                child.GetComponent<FollowerEnemy>().setup(m_childSpeed, m_childHealth, target, m_childBulletType,m_safeDistance, m_childBulletPrefab, m_childBulletInterval, m_childBulletSpeed);
                 break;
             case EnemyManager.ENEMY_TYPE.ENEMY_RANDOM:
                 child.GetComponent<RandomPathEnemy>().setup(m_childSpeed, m_childHealth, m_childChangeTimeOffset, m_childBulletType);
