@@ -13,7 +13,7 @@ public class BossDictionary : DictionaryTemplate<EnemyManager.BOSS_TYPE, GameObj
 public class IndicatorDictionary : DictionaryTemplate<Player.Player_Team, Material> { }
 
 [System.Serializable]
-public class CardDictionary : DictionaryTemplate<CardBase.CARD_TYPE, GameObject> { }
+public class CardDictionary : DictionaryTemplate<CardDataBase.CARD_TYPE, CardDataScriptableObject> { }
 
 public class EnemyManager : NetworkBehaviour{
 	public enum ENEMY_TYPE {
@@ -38,7 +38,7 @@ public class EnemyManager : NetworkBehaviour{
     public List<EnemyDictionary> m_enemyPrefabs; // TODO: use this dictionary and remove enemy prefab list
     
 	public List<BossDictionary> m_bossPrefabs;
-    public List<CardDictionary> m_cardPrefabs;
+    public List<CardDictionary> m_cardScriptableList;
 
 	public GameObject m_spawnAnim;
 	public int m_spawnCount = 1;
@@ -88,6 +88,24 @@ public class EnemyManager : NetworkBehaviour{
             }
         }
 
+        checkNPCCardData();
+    }
+
+    private void checkNPCCardData()
+    {
+        CustomDebug.Log("Check NPC Card Data");
+        for (int i = (int)CardDataBase.CARD_TYPE.CARD_NPC_FOLLOWER_HEALER; i < (int)CardDataBase.CARD_TYPE.CARD_NPC_COUNT; i++)
+        {
+            if (CardSaveData.m_cardDataList.ContainsKey((CardDataBase.CARD_TYPE)i) == false)
+            {
+                CustomDebug.Log("Data missing for Card : " + (CardDataBase.CARD_TYPE)i);
+                CardSaveData.m_cardDataList.Add((CardDataBase.CARD_TYPE)i, getCardPrefab((CardDataBase.CARD_TYPE)i).card);
+            }
+            else
+            {
+                CustomDebug.Log("Data present for Card : " + (CardDataBase.CARD_TYPE)i);
+            }
+        }
     }
 
     public void setPlayer(Transform player)
@@ -146,7 +164,7 @@ public class EnemyManager : NetworkBehaviour{
         for (int i = 0; i < m_spawnCount; i++)
         {
             int cardId = Random.Range(0, 100);
-            cardId = cardId % (int)m_cardPrefabs.Count;
+            cardId = Random.Range((int)CardDataBase.CARD_TYPE.CARD_NPC_FOLLOWER_HEALER, (int)CardDataBase.CARD_TYPE.CARD_NPC_COUNT);
 
             bool spawn = true;
             int count = 0;
@@ -158,8 +176,10 @@ public class EnemyManager : NetworkBehaviour{
                 float x = Random.Range(LevelManager.getInstance().getMinX(), LevelManager.getInstance().getMaxX());
                 float y = Random.Range(LevelManager.getInstance().getMinY(), LevelManager.getInstance().getMaxY());
                 Vector3 worldPos = new Vector3(x, y, 1.0f);
-                CustomDebug.Log("Card Type : " + (CardBase.CARD_TYPE)m_cardPrefabs[cardId]._key);
-                CardBase card = m_cardPrefabs[cardId]._value.GetComponent<CardBase>();
+                CardDataBase card = CardSaveData.m_cardDataList[(CardDataBase.CARD_TYPE)cardId];
+                //CardSaveData.m_cardDataList.TryGetValue((CardDataBase.CARD_TYPE)cardId, out card);
+                CustomDebug.Log("Card Type : " + (CardDataBase.CARD_TYPE)cardId);
+                
                 PolygonCollider2D polyCollider = getEnemyPrefab((ENEMY_TYPE)card.m_enemyType).GetComponent<PolygonCollider2D>();
                 if (polyCollider.bounds.Contains(worldPos))
                 {
@@ -167,7 +187,7 @@ public class EnemyManager : NetworkBehaviour{
                     continue;
                 }
                 
-                spawnNPC((ENEMY_TYPE)card.m_enemyType, card.m_npcType, worldPos, Quaternion.identity);
+                spawnNPC((ENEMY_TYPE)card.m_enemyType, card, worldPos, Quaternion.identity);
                 // TODO: set NPC type
                 spawn = false;
                 m_spawnEnemyCount++;
@@ -238,9 +258,9 @@ public class EnemyManager : NetworkBehaviour{
         return null;
     }
 
-    public GameObject getCardPrefab(CardBase.CARD_TYPE id)
+    public CardDataScriptableObject getCardPrefab(CardDataBase.CARD_TYPE id)
     {
-        var obj = m_cardPrefabs.Find(item => item._key == id);
+        var obj = m_cardScriptableList.Find(item => item._key == id);
         if (obj != null)
             return obj._value;
         return null;
@@ -265,12 +285,12 @@ public class EnemyManager : NetworkBehaviour{
         CustomDebug.Log("Spawned Enemy : " + enemyType);
    }
 
-    public void spawnNPC(ENEMY_TYPE enemyType, CardBase.NPC_TYPE npcType, Vector3 position, Quaternion rotation)
+    public void spawnNPC(ENEMY_TYPE enemyType, CardDataBase card, Vector3 position, Quaternion rotation)
     {
         GameObject target = getEnemyTarget(enemyType);
         NetworkInstanceId netId = target.GetComponent<NetworkIdentity>().netId;
         NetworkInstanceId parentNetId = m_networkEnemyManager.GetComponent<NetworkIdentity>().netId;
-        m_networkEnemyManager.Cmd_SpawnNPC(enemyType, ClanManager.getInstance().SelectedTeam, position, netId, parentNetId, npcType);
+        m_networkEnemyManager.Cmd_SpawnNPC(enemyType, ClanManager.getInstance().SelectedTeam, position, netId, parentNetId, card);
     }
     public GameObject getEnemyTarget(ENEMY_TYPE enemyType)
     {
@@ -444,7 +464,7 @@ public class EnemyManager : NetworkBehaviour{
         }
     }
     
-    public void CommandSpawnEnemy(ENEMY_TYPE type,Player.Player_Team team, Vector3 pos, NetworkInstanceId netId, NetworkInstanceId parentNetId, CardBase.NPC_TYPE npcType = CardBase.NPC_TYPE.NPC_NONE)
+    public void CommandSpawnEnemy(ENEMY_TYPE type,Player.Player_Team team, Vector3 pos, NetworkInstanceId netId, NetworkInstanceId parentNetId, CardDataBase card = null)
     {
         CustomDebug.Log("Command Spawn Enemy : " + netId.Value);
         GameObject obj = (GameObject)  GameManager.getInstance().getNetworkPool().Spawn(getEnemyPrefab(type), pos, Quaternion.identity);
@@ -452,7 +472,13 @@ public class EnemyManager : NetworkBehaviour{
         enemyBase.Team = team;
         enemyBase.m_playerInstanceId = netId;
         enemyBase.m_parentInstanceId = parentNetId;
-        enemyBase.m_npcType = npcType;
+        if (card == null)
+            enemyBase.m_npcType = CardDataBase.NPC_TYPE.NPC_NONE;
+        else
+        {
+            enemyBase.m_maxHealth = card.m_health;
+            enemyBase.m_npcType = card.m_npcType;
+        }
         //setupEnemy(type, obj);
         //NetworkServer.Spawn(obj);
     }

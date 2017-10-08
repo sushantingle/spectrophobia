@@ -16,10 +16,10 @@ public class NetworkEnemyManager : NetworkBehaviour {
 	}
 
     [Command]
-    public void Cmd_SpawnNPC(EnemyManager.ENEMY_TYPE type, Player.Player_Team team, Vector3 pos, NetworkInstanceId netId, NetworkInstanceId parentNetId, CardBase.NPC_TYPE npcType)
+    public void Cmd_SpawnNPC(EnemyManager.ENEMY_TYPE type, Player.Player_Team team, Vector3 pos, NetworkInstanceId netId, NetworkInstanceId parentNetId, CardDataBase card)
     {
         CustomDebug.Log("Command Spawn NPC");
-        EnemyManager.getInstance().CommandSpawnEnemy(type, team, pos, netId, parentNetId, npcType);
+        EnemyManager.getInstance().CommandSpawnEnemy(type, team, pos, netId, parentNetId, card);
     }
 
     [Command]

@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CardBase : MonoBehaviour {
+[System.Serializable]
+public class CardDataBase {
     public enum CARD_TYPE {
         CARD_NPC_NONE = 0,
         CARD_NPC_FOLLOWER_HEALER,
@@ -25,13 +26,9 @@ public class CardBase : MonoBehaviour {
     public EnemyManager.ENEMY_TYPE m_enemyType = EnemyManager.ENEMY_TYPE.ENEMY_LINEAR;
     public NPC_TYPE m_npcType = NPC_TYPE.NPC_NONE;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    public float m_healFactor = 0;
+    public float m_damageFactor = 0;
+
+    public float m_health = 5;
+
 }

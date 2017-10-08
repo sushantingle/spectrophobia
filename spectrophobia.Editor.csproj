@@ -135,6 +135,7 @@
   <ItemGroup>
     <Compile Include="Assets\Editor\CrossPlatformInput\CrossPlatformInputInitialize.cs" />
     <Compile Include="Assets\Editor\Enemy\boss\LinearBossEditor.cs" />
+    <Compile Include="Assets\Editor\Enemy\carddata\CardDataEditor.cs" />
     <Compile Include="Assets\Editor\Enemy\EnemyBaseEditor.cs" />
     <Compile Include="Assets\Editor\Enemy\FollowerEnemyEditor.cs" />
     <Compile Include="Assets\Editor\Enemy\LinearEnemyEditor.cs" />

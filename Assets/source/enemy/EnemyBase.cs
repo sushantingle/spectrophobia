@@ -87,7 +87,7 @@ public class EnemyBase : NetworkBehaviour {
     public NetworkInstanceId m_parentInstanceId = NetworkInstanceId.Invalid;
 
     [SyncVar]
-    public CardBase.NPC_TYPE m_npcType = CardBase.NPC_TYPE.NPC_NONE;
+    public CardDataBase.NPC_TYPE m_npcType = CardDataBase.NPC_TYPE.NPC_NONE;
 
     // Use this for initialization
     protected virtual void EStart() {
@@ -198,7 +198,7 @@ public class EnemyBase : NetworkBehaviour {
         m_path.init(transform, m_speed, lookAt);
     }
 
-    public virtual void setup(float speed, float health, BulletManager.BulletType bulletType = BulletManager.BulletType.BULLET_NONE, GameObject prefab = null, Transform lookAt = null, float bulletInterval = 0.0f, float bulletSpeed = 0.0f, CardBase.NPC_TYPE npcType = CardBase.NPC_TYPE.NPC_NONE)
+    public virtual void setup(float speed, float health, BulletManager.BulletType bulletType = BulletManager.BulletType.BULLET_NONE, GameObject prefab = null, Transform lookAt = null, float bulletInterval = 0.0f, float bulletSpeed = 0.0f, CardDataBase.NPC_TYPE npcType = CardDataBase.NPC_TYPE.NPC_NONE)
     {
         CustomDebug.Log("Setup 2");
         CustomDebug.Log("Base Speed : " + speed);

@@ -95,7 +95,9 @@
     <Compile Include="Assets\source\components\ProgressBar.cs" />
     <Compile Include="Assets\source\defines\PathtDefs.cs" />
     <Compile Include="Assets\source\enemy\boss\LinearBoss.cs" />
-    <Compile Include="Assets\source\enemy\cards\CardBase.cs" />
+    <Compile Include="Assets\source\enemy\cards\data\CardDataBase.cs" />
+    <Compile Include="Assets\source\enemy\cards\data\CardSaveData.cs" />
+    <Compile Include="Assets\source\enemy\cards\scriptableObjects\CardDataScriptableObject.cs" />
     <Compile Include="Assets\source\enemy\EnemyBase.cs" />
     <Compile Include="Assets\source\enemy\EnemyManager.cs" />
     <Compile Include="Assets\source\enemy\EnemySpawn.cs" />
@@ -140,6 +142,7 @@
     <Compile Include="Assets\source\test\BezierTest.cs" />
     <Compile Include="Assets\source\test\PlayerMovement.cs" />
     <Compile Include="Assets\source\test\ProjectileMotion.cs" />
+    <Compile Include="Assets\source\test\save\savetest.cs" />
     <Compile Include="Assets\source\test\shader\ShaderLinearScrollTest.cs" />
     <Compile Include="Assets\source\ui\MainMenu.cs" />
     <Compile Include="Assets\source\ui\MenuHeader.cs" />
