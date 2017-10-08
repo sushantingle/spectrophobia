@@ -7,6 +7,8 @@ using UnityEditor;
 public class EnemyBaseEditor : Editor
 {
 
+    EnemyBase enemyBase;
+
     public SerializedProperty
         m_speed_Prop,
         m_maxhealth_Prop,
@@ -27,11 +29,11 @@ public class EnemyBaseEditor : Editor
         m_explosionDamage_Prop,
         m_points_Prop,
         m_Team_Prop,
-        m_npcType_Prop,
         m_damage_Prop;
 
     protected virtual void OnEnable()
     {
+        enemyBase = (EnemyBase)target;
         m_speed_Prop = serializedObject.FindProperty("m_speed");
         m_maxhealth_Prop = serializedObject.FindProperty("m_maxHealth");
         m_bulletType_Prop = serializedObject.FindProperty("m_bulletType");
@@ -51,7 +53,6 @@ public class EnemyBaseEditor : Editor
         m_explosionDamage_Prop = serializedObject.FindProperty("m_explosionDamage");
         m_points_Prop = serializedObject.FindProperty("m_points");
         m_Team_Prop = serializedObject.FindProperty("m_team");
-        m_npcType_Prop = serializedObject.FindProperty("m_npcType");
         m_damage_Prop = serializedObject.FindProperty("m_damage");
     }
 
@@ -111,7 +112,10 @@ public class EnemyBaseEditor : Editor
         }
         EditorGUILayout.PropertyField(m_points_Prop);
         EditorGUILayout.PropertyField(m_Team_Prop);
-        EditorGUILayout.PropertyField(m_npcType_Prop);
+        //EditorGUILayout.PropertyField(m_cardData_Prop); // TODO: Property Drawer
+        enemyBase.m_cardData.m_npcType = (CardDataBase.NPC_TYPE)EditorGUILayout.EnumPopup("NpcType", enemyBase.m_cardData.m_npcType);
+        enemyBase.m_cardData.m_healFactor = EditorGUILayout.FloatField("Heal Factor", enemyBase.m_cardData.m_healFactor);
+        enemyBase.m_cardData.m_damageFactor = EditorGUILayout.FloatField("Damage Factor", enemyBase.m_cardData.m_damageFactor);
         serializedObject.ApplyModifiedProperties();
     }
 }
