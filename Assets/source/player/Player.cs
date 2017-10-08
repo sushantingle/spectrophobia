@@ -201,7 +201,7 @@ public class Player : NetworkBehaviour {
     // Collision callback
 	void OnTriggerEnter2D(Collider2D col)
 	{
-        return;
+        //return;
 		if (col.gameObject.layer == LayerMask.NameToLayer ("enemy")) {
             EnemyBase enemy = col.gameObject.GetComponent<EnemyBase>();
             if (GameManager.getInstance().isSinglePlayer())
@@ -256,20 +256,6 @@ public class Player : NetworkBehaviour {
         base.OnStartLocalPlayer();
 
         GameManager.getInstance().onStartLocalPlayer(gameObject);
-
-        if (GameManager.getInstance().isMultiplayer())
-        {
-            if (ClanManager.getInstance().SelectedTeam == Player_Team.TEAM_CT)
-            {
-                ClanManager.getInstance().onSpawnedCT(gameObject);
-                m_team = Player_Team.TEAM_CT;
-            }
-            else
-            {
-                ClanManager.getInstance().onSpawnedT(gameObject);
-                m_team = Player_Team.TEAM_T;
-            }
-        }
     }
 
     public override void OnStartClient()

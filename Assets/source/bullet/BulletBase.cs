@@ -133,6 +133,8 @@ public class BulletBase : MonoBehaviour
             {
                 if (enemy.m_lookAt != null)
                 {
+                    CustomDebug.Log("Target Team : " + enemy.m_lookAt.GetComponent<Player>().getTeam());
+                    CustomDebug.Log("NPC Team : " + enemy.Team);
                     if (enemy.m_lookAt.GetComponent<Player>().getTeam() == enemy.Team)
                         return CardDataBase.NPC_TYPE.NPC_KILLER;
                     else

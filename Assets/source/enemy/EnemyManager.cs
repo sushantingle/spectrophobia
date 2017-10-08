@@ -477,9 +477,14 @@ public class EnemyManager : NetworkBehaviour{
         else
         {
             enemyBase.m_maxHealth = card.m_health;
-            enemyBase.m_cardData.m_npcType = card.m_npcType;
+            EnemyBase.CardData cardData = new EnemyBase.CardData();
+            cardData.m_npcType = card.m_npcType;
+            cardData.m_healFactor = card.m_healFactor;
+            cardData.m_damageFactor = card.m_damageFactor;
+            enemyBase.m_cardData = cardData;
+            /*enemyBase.m_cardData.m_npcType = card.m_npcType;
             enemyBase.m_cardData.m_healFactor = card.m_healFactor;
-            enemyBase.m_cardData.m_damageFactor = card.m_damageFactor;
+            enemyBase.m_cardData.m_damageFactor = card.m_damageFactor;*/
         }
         //setupEnemy(type, obj);
         //NetworkServer.Spawn(obj);

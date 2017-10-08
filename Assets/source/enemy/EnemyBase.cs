@@ -98,7 +98,7 @@ public class EnemyBase : NetworkBehaviour {
     [SyncVar (hook = "OnSetParentInstanceId")]
     public NetworkInstanceId m_parentInstanceId = NetworkInstanceId.Invalid;
 
-    [SyncVar]
+    [SyncVar (hook = "OnSetCardData")]
     public CardData m_cardData;
 
     // Use this for initialization
@@ -329,7 +329,7 @@ public class EnemyBase : NetworkBehaviour {
                     return;
                 }
 
-                if (bulletBase.isNPCParentArmy() == false)
+                if (bulletBase.getParentNPCType() != CardDataBase.NPC_TYPE.NPC_ARMY)
                 {
                     CustomDebug.Log("Bullet parent is of type army");
                     return;
@@ -631,6 +631,14 @@ public class EnemyBase : NetworkBehaviour {
         m_parentInstanceId = netId;
     }
 
+    public void OnSetCardData(CardData card)
+    {
+        CustomDebug.Log("On Set Card Data");
+        m_cardData.m_npcType = card.m_npcType;
+        m_cardData.m_healFactor = card.m_healFactor;
+        m_cardData.m_damageFactor = card.m_damageFactor;
+    }
+
     public bool isNPCHealer()
     {
         return (m_cardData.m_npcType == CardDataBase.NPC_TYPE.NPC_HEALER || m_cardData.m_npcType == CardDataBase.NPC_TYPE.NPC_KILLER_AND_HEALER);
@@ -667,7 +675,7 @@ public class EnemyBase : NetworkBehaviour {
         m_NPCTargetList.Clear();
         
         List<Transform> targetList = Util.getTransformListWithLayer(LayerMask.NameToLayer("player"));
-        CustomDebug.Log("Player Target List Size : " + targetList.Count);
+        //CustomDebug.Log("Player Target List Size : " + targetList.Count);
         if (isNPCKiller()) // pick same team mate to kill
         {
             foreach (Transform trans in targetList)
@@ -697,8 +705,8 @@ public class EnemyBase : NetworkBehaviour {
             List<Transform> playerTargetList = Util.getTransformListWithLayer(LayerMask.NameToLayer("player"));
             List<Transform> npcTargetList = Util.getTransformListWithLayer(LayerMask.NameToLayer("enemy"));
 
-            CustomDebug.Log("Player Target List Size : " + playerTargetList.Count);
-            CustomDebug.Log("NPC Target List Size : " + npcTargetList.Count);
+            //CustomDebug.Log("Player Target List Size : " + playerTargetList.Count);
+            //CustomDebug.Log("NPC Target List Size : " + npcTargetList.Count);
             foreach (Transform trans in playerTargetList)
             {
                 if (trans.gameObject.GetComponent<NetworkTransform>().enabled)
@@ -727,12 +735,12 @@ public class EnemyBase : NetworkBehaviour {
 
         Transform target = null;
         float minDistance = 9999.0f;
-        CustomDebug.Log("Target List Size : " + m_NPCTargetList.Count);
+        //CustomDebug.Log("Target List Size : " + m_NPCTargetList.Count);
 
         foreach (Transform trans in m_NPCTargetList)
         {
             float distance = Vector3.Distance(trans.position, transform.position);
-            CustomDebug.Log("Distance from Target : " + distance);
+            //CustomDebug.Log("Distance from Target : " + distance);
             if (minDistance > distance)
             {
                 minDistance = distance;
