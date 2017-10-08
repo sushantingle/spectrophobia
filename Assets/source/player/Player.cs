@@ -152,6 +152,9 @@ public class Player : NetworkBehaviour {
 			GameManager.getInstance ().endGame ();
 		}
 
+        if (m_health > PlayerDefs.CONST_PLAYER_MAX_HEALTH)
+            m_health = PlayerDefs.CONST_PLAYER_MAX_HEALTH;
+        
         updateHealthBar();
 	}
 
@@ -197,10 +200,20 @@ public class Player : NetworkBehaviour {
     // Collision callback
 	void OnTriggerEnter2D(Collider2D col)
 	{
-        return;
+       
 		if (col.gameObject.layer == LayerMask.NameToLayer ("enemy")) {
             EnemyBase enemy = col.gameObject.GetComponent<EnemyBase>();
-			onDamage (enemy.m_damage);
+            if (GameManager.getInstance().isSinglePlayer())
+                onDamage(enemy.m_damage);
+            else if (GameManager.getInstance().isMultiplayer())
+            {
+                if (m_team == enemy.Team)
+                {
+                    CustomDebug.Log("Same Team Player and Enemy");
+                    return;
+                }
+                // TODO: Decide if touching other enemies will cause problem or not.
+            }
 		}
 
 		if (col.gameObject.layer == LayerMask.NameToLayer ("enemybullet")) {
@@ -216,7 +229,7 @@ public class Player : NetworkBehaviour {
                 if (parentNetId == NetworkInstanceId.Invalid)
                 {
                     CustomDebug.LogError("Bullet parent is missing");
-                    onDamage();
+                    onDamage(0.0f);
                 }
                 else
                 {
@@ -225,7 +238,7 @@ public class Player : NetworkBehaviour {
                         enemy = NetworkServer.FindLocalObject(parentNetId).GetComponent<EnemyBase>();
                     else
                         enemy = ClientScene.FindLocalObject(parentNetId).GetComponent<EnemyBase>();
-                    onDamage(enemy.m_damage);
+                    onDamage(enemy.getNPCDamageFor(m_team));
                 }
             }
 		}
@@ -288,5 +301,10 @@ public class Player : NetworkBehaviour {
         {
             ClanManager.getInstance().onSpawnedT(gameObject);
         }
+    }
+
+    public Player.Player_Team getTeam()
+    {
+        return m_team;
     }
 }

@@ -3,7 +3,16 @@ using System.Collections;
 using System.Runtime.CompilerServices;
 using UnityEngine.Networking;
 
+
 public class EnemyBase : NetworkBehaviour {
+    [System.Serializable]
+    public class CardData
+    {
+        public CardDataBase.NPC_TYPE m_npcType = CardDataBase.NPC_TYPE.NPC_NONE;
+        public float m_healFactor = 0.0f;
+        public float m_damageFactor = 0.0f;
+    }
+
 
     public Player.Player_Team Team
     {
@@ -88,7 +97,7 @@ public class EnemyBase : NetworkBehaviour {
     public NetworkInstanceId m_parentInstanceId = NetworkInstanceId.Invalid;
 
     [SyncVar]
-    public CardDataBase.NPC_TYPE m_npcType = CardDataBase.NPC_TYPE.NPC_NONE;
+    public CardData m_cardData;
 
     // Use this for initialization
     protected virtual void EStart() {
@@ -212,7 +221,7 @@ public class EnemyBase : NetworkBehaviour {
         m_bulletSpeed = bulletSpeed;
         m_bulletType = bulletType;
         m_lookAt = lookAt;
-        m_npcType = npcType;
+        m_cardData.m_npcType = npcType;
         m_path.init(transform, m_speed, m_lookAt);
     }
 
@@ -266,6 +275,12 @@ public class EnemyBase : NetworkBehaviour {
             }
 
             //Destroy(col.gameObject);
+            if (GameManager.getInstance().isMultiplayer() && bulletBase.getParentTeam() == Team)
+            {
+                CustomDebug.Log("Same Team. Ignore bullet collision");
+                return;
+            }
+
             BulletManager.getInstance().onDestroyBullet(col.gameObject);
 
             if (GameManager.getInstance().isMultiplayer() && isCustomLocalPlayer(col.gameObject) == false)
@@ -287,6 +302,54 @@ public class EnemyBase : NetworkBehaviour {
             if (m_specialPower == SpecialPower.POWER_AUTO_RECOVERY)
             {
                 m_lastHitTime = Time.time;
+            }
+        }
+
+        if (col.gameObject.layer == LayerMask.NameToLayer("enemyBullet"))
+        {
+            if (GameManager.getInstance().isMultiplayer())
+            {
+                BulletBase bulletBase = col.gameObject.GetComponent<BulletBase>();
+                if (bulletBase == null)
+                {
+                    CustomDebug.LogError("Not bullet");
+                    return;
+                }
+
+                if (GameManager.getInstance().isMultiplayer() && bulletBase.getParentTeam() == Team)
+                {
+                    CustomDebug.Log("Same Team. Ignore bullet collision");
+                    return;
+                }
+
+                if (bulletBase.isNPCParentArmy() == false)
+                {
+                    CustomDebug.Log("Bullet parent is of type army");
+                    return;
+                }
+
+                BulletManager.getInstance().onDestroyBullet(col.gameObject);
+
+                if (GameManager.getInstance().isMultiplayer() && isCustomLocalPlayer(col.gameObject) == false)
+                {
+                    CustomDebug.Log("Enemy Base Not a local player");
+                    return;
+                }
+
+                m_health--;
+                if (m_health <= 0)
+                {
+                    if (m_specialPower == SpecialPower.POWER_EXPLODE_ON_DEATH)
+                        StartCoroutine(invokeOnExplosion(m_explosionDelay));
+                    else
+                        onDeath();
+                }
+
+                // special Power
+                if (m_specialPower == SpecialPower.POWER_AUTO_RECOVERY)
+                {
+                    m_lastHitTime = Time.time;
+                }
             }
         }
     }
@@ -559,6 +622,37 @@ public class EnemyBase : NetworkBehaviour {
     {
         CustomDebug.Log("On set Parent Instance Id");
         m_parentInstanceId = netId;
+    }
+
+    public bool isNPCHealer()
+    {
+        return (m_cardData.m_npcType == CardDataBase.NPC_TYPE.NPC_HEALER || m_cardData.m_npcType == CardDataBase.NPC_TYPE.NPC_KILLER_AND_HEALER);
+    }
+
+    public bool isNPCKiller()
+    {
+        return (m_cardData.m_npcType == CardDataBase.NPC_TYPE.NPC_KILLER || m_cardData.m_npcType == CardDataBase.NPC_TYPE.NPC_KILLER_AND_HEALER);
+    }
+
+    public bool isNPCArmy()
+    {
+        return (m_cardData.m_npcType == CardDataBase.NPC_TYPE.NPC_ARMY);
+    }
+
+    public float getNPCDamageFor(Player.Player_Team team)
+    {
+        if (m_team == team)
+        {
+            if (isNPCHealer())
+                return -m_cardData.m_healFactor;
+        }
+        else
+        {
+            if (isNPCKiller() || isNPCArmy())
+                return m_cardData.m_damageFactor;
+        }
+
+        return 0.0f;
     }
 }
 	
