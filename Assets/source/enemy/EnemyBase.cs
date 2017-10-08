@@ -62,7 +62,8 @@ public class EnemyBase : NetworkBehaviour {
     protected PathBase m_path = null;
     [SyncVar (hook = "OnSetPlayerInstanceId")]
     public NetworkInstanceId m_playerInstanceId;
-    
+
+    public float m_damage = 1.0f;
     // Special powers
     public enum SpecialPower
     {

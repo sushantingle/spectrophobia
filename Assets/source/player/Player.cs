@@ -199,12 +199,35 @@ public class Player : NetworkBehaviour {
 	{
         return;
 		if (col.gameObject.layer == LayerMask.NameToLayer ("enemy")) {
-			onDamage ();
+            EnemyBase enemy = col.gameObject.GetComponent<EnemyBase>();
+			onDamage (enemy.m_damage);
 		}
 
 		if (col.gameObject.layer == LayerMask.NameToLayer ("enemybullet")) {
             BulletManager.getInstance().onDestroyBullet(col.gameObject);
-            onDamage ();
+            if (GameManager.getInstance().isSinglePlayer())
+            {
+                onDamage();
+            }
+            else if (GameManager.getInstance().isMultiplayer())
+            {
+                NetworkInstanceId parentNetId = col.gameObject.GetComponent<BulletBase>().getParentNetId();
+                CustomDebug.Log("Bullet Parent Net id :" + parentNetId.Value);
+                if (parentNetId == NetworkInstanceId.Invalid)
+                {
+                    CustomDebug.LogError("Bullet parent is missing");
+                    onDamage();
+                }
+                else
+                {
+                    EnemyBase enemy = null;
+                    if (GameManager.getInstance().isServer())
+                        enemy = NetworkServer.FindLocalObject(parentNetId).GetComponent<EnemyBase>();
+                    else
+                        enemy = ClientScene.FindLocalObject(parentNetId).GetComponent<EnemyBase>();
+                    onDamage(enemy.m_damage);
+                }
+            }
 		}
 	}
 
