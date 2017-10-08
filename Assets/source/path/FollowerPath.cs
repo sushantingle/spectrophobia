@@ -21,7 +21,7 @@ public class FollowerPath : PathBase {
 
     public override void update()
     {
-        if (m_transform == null)
+        if (m_transform == null || m_lookAt == null)
             return;
         base.update();
         if (Time.time - m_lastUpdateTick > m_updateTargetTick)

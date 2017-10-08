@@ -43,11 +43,10 @@ public class SineBullet : BulletBase {
 
     public void setup(Vector3 direction, float speed, float amplitude, NetworkInstanceId _parentNetId, float lifeStartPoint = Mathf.PI)
     {
-        m_direction = (direction == Vector3.zero) ? Vector3.right : direction;
-        m_speed = speed;
+        Vector3 dir = (direction == Vector3.zero) ? Vector3.right : direction;
+        base.setup(_parentNetId, dir, speed);
         m_amplitude = amplitude;
         m_life = lifeStartPoint;
-        m_parentNetId = _parentNetId;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

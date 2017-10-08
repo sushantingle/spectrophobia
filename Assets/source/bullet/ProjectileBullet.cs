@@ -62,6 +62,7 @@ public class ProjectileBullet : BulletBase {
     }
     public void setup(Direction d, float distance, float time, float gravity, float angle, NetworkInstanceId _parentNetId)
     {
+        base.setup(_parentNetId, Vector3.zero, 0.0f);
         m_projDirection = d;
         m_maxdistance = distance;
         m_maxtime = time;

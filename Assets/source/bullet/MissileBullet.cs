@@ -39,9 +39,8 @@ public class MissileBullet : BulletBase {
 
     public void setup(Transform _target, float _speed, NetworkInstanceId _parentNetId)
     {
+        base.setup(_parentNetId, Vector3.zero, _speed);
         m_target = _target;
-        m_speed = _speed;
-        m_parentNetId = _parentNetId;
         generateCurve();
     }
 

@@ -16,7 +16,7 @@ public class Player : NetworkBehaviour {
     }
 
     [SyncVar(hook = "OnSetTeam")]
-    private Player_Team m_team = Player_Team.TEAM_NONE;
+    public Player_Team m_team = Player_Team.TEAM_NONE;
     public float 		m_speed 		= 0.1f;
 	public 	float 		m_fireInterval 	= 0.5f;
     public float        m_bulletSpeed   = 0.1f;
@@ -164,6 +164,7 @@ public class Player : NetworkBehaviour {
     }
 	public void onStartGame() {
         resetPlayer();
+        m_team = ClanManager.getInstance().SelectedTeam;
     }
 
     public void onResumeGame()
@@ -200,7 +201,7 @@ public class Player : NetworkBehaviour {
     // Collision callback
 	void OnTriggerEnter2D(Collider2D col)
 	{
-       
+        return;
 		if (col.gameObject.layer == LayerMask.NameToLayer ("enemy")) {
             EnemyBase enemy = col.gameObject.GetComponent<EnemyBase>();
             if (GameManager.getInstance().isSinglePlayer())

@@ -90,6 +90,7 @@
     <Compile Include="Assets\source\bullet\MissileBullet.cs" />
     <Compile Include="Assets\source\bullet\online\OnlineBulletManager.cs" />
     <Compile Include="Assets\source\bullet\ProjectileBullet.cs" />
+    <Compile Include="Assets\source\bullet\Scriptable\BulletColorScriptablePObj.cs" />
     <Compile Include="Assets\source\bullet\SineBullet.cs" />
     <Compile Include="Assets\source\components\CameraFollower.cs" />
     <Compile Include="Assets\source\components\ProgressBar.cs" />
