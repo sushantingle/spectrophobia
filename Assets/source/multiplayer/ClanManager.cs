@@ -65,12 +65,15 @@ public class ClanManager : NetworkBehaviour {
         ClientScene.AddPlayer(0);
         /*if (GameManager.getInstance().isSinglePlayer())
             
-        else*/ if (GameManager.getInstance().isMultiplayer())
+        else*/
+#if ENABLE_MULTIPLAYER
+        if (GameManager.getInstance().isMultiplayer())
         {
             CustomDebug.Log("Push Team selection");
 
             //StateManager.getInstance().pushState(StateManager.MenuState.STATE_TEAM_SELECTION);
         }
+#endif
     }
 
     public void OnClientDisconnect()

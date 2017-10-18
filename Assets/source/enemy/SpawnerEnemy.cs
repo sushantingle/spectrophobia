@@ -154,6 +154,7 @@ public class SpawnerEnemy : EnemyBase {
                 setupChild(m_spawnType, child, GameManager.getInstance().m_player.transform);
                 EnemyManager.getInstance().onCustomEnemySpawned(child);
             }
+#if ENABLE_MULTIPLAYER
             else if (GameManager.getInstance().isMultiplayer())
             {
                 NetworkInstanceId parentNetId = gameObject.GetComponent<NetworkIdentity>().netId;
@@ -161,6 +162,7 @@ public class SpawnerEnemy : EnemyBase {
                 Vector3 pos = transform.position + (new Vector3(xDir, yDir, 0.0f) * spawnDist);
                 EnemyManager.getInstance().getNetworkEnemyManager().Cmd_spawnSpawnerChild(parentNetId, m_spawnType, pos, targetNetId);
             }
+#endif
         }
     }
 

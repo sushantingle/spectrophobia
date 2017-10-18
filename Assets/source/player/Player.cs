@@ -201,11 +201,12 @@ public class Player : NetworkBehaviour {
     // Collision callback
 	void OnTriggerEnter2D(Collider2D col)
 	{
-        //return;
+        return;
 		if (col.gameObject.layer == LayerMask.NameToLayer ("enemy")) {
             EnemyBase enemy = col.gameObject.GetComponent<EnemyBase>();
             if (GameManager.getInstance().isSinglePlayer())
                 onDamage(enemy.m_damage);
+#if ENABLE_MULTIPLAYER
             else if (GameManager.getInstance().isMultiplayer())
             {
                 if (m_team == enemy.Team)
@@ -215,7 +216,8 @@ public class Player : NetworkBehaviour {
                 }
                 // TODO: Decide if touching other enemies will cause problem or not.
             }
-		}
+#endif
+        }
 
 		if (col.gameObject.layer == LayerMask.NameToLayer ("enemybullet")) {
             BulletManager.getInstance().onDestroyBullet(col.gameObject);
@@ -223,6 +225,7 @@ public class Player : NetworkBehaviour {
             {
                 onDamage();
             }
+#if ENABLE_MULTIPLAYER
             else if (GameManager.getInstance().isMultiplayer())
             {
                 NetworkInstanceId parentNetId = col.gameObject.GetComponent<BulletBase>().getParentNetId();
@@ -242,7 +245,8 @@ public class Player : NetworkBehaviour {
                     onDamage(enemy.getNPCDamageFor(m_team));
                 }
             }
-		}
+#endif
+        }
 	}
 
     public void damageInRange(Vector3 position, float range, float damage)

@@ -142,8 +142,10 @@ public class EnemyBase : NetworkBehaviour {
     protected virtual void Update() {
         if (GameManager.getInstance().isGamePaused())
             return;
+#if ENABLE_MULTIPLAYER
         if (GameManager.getInstance().isMultiplayer() && !GameManager.getInstance().isServer())
             return;
+#endif
 
         EUpdate();
     }
@@ -157,11 +159,12 @@ public class EnemyBase : NetworkBehaviour {
         }
 
         updateSpecialPower();
-
+#if ENABLE_MULTIPLAYER
         if (GameManager.getInstance().isMultiplayer())
         {
             updateNPCTarget();
         }
+#endif
     }
 
     protected virtual void FixedUpdate()
@@ -176,9 +179,10 @@ public class EnemyBase : NetworkBehaviour {
     {
         if (GameManager.getInstance().isGamePaused())
             return;
-
+#if ENABLE_MULTIPLAYER
         if (GameManager.getInstance().isMultiplayer() && !GameManager.getInstance().isServer())
             return;
+#endif
 
         int layermask = 1 << LayerMask.NameToLayer("wall");
         //layermask = ~layermask;
@@ -282,20 +286,22 @@ public class EnemyBase : NetworkBehaviour {
             }
 
             //Destroy(col.gameObject);
+#if ENABLE_MULTIPLAYER
             if (GameManager.getInstance().isMultiplayer() && bulletBase.getParentTeam() == Team)
             {
                 CustomDebug.Log("Same Team. Ignore bullet collision");
                 return;
             }
+#endif
 
             BulletManager.getInstance().onDestroyBullet(col.gameObject);
-
+#if ENABLE_MULTIPLAYER
             if (GameManager.getInstance().isMultiplayer() && isCustomLocalPlayer(col.gameObject) == false)
             {
                 CustomDebug.Log("Enemy Base Not a local player");
                 return;
             }
-
+#endif
             m_health--;
             if (m_health <= 0)
             {
@@ -314,6 +320,7 @@ public class EnemyBase : NetworkBehaviour {
 
         if (col.gameObject.layer == LayerMask.NameToLayer("enemyBullet"))
         {
+#if ENABLE_MULTIPLAYER
             if (GameManager.getInstance().isMultiplayer())
             {
                 BulletBase bulletBase = col.gameObject.GetComponent<BulletBase>();
@@ -358,6 +365,7 @@ public class EnemyBase : NetworkBehaviour {
                     m_lastHitTime = Time.time;
                 }
             }
+#endif
         }
     }
 
@@ -391,6 +399,7 @@ public class EnemyBase : NetworkBehaviour {
 
     private bool isCustomLocalPlayer(GameObject bullet = null)
     {
+#if ENABLE_MULTIPLAYER
         if (GameManager.getInstance().isMultiplayer())
         {
             //return GameManager.getInstance().isServer();
@@ -439,7 +448,7 @@ public class EnemyBase : NetworkBehaviour {
                 }
             }
         }
-
+#endif
         return true;
     }
 

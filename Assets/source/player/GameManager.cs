@@ -134,8 +134,10 @@ public class GameManager : MonoBehaviour {
         EnemyManager.getInstance().preload();
         if (isSinglePlayer())
             startGame();
+#if ENABLE_MULTIPLAYER
         else if (isMultiplayer())
             StateManager.getInstance().pushState(StateManager.MenuState.STATE_TEAM_SELECTION);
+#endif
     }
 
     private void startGame()

@@ -79,7 +79,13 @@ public class EnemyManager : NetworkBehaviour{
             {
                 ObjectPool.Preload(obj._value, m_preloadCount);
             }
+
+            foreach (var obj in m_bossPrefabs)
+            {
+                ObjectPool.Preload(obj._value, m_preloadCount);
+            }
         }
+#if ENABLE_MULTIPLAYER
         else if (GameManager.getInstance().isMultiplayer())
         {
             foreach (var obj in m_enemyPrefabs)
@@ -87,7 +93,7 @@ public class EnemyManager : NetworkBehaviour{
                 GameManager.getInstance().getNetworkPool().Preload(obj._value, m_preloadCount);
             }
         }
-
+#endif
         checkNPCCardData();
     }
 
@@ -144,6 +150,7 @@ public class EnemyManager : NetworkBehaviour{
                 }
             }
         }
+#if ENABLE_MULTIPLAYER
         else if (GameManager.getInstance().isMultiplayer())
         {
             if (m_spawnEnemyCount < m_spawnCount)
@@ -156,7 +163,7 @@ public class EnemyManager : NetworkBehaviour{
                 }
             }
         }
-
+#endif
     }
 
     public void spawnNPCs()
@@ -269,6 +276,7 @@ public class EnemyManager : NetworkBehaviour{
 	public void spawnEnemy(ENEMY_TYPE enemyType, Vector3 position, Quaternion rotation)
 	{
         GameObject e = null;
+#if ENABLE_MULTIPLAYER
         if (GameManager.getInstance().isMultiplayer())
         {
             GameObject target = getEnemyTarget(enemyType);
@@ -276,7 +284,9 @@ public class EnemyManager : NetworkBehaviour{
             NetworkInstanceId parentNetId = m_networkEnemyManager.GetComponent<NetworkIdentity>().netId;
             m_networkEnemyManager.Cmd_SpawnEnemy(enemyType, ClanManager.getInstance().SelectedTeam, position, netId, parentNetId);
         }
-        else if (GameManager.getInstance().isSinglePlayer())
+        else
+#endif
+        if (GameManager.getInstance().isSinglePlayer())
         {
             e = (GameObject)ObjectPool.Spawn(getEnemyPrefab(enemyType), position, rotation);
             m_spawnedEnemyList.Add(e);
@@ -445,8 +455,8 @@ public class EnemyManager : NetworkBehaviour{
 					}
 				}*/
             //spawnEnemy ((ENEMY_TYPE)enemyId, worldPos, Quaternion.identity);
-                
-                if (GameManager.getInstance().isMultiplayer())
+#if ENABLE_MULTIPLAYER
+            if (GameManager.getInstance().isMultiplayer())
                 {
                     BOSS_TYPE type = (BOSS_TYPE)bossId;
                     GameObject target = getEnemyTarget(type);
@@ -454,7 +464,9 @@ public class EnemyManager : NetworkBehaviour{
                     NetworkInstanceId parentNetId = m_networkEnemyManager.GetComponent<NetworkIdentity>().netId;
                     m_networkEnemyManager.Cmd_SpawnBoss(type, ClanManager.getInstance().SelectedTeam, worldPos, netId, parentNetId);
                 }
-                else if (GameManager.getInstance().isSinglePlayer())
+                else
+#endif
+                if (GameManager.getInstance().isSinglePlayer())
                 {
                     GameObject e = (GameObject)ObjectPool.Spawn(getBossPrefab((BOSS_TYPE)bossId), worldPos, Quaternion.identity);
                     m_spawnedEnemyList.Add(e);
@@ -523,10 +535,12 @@ public class EnemyManager : NetworkBehaviour{
                 ObjectPool.Despawn(obj);
             }
         }
+#if ENABLE_MULTIPLAYER
         else if (GameManager.getInstance().isMultiplayer())
         {
             // TODO : remove spawned enemy list
         }
+#endif
 
         m_spawnedEnemyList.Clear();
         m_player = null;

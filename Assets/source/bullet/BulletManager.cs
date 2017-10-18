@@ -72,8 +72,10 @@ public class BulletManager : NetworkBehaviour {
         {
             if(GameManager.getInstance().isSinglePlayer())
                 Local_LinearBullet(_type, layer, _spawner.position, _direction, _speed, _parentNetId);
-            else if(GameManager.getInstance().isMultiplayer())
+#if ENABLE_MULTIPLAYER
+            else if (GameManager.getInstance().isMultiplayer())
                 m_onlineBulletManager.Cmd_LinearBullet(_type, layer, _spawner.position, _direction, _speed, _parentNetId);
+#endif
         }
     }
 
@@ -85,19 +87,23 @@ public class BulletManager : NetworkBehaviour {
 
             if (GameManager.getInstance().isSinglePlayer())
                 Local_LinearBullet(_type, layer, _spawner.position, _direction, _speed, _parentNetId);
+#if ENABLE_MULTIPLAYER
             else if (GameManager.getInstance().isMultiplayer())
                 m_onlineBulletManager.Cmd_LinearBullet(_type, layer, _spawner.position, _direction, _speed, _parentNetId);
+#endif
         }
         else if (_type == BulletType.BULLET_MISSILE)
         {
             if (GameManager.getInstance().isSinglePlayer())
                 Local_MissileBullet(_type, layer, _spawner.position, _lookAt, _speed, _parentNetId);
+#if ENABLE_MULTIPLAYER
             else if (GameManager.getInstance().isMultiplayer())
             {
                 NetworkIdentity netIdentity =_lookAt.GetComponent<NetworkIdentity>();
                 if(netIdentity != null) // This is network object
                     m_onlineBulletManager.Cmd_MissileBullet(_type, layer, _spawner.position, netIdentity.netId, _speed, _parentNetId);
             }
+#endif
         }
     }
 
@@ -133,8 +139,10 @@ public class BulletManager : NetworkBehaviour {
 
             if (GameManager.getInstance().isSinglePlayer())
                 Local_LinearBullet(_type, layer, _spawner.position, newDirection.normalized, _speed, _parentNetId);
-            else if(GameManager.getInstance().isMultiplayer())
+#if ENABLE_MULTIPLAYER
+            else if (GameManager.getInstance().isMultiplayer())
                 m_onlineBulletManager.Cmd_LinearBullet(_type, layer, _spawner.position, newDirection.normalized, _speed, _parentNetId);
+#endif
             angle += angleFactor;
         }
     }
@@ -145,10 +153,12 @@ public class BulletManager : NetworkBehaviour {
         {
             Local_ProjectileBullet(_type, layer, _spawner.position, _direction, _distance, _time, _gravity, _angle, _parentNetId);
         }
+#if ENABLE_MULTIPLAYER
         else if (GameManager.getInstance().isMultiplayer())
         {
             m_onlineBulletManager.Cmd_ProjectileBullet(_type, layer, _spawner.position, _direction, _distance, _time, _gravity, _angle, _parentNetId);
         }
+#endif
     }
 
     // for projectile bullet 4
@@ -162,6 +172,7 @@ public class BulletManager : NetworkBehaviour {
             Local_ProjectileBullet(_type, layer, _spawner.position, ProjectileBullet.Direction.DIRECTION_LEFT, _distance, _time, _gravity, _angle, _parentNetId);
             Local_ProjectileBullet(_type, layer, _spawner.position, ProjectileBullet.Direction.DIRECTION_LEFT, _distance + 1.0f, _time, _gravity - 1.0f, _angle + 10.0f, _parentNetId);
         }
+#if ENABLE_MULTIPLAYER
         else if (GameManager.getInstance().isMultiplayer())
         {
             m_onlineBulletManager.Cmd_ProjectileBullet(_type, layer, _spawner.position, ProjectileBullet.Direction.DIRECTION_RIGHT, _distance, _time, _gravity, _angle, _parentNetId);
@@ -170,6 +181,7 @@ public class BulletManager : NetworkBehaviour {
             m_onlineBulletManager.Cmd_ProjectileBullet(_type, layer, _spawner.position, ProjectileBullet.Direction.DIRECTION_LEFT, _distance, _time, _gravity, _angle, _parentNetId);
             m_onlineBulletManager.Cmd_ProjectileBullet(_type, layer, _spawner.position, ProjectileBullet.Direction.DIRECTION_LEFT, _distance + 1.0f, _time, _gravity - 1.0f, _angle + 10.0f, _parentNetId);
         }
+#endif
     }
 
     // for Sine / Spiral
@@ -179,8 +191,10 @@ public class BulletManager : NetworkBehaviour {
         {
             if (GameManager.getInstance().isSinglePlayer())
                 Local_SineBullet(_type, layer, _spawner.position, _direction, _speed, _amplitude, _parentNetId, _startPoint);
+#if ENABLE_MULTIPLAYER
             else if (GameManager.getInstance().isMultiplayer())
                 m_onlineBulletManager.Cmd_SineBullet(_type, layer, _spawner.position, _direction, _speed, _amplitude, _parentNetId, _startPoint);
+#endif
         }
         else if (_type == BulletType.BULLET_SPIRAL)
         {
