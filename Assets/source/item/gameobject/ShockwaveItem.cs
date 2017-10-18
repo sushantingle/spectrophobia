@@ -8,7 +8,7 @@ public class ShockwaveItem : ItemBase {
     protected override void Start()
     {
         base.Start();
-        m_type = ItemManager.ITEM_TYPE.ITEM_SHOCKWAVE;
+        m_type = ItemManager.ITEM_TYPE.ITEM_C;
     }
 
     protected override void Update()

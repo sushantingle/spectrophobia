@@ -19,10 +19,10 @@ public class ItemManager : MonoBehaviour {
 		ITEM_CANDY,
 		ITEM_INVINCIBLE,
 		ITEM_LIFE,
-		ITEM_GRANDPA,
-        ITEM_SHOCKWAVE,
-        ITEM_S_BULLET,
-        ITEM_BULLET_SPEED,
+		ITEM_D, // Spiral Bullet
+        ITEM_C, // Shockwave
+        ITEM_S, // 4 bullets
+        ITEM_A, // increase bullet speed
 		ITEM_COUNT,
 	}
     
@@ -61,7 +61,7 @@ public class ItemManager : MonoBehaviour {
         {
             switch (itemData.getItemType())
             {
-                case ITEM_TYPE.ITEM_GRANDPA:
+                case ITEM_TYPE.ITEM_D:
                     itemData.update();
                     break;
                 case ITEM_TYPE.ITEM_INVINCIBLE:
@@ -149,11 +149,16 @@ public class ItemManager : MonoBehaviour {
                         ItemDefs.addItem(ItemDefs.ItemType.ITEM_ID_CANDY, candyItem.m_count);
                     }
                     break;
-                case ITEM_TYPE.ITEM_GRANDPA:
+                case ITEM_TYPE.ITEM_D:
                     {
                         BaseItemData itemData = new BaseItemData();
-                        itemData.init(ITEM_TYPE.ITEM_GRANDPA);
-                        if (!hasItemActive(ITEM_TYPE.ITEM_GRANDPA))
+                        itemData.init(ITEM_TYPE.ITEM_D);
+
+                        //remove S power
+                        if (hasItemActive(ITEM_TYPE.ITEM_S))
+                            removeItem(ITEM_TYPE.ITEM_S);
+
+                        if (!hasItemActive(ITEM_TYPE.ITEM_D))
                             m_ownedItemList.Add(itemData);
                     }
                     break;
@@ -172,21 +177,27 @@ public class ItemManager : MonoBehaviour {
                         CustomDebug.Log("Collected Life : "+ lifeItem.m_life);
                     }
                     break;
-                case ITEM_TYPE.ITEM_SHOCKWAVE:
+                case ITEM_TYPE.ITEM_C:
                     {
                         EnemyManager.getInstance().onShockwaveCollected((itemObj as ShockwaveItem).m_damage);
                     }
                     break;
-                case ITEM_TYPE.ITEM_BULLET_SPEED:
+                case ITEM_TYPE.ITEM_A:
                     {
-                        GameManager.getInstance().m_player.collectedSpeedBullet(0.1f);
+                        BulletSpeedItem speedItem = (BulletSpeedItem)itemObj;
+                        GameManager.getInstance().m_player.collectedSpeedBullet(speedItem.m_speedFactor);
                     }
                     break;
-                case ITEM_TYPE.ITEM_S_BULLET:
+                case ITEM_TYPE.ITEM_S:
                     {
                         BaseItemData itemData = new BaseItemData();
-                        itemData.init(ITEM_TYPE.ITEM_S_BULLET);
-                        if(!hasItemActive(ITEM_TYPE.ITEM_S_BULLET))
+                        itemData.init(ITEM_TYPE.ITEM_S);
+
+                        // if has D power, then remove it
+                        if (hasItemActive(ITEM_TYPE.ITEM_D))
+                            removeItem(ITEM_TYPE.ITEM_D);
+
+                        if(!hasItemActive(ITEM_TYPE.ITEM_S))
                             m_ownedItemList.Add(itemData);
                     }
                     break;

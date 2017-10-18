@@ -119,17 +119,25 @@ public class Player : NetworkBehaviour {
 		m_hitLeft = (hitLeft.collider != null);
 
 	}
-	
+
     // Fire bullet	
-	void fireBullet(Vector3 direction) {
+    void fireBullet(Vector3 direction) {
         int layer = LayerMask.NameToLayer("playerbullet");
         NetworkInstanceId parentNetId = GetComponent<NetworkIdentity>().netId;
 
-        BulletManager.getInstance().initBullet(BulletManager.BulletType.BULLET_LINEAR, layer, transform, direction, m_bulletSpeed, parentNetId);
-        if (ItemManager.getInstance().hasItemActive(ItemManager.ITEM_TYPE.ITEM_S_BULLET))
+        if (ItemManager.getInstance().hasItemActive(ItemManager.ITEM_TYPE.ITEM_S))
         {
             BulletManager.getInstance().initBullet(BulletManager.BulletType.BULLET_LINEAR_N_PI, layer, transform, direction, m_bulletSpeed, 4, parentNetId);
         }
+        else if (ItemManager.getInstance().hasItemActive(ItemManager.ITEM_TYPE.ITEM_D))
+        {
+            BulletManager.getInstance().initBullet(BulletManager.BulletType.BULLET_SPIRAL, layer, transform, direction, m_bulletSpeed, 1, parentNetId);
+        }
+        else
+        {
+            BulletManager.getInstance().initBullet(BulletManager.BulletType.BULLET_LINEAR, layer, transform, direction, m_bulletSpeed, parentNetId);
+        }
+
 		m_lastFireTime = Time.time;
 	}
 
@@ -138,12 +146,6 @@ public class Player : NetworkBehaviour {
         // check if player has invincible power
 		if (ItemManager.getInstance ().hasItemActive (ItemManager.ITEM_TYPE.ITEM_INVINCIBLE))
 			return;
-
-        // check if player own grandpa item, if yes, then remove it and do not update health
-		if (ItemManager.getInstance ().hasItemActive (ItemManager.ITEM_TYPE.ITEM_GRANDPA)) {
-            ItemManager.getInstance ().removeItem (ItemManager.ITEM_TYPE.ITEM_GRANDPA);
-			return;
-		}
 
         // update player's health
 		m_health -= damage;
