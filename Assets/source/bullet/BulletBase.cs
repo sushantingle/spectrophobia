@@ -35,15 +35,16 @@ public class BulletBase : MonoBehaviour
         m_direction = direction;
         m_speed = speed;
         m_parentNetId = parentNetId;
-
+        #if ENABLE_MULTIPLAYER
         if (GameManager.getInstance().isMultiplayer())
-        {
-            CardDataBase.NPC_TYPE npcType = getParentNPCType();
-            if (npcType != CardDataBase.NPC_TYPE.NPC_NONE)
-                GetComponent<SpriteRenderer>().material = m_bulletColorScriptableObj.getMaterialOf(npcType);
-            else
-                CustomDebug.Log("Not valid NPC Type");
-        }
+            {
+                CardDataBase.NPC_TYPE npcType = getParentNPCType();
+                if (npcType != CardDataBase.NPC_TYPE.NPC_NONE)
+                    GetComponent<SpriteRenderer>().material = m_bulletColorScriptableObj.getMaterialOf(npcType);
+                else
+                    CustomDebug.Log("Not valid NPC Type");
+            }
+        #endif
     }
 
     // Update is called once per frame
