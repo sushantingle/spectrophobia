@@ -15,6 +15,7 @@ public class StateManager : MonoBehaviour {
         STATE_MULTIPLAYER,
         STATE_TEAM_SELECTION,
         STATE_WAITING_FOR_PLAYER,
+        STATE_SETTINGS,
     }
 
     private static StateManager m_instance;

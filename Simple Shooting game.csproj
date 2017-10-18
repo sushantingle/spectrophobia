@@ -139,6 +139,7 @@
     <Compile Include="Assets\source\path\RandomPath.cs" />
     <Compile Include="Assets\source\path\RunawayPath.cs" />
     <Compile Include="Assets\source\player\GameManager.cs" />
+    <Compile Include="Assets\source\player\GameSettings.cs" />
     <Compile Include="Assets\source\player\Player.cs" />
     <Compile Include="Assets\source\player\PlayerDefs.cs" />
     <Compile Include="Assets\source\test\BezierTest.cs" />
@@ -152,6 +153,7 @@
     <Compile Include="Assets\source\ui\PauseMenu.cs" />
     <Compile Include="Assets\source\ui\ResultMenu.cs" />
     <Compile Include="Assets\source\ui\RetryMenu.cs" />
+    <Compile Include="Assets\source\ui\SettingsMenu.cs" />
     <Compile Include="Assets\source\ui\StateManager.cs" />
     <Compile Include="Assets\source\ui\TeamSelection.cs" />
     <Compile Include="Assets\source\util\BezierCurve.cs" />

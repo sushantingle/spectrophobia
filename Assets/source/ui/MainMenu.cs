@@ -42,4 +42,9 @@ public class MainMenu : MonoBehaviour {
 
         StateManager.getInstance().pushState(StateManager.MenuState.STATE_MULTIPLAYER);
     }
+
+    public void onClickSettings()
+    {
+        StateManager.getInstance().pushState(StateManager.MenuState.STATE_SETTINGS);
+    }
 }

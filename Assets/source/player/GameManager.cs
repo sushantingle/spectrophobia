@@ -78,12 +78,6 @@ public class GameManager : MonoBehaviour {
         m_isPaused = value;
     }
 
-    public void OnGUI()
-    {
-        if (GUI.Button(new Rect(new Vector2(10, 10), new Vector2(100,50)), "Candy"))
-            ItemManager.getInstance().collectedCandy(5);
-    }
-
     public void addScore(int score)
     {
         m_globalScore += score * m_xp;
@@ -133,7 +127,10 @@ public class GameManager : MonoBehaviour {
         m_networkObjectPool = m_player.GetComponent<NetworkObjectPool>();
         EnemyManager.getInstance().preload();
         if (isSinglePlayer())
+        {
+            m_player.m_autoAim = GameSettings.m_autoAim;
             startGame();
+        }
 #if ENABLE_MULTIPLAYER
         else if (isMultiplayer())
             StateManager.getInstance().pushState(StateManager.MenuState.STATE_TEAM_SELECTION);
