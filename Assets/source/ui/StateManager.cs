@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public class StateDictionary : DictionaryTemplate<StateManager.MenuState, GameObject> { }
 
 public class StateManager : MonoBehaviour {
 
@@ -21,7 +23,7 @@ public class StateManager : MonoBehaviour {
     private static StateManager m_instance;
     private MenuState           m_currentStateId = MenuState.STATE_NONE;
 
-    public List<GameObject> m_stateArray;
+    public List<StateDictionary> m_stateArray;
 
     public static StateManager getInstance()
     {
@@ -51,11 +53,20 @@ public class StateManager : MonoBehaviour {
     public void pushState(MenuState state)
     {
         if(m_currentStateId != MenuState.STATE_NONE)
-            m_stateArray[(int)m_currentStateId].SetActive(false);
+            getStateObject(m_currentStateId).SetActive(false);
 
         if(state != MenuState.STATE_NONE)
-            m_stateArray[(int)state].SetActive(true);
+            getStateObject(state).SetActive(true);
 
         m_currentStateId = state;
     }
+
+    public GameObject getStateObject(MenuState id)
+    {
+        var obj = m_stateArray.Find(item => item._key == id);
+        if (obj != null)
+            return obj._value;
+        return null;
+    }
+
 }
