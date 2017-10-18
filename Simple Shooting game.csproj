@@ -94,6 +94,7 @@
     <Compile Include="Assets\source\bullet\online\OnlineBulletManager.cs" />
     <Compile Include="Assets\source\components\CameraFollower.cs" />
     <Compile Include="Assets\source\components\ProgressBar.cs" />
+    <Compile Include="Assets\source\defines\GameDefs.cs" />
     <Compile Include="Assets\source\defines\PathtDefs.cs" />
     <Compile Include="Assets\source\enemy\EnemyBase.cs" />
     <Compile Include="Assets\source\enemy\EnemyManager.cs" />
