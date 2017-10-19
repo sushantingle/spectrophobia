@@ -289,7 +289,7 @@ public class ItemManager : MonoBehaviour {
             random -= m_itemPrefabList[i]._value.m_weight;
             if (random < 0.0f)
             {
-                selected = i;
+                selected = (int)m_itemPrefabList[i]._key;
                 break;
             }
         }
