@@ -169,6 +169,7 @@ public class ItemManager : MonoBehaviour {
                         InvincibleItemData invincibleItemData = new InvincibleItemData();
                         invincibleItemData.init(ITEM_TYPE.ITEM_INVINCIBLE, Time.time, invincibleItem.m_activeDuration);
                         m_ownedItemList.Add(invincibleItemData);
+                        GameManager.getInstance().m_player.onCollectedInvincible();
                     }
                     break;
                 case ITEM_TYPE.ITEM_LIFE:
@@ -207,11 +208,23 @@ public class ItemManager : MonoBehaviour {
     }
 
     public void removeItem(BaseItemData itemData) {
+        onRemovedItem(itemData.getItemType());
         m_ownedItemList.Remove(m_ownedItemList.Find(item => (item.getItemType() == itemData.getItemType())));
 	}
 
     public void removeItem(ITEM_TYPE itemType) {
+        onRemovedItem(itemType);
         m_ownedItemList.Remove(m_ownedItemList.Find(item => (item.getItemType() == itemType)));
+    }
+
+    private void onRemovedItem(ITEM_TYPE type)
+    {
+        switch (type)
+        {
+            case ITEM_TYPE.ITEM_INVINCIBLE:
+                GameManager.getInstance().m_player.onRemovedInvincible();
+                break;
+        }
     }
 
 	public void collectedCandy(int count) {

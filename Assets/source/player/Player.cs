@@ -200,6 +200,15 @@ public class Player : NetworkBehaviour {
             m_bulletSpeed = PlayerDefs.CONST_MAX_FIRE_SPEED;
     }
 
+    public void onCollectedInvincible()
+    {
+        GetComponent<OutlineParticleEmitter>().enabled = true;
+    }
+
+    public void onRemovedInvincible()
+    {
+        GetComponent<OutlineParticleEmitter>().enabled = false;
+    }
     // Collision callback
 	void OnTriggerEnter2D(Collider2D col)
 	{
