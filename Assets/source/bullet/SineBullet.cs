@@ -14,6 +14,11 @@ public class SineBullet : BulletBase {
         m_startPos = transform.position;
     }
 
+    private void OnEnable()
+    {
+        m_startPos = transform.position;    
+    }
+
     private void Update()
     {
         BUpdate();
@@ -23,11 +28,12 @@ public class SineBullet : BulletBase {
     {
         Vector3 pos = transform.position;
         pos.x += m_direction.x * m_speed;
+
         if (m_life < 0.0f)
             m_life = 2 * Mathf.PI;
         
         pos.y = m_startPos.y + Mathf.Sin(m_life) * m_amplitude;
-        m_life -= 0.1f; ;
+        m_life -= 0.5f; ;
 
         Vector3 direction = pos - transform.position;
         float angle = Vector3.Angle(transform.right, direction);

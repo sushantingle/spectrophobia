@@ -234,7 +234,7 @@ public class BulletManager : NetworkBehaviour {
     {
         GameObject bullet = (GameObject)ObjectPool.Spawn(getBulletPrefab(_type), _position, Quaternion.identity);
         bullet.layer = layer;// LayerMask.NameToLayer("enemybullet");
-        bullet.GetComponent<SineBullet>().setup(new Vector3(_direction.x, 0, 0).normalized, _speed, _amplitude, _parentNetId, _startPoint);
+        bullet.GetComponent<SineBullet>().setup(_direction.normalized, _speed, _amplitude, _parentNetId, _startPoint);
     }
 
     public void onDestroyBullet(GameObject obj)

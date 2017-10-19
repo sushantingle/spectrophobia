@@ -100,7 +100,7 @@ public class ItemManager : MonoBehaviour {
                 float x = Random.Range(LevelManager.getInstance().getMinX(), LevelManager.getInstance().getMaxX());
                 float y = Random.Range(LevelManager.getInstance().getMinY(), LevelManager.getInstance().getMaxY());
                 Vector3 worldPos = new Vector3(x, y, 1.0f);
-				BoxCollider2D boxCollider = m_itemPrefabList[index]._value.m_prefab.GetComponent<BoxCollider2D> ();
+				BoxCollider2D boxCollider = getItemPrefab((ITEM_TYPE) index).GetComponent<BoxCollider2D> ();
 				if (boxCollider != null) {
 					Vector2 topLeft = new Vector2 (worldPos.x - boxCollider.size.x / 2, worldPos.y - boxCollider.size.y / 2);
 					Vector2 bottomRight = new Vector2 (worldPos.x + boxCollider.size.x / 2, worldPos.y + boxCollider.size.y / 2);
@@ -114,7 +114,7 @@ public class ItemManager : MonoBehaviour {
 						continue;
 					}
 				}
-				Instantiate (m_itemPrefabList[index]._value.m_prefab, worldPos, Quaternion.identity);
+				Instantiate (getItemPrefab((ITEM_TYPE)index), worldPos, Quaternion.identity);
 				spawn = false;
 				CustomDebug.Log ("Spawned Item : " + (ITEM_TYPE)index);
 			}

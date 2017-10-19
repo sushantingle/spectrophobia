@@ -131,7 +131,7 @@ public class Player : NetworkBehaviour {
         }
         else if (ItemManager.getInstance().hasItemActive(ItemManager.ITEM_TYPE.ITEM_D))
         {
-            BulletManager.getInstance().initBullet(BulletManager.BulletType.BULLET_SPIRAL, layer, transform, direction, m_bulletSpeed, 1, parentNetId);
+            BulletManager.getInstance().initBullet(BulletManager.BulletType.BULLET_SPIRAL, layer, transform, direction, m_bulletSpeed, 1.0f, parentNetId);
         }
         else
         {
