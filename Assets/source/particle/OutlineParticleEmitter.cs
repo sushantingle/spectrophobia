@@ -42,6 +42,10 @@ public class OutlineParticleEmitter : BaseParticleEmitter {
 
         Vector2 spawnPoint = Vector2.Lerp(pointA, pointB, Random.Range(0f, 1f));
 
+        // Fixed issue : spawn point should change according to local scale.
+        spawnPoint.x *= transform.localScale.x;
+        spawnPoint.y *= transform.localScale.y;
+
         spawnAtPosition(spawnPoint + (Vector2)this.transform.position, Quaternion.identity);
     }
 

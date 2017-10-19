@@ -84,6 +84,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\source\Anim\BlastAnim.cs" />
     <Compile Include="Assets\source\bullet\BulletBase.cs" />
     <Compile Include="Assets\source\bullet\BulletManager.cs" />
     <Compile Include="Assets\source\bullet\LinearBullet.cs" />
@@ -146,6 +147,7 @@
     <Compile Include="Assets\source\test\BezierTest.cs" />
     <Compile Include="Assets\source\test\PlayerMovement.cs" />
     <Compile Include="Assets\source\test\ProjectileMotion.cs" />
+    <Compile Include="Assets\source\test\Shockwavetest.cs" />
     <Compile Include="Assets\source\test\save\savetest.cs" />
     <Compile Include="Assets\source\test\shader\ShaderLinearScrollTest.cs" />
     <Compile Include="Assets\source\ui\MainMenu.cs" />

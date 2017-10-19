@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ShockwaveItem : ItemBase {
     public float m_damage = 1.0f;
+    public GameObject m_anim;
 
     protected override void Start()
     {

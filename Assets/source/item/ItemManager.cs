@@ -91,6 +91,7 @@ public class ItemManager : MonoBehaviour {
             if(itemType == ITEM_TYPE.ITEM_NONE)
                index = getRandomIndex();
 
+            index = (int)ITEM_TYPE.ITEM_C;
 			bool spawn = true;
 			int count = 0;
 
@@ -181,7 +182,9 @@ public class ItemManager : MonoBehaviour {
                     break;
                 case ITEM_TYPE.ITEM_C:
                     {
-                        EnemyManager.getInstance().onShockwaveCollected((itemObj as ShockwaveItem).m_damage);
+                        ShockwaveItem shockwaveItem = (ShockwaveItem)itemObj;
+                        EnemyManager.getInstance().onShockwaveCollected(shockwaveItem.m_damage);
+                        Instantiate(shockwaveItem.m_anim, shockwaveItem.transform.position, Quaternion.identity);
                     }
                     break;
                 case ITEM_TYPE.ITEM_A:
