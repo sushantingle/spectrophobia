@@ -16,7 +16,7 @@ public class MenuHeader : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        m_candyCount.text = "" + ItemDefs.getItemCount(ItemDefs.ItemType.ITEM_ID_CANDY);
+        m_candyCount.text = "" + GameStats.SOULS;
         m_globalScore.text = "" + GameManager.getInstance().getGlobalScore();
         m_xp.text = "" + GameManager.getInstance().getXp();
 	}

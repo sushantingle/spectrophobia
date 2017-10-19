@@ -146,7 +146,8 @@ public class ItemManager : MonoBehaviour {
                     {
                         CandyItem candyItem = (CandyItem)itemObj;
                         CustomDebug.Log("Candy Added : " + candyItem.m_count);
-                        ItemDefs.addItem(ItemDefs.ItemType.ITEM_ID_CANDY, candyItem.m_count);
+                        //ItemDefs.addItem(ItemDefs.ItemType.ITEM_ID_CANDY, candyItem.m_count);
+                        GameStats.SOULS += candyItem.m_count;
                     }
                     break;
                 case ITEM_TYPE.ITEM_D:
@@ -214,11 +215,13 @@ public class ItemManager : MonoBehaviour {
     }
 
 	public void collectedCandy(int count) {
-        ItemDefs.addItem(ItemDefs.ItemType.ITEM_ID_CANDY, count);
+        //ItemDefs.addItem(ItemDefs.ItemType.ITEM_ID_CANDY, count);
+        GameStats.SOULS += count;
 	}
 
     public void usedCandy(int count = 1) {
-        ItemDefs.removeItem(ItemDefs.ItemType.ITEM_ID_CANDY, count);
+        //ItemDefs.removeItem(ItemDefs.ItemType.ITEM_ID_CANDY, count);
+        GameStats.SOULS -= count;
     }
 	/*
 	 * Util Functions
