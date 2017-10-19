@@ -154,6 +154,7 @@ public class GameManager : MonoBehaviour {
     private void reset()
     {
         EnemyManager.getInstance().reset();
+        m_globalScore = 0;
         m_player.resetPlayer();
         m_player = null;
         m_mainCamera.GetComponent<CameraFollower>().setTarget(null);

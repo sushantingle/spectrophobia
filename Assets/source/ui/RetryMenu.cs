@@ -26,7 +26,6 @@ public class RetryMenu : MonoBehaviour {
 
     public void onClickNo()
     {
-        GameManager.getInstance().exitGame();
-        DerivedNetworManager.getInstance().stopHost();
+        StateManager.getInstance().pushState(StateManager.MenuState.STATE_RESULT);
     }
 }

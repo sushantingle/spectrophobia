@@ -203,7 +203,7 @@ public class Player : NetworkBehaviour {
     // Collision callback
 	void OnTriggerEnter2D(Collider2D col)
 	{
-        return;
+        //return;
 		if (col.gameObject.layer == LayerMask.NameToLayer ("enemy")) {
             EnemyBase enemy = col.gameObject.GetComponent<EnemyBase>();
             if (GameManager.getInstance().isSinglePlayer())
