@@ -84,6 +84,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\source\Anim\AnimData.cs" />
+    <Compile Include="Assets\source\Anim\AnimationManager.cs" />
     <Compile Include="Assets\source\Anim\BlastAnim.cs" />
     <Compile Include="Assets\source\bullet\BulletBase.cs" />
     <Compile Include="Assets\source\bullet\BulletManager.cs" />
