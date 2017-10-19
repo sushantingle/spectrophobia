@@ -91,7 +91,6 @@ public class ItemManager : MonoBehaviour {
             if(itemType == ITEM_TYPE.ITEM_NONE)
                index = getRandomIndex();
 
-            index = (int)ITEM_TYPE.ITEM_C;
 			bool spawn = true;
 			int count = 0;
 
