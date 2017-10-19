@@ -14,9 +14,10 @@ public class SettingsMenu : MonoBehaviour {
 
     private void OnEnable()
     {
-        GameSettings.m_autoAim = m_autoAimToggle.isOn;
-        GameSettings.m_soundOn = m_soundToggle.isOn;
+        m_autoAimToggle.isOn = GameSettings.AUTOAIM;
+        m_soundToggle.isOn = GameSettings.SOUNDS_ON;
     }
+
     // Update is called once per frame
     void Update () {
 		
@@ -25,13 +26,13 @@ public class SettingsMenu : MonoBehaviour {
     public void onClickAutoAim()
     {
         CustomDebug.Log("Enable Auto Aim : " + m_autoAimToggle.isOn);
-        GameSettings.m_autoAim = m_autoAimToggle.isOn;
+        GameSettings.AUTOAIM = m_autoAimToggle.isOn;
     }
 
     public void onClickSounds()
     {
         CustomDebug.Log("Enable Sound : " + m_soundToggle.isOn);
-        GameSettings.m_soundOn = m_soundToggle.isOn;
+        GameSettings.SOUNDS_ON = m_soundToggle.isOn;
     }
 
     public void onClickBackButton()

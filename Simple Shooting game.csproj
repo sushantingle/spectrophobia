@@ -140,6 +140,7 @@
     <Compile Include="Assets\source\path\RunawayPath.cs" />
     <Compile Include="Assets\source\player\GameManager.cs" />
     <Compile Include="Assets\source\player\GameSettings.cs" />
+    <Compile Include="Assets\source\player\GameStats.cs" />
     <Compile Include="Assets\source\player\Player.cs" />
     <Compile Include="Assets\source\player\PlayerDefs.cs" />
     <Compile Include="Assets\source\test\BezierTest.cs" />

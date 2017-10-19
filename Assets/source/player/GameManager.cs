@@ -128,7 +128,7 @@ public class GameManager : MonoBehaviour {
         EnemyManager.getInstance().preload();
         if (isSinglePlayer())
         {
-            m_player.m_autoAim = GameSettings.m_autoAim;
+            m_player.m_autoAim = GameSettings.AUTOAIM;
             startGame();
         }
 #if ENABLE_MULTIPLAYER

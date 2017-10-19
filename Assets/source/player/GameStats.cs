@@ -4,29 +4,31 @@ using UnityEngine;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
-public class GameSettings : MonoBehaviour {
+public class GameStats : MonoBehaviour {
 
-    private const string FILENAME = "gamesettings.dat";
+    private static string FILENAME = "gamedata.dat";
 
     [System.Serializable]
     struct Data {
-        public bool m_autoAim;
-        public bool m_soundOn;
+        public int m_souls;
+        public int m_highScore;
     }
 
     private static Data m_data;
 
     private void Start()
     {
-        loadData();    
+        //load game stats
+        loadStats();
     }
 
     private void OnDestroy()
     {
-        saveData();
+        // write game stats
+        saveStats();
     }
 
-    private void saveData()
+    private void saveStats()
     {
         BinaryFormatter bf = new BinaryFormatter();
         FileStream f = File.Create(Application.persistentDataPath + FILENAME);
@@ -34,7 +36,7 @@ public class GameSettings : MonoBehaviour {
         f.Close();
     }
 
-    private void loadData()
+    private void loadStats()
     {
         if (File.Exists(Application.persistentDataPath + FILENAME))
         {
@@ -45,31 +47,32 @@ public class GameSettings : MonoBehaviour {
         }
         else
         {
-            CustomDebug.Log("Game Settings File does not exist");
+            CustomDebug.Log("Game Stats File does not exist");
         }
+
     }
 
-    public static bool AUTOAIM
+    public static int SOULS
     {
         get
         {
-            return m_data.m_autoAim;
+            return m_data.m_souls;
         }
         set
         {
-            m_data.m_autoAim = value;
+            m_data.m_souls = value;
         }
     }
 
-    public static bool SOUNDS_ON
+    public static int HIGHSCORE
     {
         get
         {
-            return m_data.m_soundOn;
+            return m_data.m_highScore;
         }
         set
         {
-            m_data.m_soundOn = value;
+            m_data.m_highScore = value;
         }
     }
 }

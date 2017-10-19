@@ -16,7 +16,7 @@ public class ItemManager : MonoBehaviour {
 
 	public enum ITEM_TYPE {
         ITEM_NONE,
-		ITEM_CANDY,
+		ITEM_ONE_UP,
 		ITEM_INVINCIBLE,
 		ITEM_LIFE,
 		ITEM_D, // Spiral Bullet
@@ -132,7 +132,7 @@ public class ItemManager : MonoBehaviour {
     {
         for (int i = 0; i < PlayerDefs.CONST_SPECIAL_ITEM_SPAWN_COUNT; i++)
         {
-            generateItem(ITEM_TYPE.ITEM_CANDY);
+            generateItem(ITEM_TYPE.ITEM_ONE_UP);
         }
     }
 
@@ -142,7 +142,7 @@ public class ItemManager : MonoBehaviour {
         {
             switch (itemObj.getItemType())
             {
-                case ITEM_TYPE.ITEM_CANDY:
+                case ITEM_TYPE.ITEM_ONE_UP:
                     {
                         CandyItem candyItem = (CandyItem)itemObj;
                         CustomDebug.Log("Candy Added : " + candyItem.m_count);

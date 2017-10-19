@@ -8,7 +8,7 @@ public class CandyItem : ItemBase {
 	// Use this for initialization
 	protected override void Start () {
         base.Start();
-        m_type = ItemManager.ITEM_TYPE.ITEM_CANDY;
+        m_type = ItemManager.ITEM_TYPE.ITEM_ONE_UP;
 	}
 	
 	// Update is called once per frame
