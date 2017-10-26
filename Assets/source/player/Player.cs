@@ -147,6 +147,11 @@ public class Player : NetworkBehaviour {
 		if (ItemManager.getInstance ().hasItemActive (ItemManager.ITEM_TYPE.ITEM_INVINCIBLE))
 			return;
 
+        AnimData animData = new AnimData();
+        animData.m_duration = 0.3f;
+        animData.m_position = transform.position;
+        AnimationManager.getInstance().startAnim(AnimationManager.AnimType.ANIM_HIT, animData);
+
         // update player's health
 		m_health -= damage;
 		if (m_health <= 0) {
@@ -183,6 +188,9 @@ public class Player : NetworkBehaviour {
 
     private void onPlayerDied() {
         GetComponent<SpriteRenderer>().material.color = Color.red;
+        Vector3 targetScale = transform.localScale + new Vector3(4.0f, 4.0f, 0.0f);
+        BlastAnimData data = new BlastAnimData(transform, targetScale, 0.5f);
+        AnimationManager.getInstance().startAnim(AnimationManager.AnimType.ANIM_DEATH, data);
     }
 
     // update health on collecting health item

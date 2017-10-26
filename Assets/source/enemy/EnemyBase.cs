@@ -302,6 +302,11 @@ public class EnemyBase : NetworkBehaviour {
                 return;
             }
 #endif
+            AnimData animData = new AnimData();
+            animData.m_duration = 0.3f;
+            animData.m_position = transform.position;
+            AnimationManager.getInstance().startAnim(AnimationManager.AnimType.ANIM_HIT, animData);
+
             m_health--;
             if (m_health <= 0)
             {
@@ -372,6 +377,10 @@ public class EnemyBase : NetworkBehaviour {
     private void onDeath()
     {
         CustomDebug.Log("OnDeath");
+        Vector3 targetScale = transform.localScale + new Vector3(4.0f, 4.0f, 0.0f);
+        BlastAnimData data = new BlastAnimData(transform, targetScale, 0.5f);
+        AnimationManager.getInstance().startAnim(AnimationManager.AnimType.ANIM_DEATH, data);
+
         if (GameManager.getInstance().isSinglePlayer())
         {
             reset();

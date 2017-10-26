@@ -7,7 +7,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{26368C2C-089E-0A6F-3041-79137EE301B7}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AssemblyName>Assembly-CSharp</AssemblyName>
+    <AssemblyName>Assembly-CSharp.dll</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
@@ -50,31 +50,31 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="UnityEditor">
-      <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine">
-      <HintPath>Library\UnityAssemblies\UnityEngine.dll</HintPath>
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
+      <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.Networking">
-      <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
+      <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.TestRunner">
-      <HintPath>Library\UnityAssemblies\UnityEngine.TestRunner.dll</HintPath>
+      <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/TestRunner/UnityEngine.TestRunner.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
-      <HintPath>Library\UnityAssemblies\nunit.framework.dll</HintPath>
+      <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/TestRunner/net35/unity-custom/nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.Timeline">
-      <HintPath>Library\UnityAssemblies\UnityEngine.Timeline.dll</HintPath>
+      <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/Timeline/RuntimeEditor/UnityEngine.Timeline.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.Analytics">
-      <HintPath>Library\UnityAssemblies\UnityEngine.Analytics.dll</HintPath>
+      <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityAnalytics/UnityEngine.Analytics.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.HoloLens">
-      <HintPath>Library\UnityAssemblies\UnityEngine.HoloLens.dll</HintPath>
+      <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityHoloLens/RuntimeEditor/UnityEngine.HoloLens.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -84,6 +84,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\source\Anim\AnimationManager.cs" />
+    <Compile Include="Assets\source\Anim\AnimData.cs" />
+    <Compile Include="Assets\source\Anim\BlastAnim.cs" />
+    <Compile Include="Assets\source\Anim\HitAnim.cs" />
     <Compile Include="Assets\source\bullet\BulletBase.cs" />
     <Compile Include="Assets\source\bullet\BulletManager.cs" />
     <Compile Include="Assets\source\bullet\LinearBullet.cs" />
@@ -94,6 +98,7 @@
     <Compile Include="Assets\source\bullet\SineBullet.cs" />
     <Compile Include="Assets\source\components\CameraFollower.cs" />
     <Compile Include="Assets\source\components\ProgressBar.cs" />
+    <Compile Include="Assets\source\defines\GameDefs.cs" />
     <Compile Include="Assets\source\defines\PathtDefs.cs" />
     <Compile Include="Assets\source\enemy\boss\LinearBoss.cs" />
     <Compile Include="Assets\source\enemy\cards\data\CardDataBase.cs" />
@@ -138,6 +143,8 @@
     <Compile Include="Assets\source\path\RandomPath.cs" />
     <Compile Include="Assets\source\path\RunawayPath.cs" />
     <Compile Include="Assets\source\player\GameManager.cs" />
+    <Compile Include="Assets\source\player\GameSettings.cs" />
+    <Compile Include="Assets\source\player\GameStats.cs" />
     <Compile Include="Assets\source\player\Player.cs" />
     <Compile Include="Assets\source\player\PlayerDefs.cs" />
     <Compile Include="Assets\source\test\BezierTest.cs" />
@@ -145,12 +152,14 @@
     <Compile Include="Assets\source\test\ProjectileMotion.cs" />
     <Compile Include="Assets\source\test\save\savetest.cs" />
     <Compile Include="Assets\source\test\shader\ShaderLinearScrollTest.cs" />
+    <Compile Include="Assets\source\test\Shockwavetest.cs" />
     <Compile Include="Assets\source\ui\MainMenu.cs" />
     <Compile Include="Assets\source\ui\MenuHeader.cs" />
     <Compile Include="Assets\source\ui\MultiplayerMenu.cs" />
     <Compile Include="Assets\source\ui\PauseMenu.cs" />
     <Compile Include="Assets\source\ui\ResultMenu.cs" />
     <Compile Include="Assets\source\ui\RetryMenu.cs" />
+    <Compile Include="Assets\source\ui\SettingsMenu.cs" />
     <Compile Include="Assets\source\ui\StateManager.cs" />
     <Compile Include="Assets\source\ui\TeamSelection.cs" />
     <Compile Include="Assets\source\util\BezierCurve.cs" />

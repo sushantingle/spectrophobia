@@ -5,7 +5,7 @@ using UnityEngine;
 public class BlastAnim : MonoBehaviour {
 
     public Vector3 m_targetScale = Vector3.zero;
-    public float m_speed = 1.0f;
+    public float m_duration = 1.0f;
     Vector3 originalScale;
 
     private float m_startTime;
@@ -21,7 +21,7 @@ public class BlastAnim : MonoBehaviour {
     {
         transform.localScale = Vector3.Lerp(transform.localScale, m_targetScale, Time.deltaTime);
 
-        if(Time.time - m_startTime > m_speed)
+        if(Time.time - m_startTime > m_duration)
             Destroy(gameObject);
     }
 }

@@ -74,6 +74,8 @@ public class PolygonParticleEmitter : BaseParticleEmitter {
     {
         int index = selectRandomTriangle();
         Vector2 spawnPoint = getRandomPointInTriangle(m_triangles[index]);
+        spawnPoint.x *= transform.localScale.x;
+        spawnPoint.y *= transform.localScale.y;
         // spawn particle at point
         spawnAtPosition(spawnPoint + (Vector2)this.transform.position, Quaternion.identity);
     }
