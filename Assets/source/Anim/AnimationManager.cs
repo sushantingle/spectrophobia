@@ -11,6 +11,8 @@ public class AnimationManager : MonoBehaviour {
         ANIM_BLAST,
         ANIM_HIT,
         ANIM_DEATH,
+        ANIM_ITEM_COLLECT,
+        ANIM_ITEM_DISAPPEAR,
     }
 
     private static AnimationManager m_instance = null;
@@ -51,6 +53,7 @@ public class AnimationManager : MonoBehaviour {
         {
             case AnimType.ANIM_BLAST:
             case AnimType.ANIM_DEATH:
+            case AnimType.ANIM_ITEM_COLLECT:
                 {
                     BlastAnimData data = (BlastAnimData)animData;
                     GameObject animObj = (GameObject)Instantiate(getAnimPrefab(type), data.m_position, Quaternion.identity);
@@ -60,6 +63,7 @@ public class AnimationManager : MonoBehaviour {
                 }
                 break;
             case AnimType.ANIM_HIT:
+            case AnimType.ANIM_ITEM_DISAPPEAR:
                 {
                     GameObject animObj = (GameObject)Instantiate(getAnimPrefab(type), animData.m_position, Quaternion.identity);
                     HitAnim animation = animObj.GetComponent<HitAnim>();

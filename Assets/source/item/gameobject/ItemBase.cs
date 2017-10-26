@@ -20,6 +20,11 @@ public abstract class ItemBase : MonoBehaviour {
 
         if (Time.time - m_startTime > m_activeDuration)
         {
+            AnimData animData = new AnimData();
+            animData.m_duration = 0.3f;
+            animData.m_position = transform.position;
+            AnimationManager.getInstance().startAnim(AnimationManager.AnimType.ANIM_ITEM_DISAPPEAR, animData);
+
             Destroy(gameObject);
         }
     }
@@ -30,6 +35,12 @@ public abstract class ItemBase : MonoBehaviour {
         {
             m_isCollected = true;
             ItemManager.getInstance().addItem(this);
+
+            //Anim
+            Vector3 targetScale = transform.localScale + new Vector3(4.0f, 4.0f, 0.0f);
+            BlastAnimData data = new BlastAnimData(transform, targetScale, 0.5f);
+            AnimationManager.getInstance().startAnim(AnimationManager.AnimType.ANIM_ITEM_COLLECT, data);
+
             Destroy(gameObject);
         }
     }
