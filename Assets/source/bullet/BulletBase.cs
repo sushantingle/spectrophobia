@@ -89,13 +89,13 @@ public class BulletBase : MonoBehaviour
 
     protected virtual void BOnTriggerEnter2D(Collider2D collision)
     {
-        if (GameManager.getInstance().isSinglePlayer())
+        /*if (GameManager.getInstance().isSinglePlayer())
         {
             if (collision.gameObject.layer == LayerMask.NameToLayer("wall"))
             {
                 Destroy(gameObject);
             }
-        }
+        }*/
     }
 
     public NetworkInstanceId getParentNetId()
