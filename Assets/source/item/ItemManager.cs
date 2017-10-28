@@ -184,7 +184,7 @@ public class ItemManager : MonoBehaviour {
                         ShockwaveItem shockwaveItem = (ShockwaveItem)itemObj;
                         EnemyManager.getInstance().onShockwaveCollected(shockwaveItem.m_damage);
                         //Instantiate(shockwaveItem.m_anim, shockwaveItem.transform.position, Quaternion.identity);
-                        BlastAnimData data = new BlastAnimData(shockwaveItem.transform, new Vector3(10.0f, 10.0f, shockwaveItem.transform.localScale.z), 1.0f);
+                        BlastAnimData data = new BlastAnimData(shockwaveItem.transform, new Vector3(30.0f, 30.0f, shockwaveItem.transform.localScale.z), 3.0f);
                         AnimationManager.getInstance().startAnim(AnimationManager.AnimType.ANIM_BLAST, data);
                     }
                     break;

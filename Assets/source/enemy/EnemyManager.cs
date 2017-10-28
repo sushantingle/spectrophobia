@@ -557,7 +557,7 @@ public class EnemyManager : NetworkBehaviour{
                 EnemyBase enemyBase = obj.GetComponent<EnemyBase>();
                 if (enemyBase != null)
                 {
-                    enemyBase.onExternalDamage(damage);
+                    enemyBase.onExternalDamage(enemyBase.m_maxHealth);
                 }
             }
         }
