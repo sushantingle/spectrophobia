@@ -31,6 +31,9 @@ public class Player : NetworkBehaviour {
 	private BoxCollider2D	m_boxCollider;	
     private float           m_health;    
     public  ProgressBar     m_healthBar;
+    public float            m_healthDegradeRate = 0.1f;
+    public float            m_healthDegradeFactor = 0.01f;
+    private float m_degradeStartTime;
 
     public bool m_autoAim = false;
     private Vector3 m_lastFireDirection = Vector3.zero;
@@ -38,6 +41,7 @@ public class Player : NetworkBehaviour {
 	void Start () {
 		m_boxCollider = GetComponent<BoxCollider2D> ();
         m_health = PlayerDefs.CONST_PLAYER_MAX_HEALTH;
+        m_degradeStartTime = Time.time;
 	}
 	
 	// Update is called once per frame
@@ -94,6 +98,12 @@ public class Player : NetworkBehaviour {
                 m_lastFireDirection = fireDirection;
             }
         }
+
+        // Degarde health over time
+        if (GameManager.getInstance().isSinglePlayer())
+        {
+            degradeHealthOverTime();
+        }
 	}
 
 	void FixedUpdate() {
@@ -119,6 +129,16 @@ public class Player : NetworkBehaviour {
 		m_hitLeft = (hitLeft.collider != null);
 
 	}
+    
+    // degarde health
+    void degradeHealthOverTime()
+    {       
+        if (Time.time - m_degradeStartTime > m_healthDegradeRate)
+        {
+            m_degradeStartTime = Time.time;
+            onDamage(m_healthDegradeFactor);
+        }
+    }
 
     // Fire bullet	
     void fireBullet(Vector3 direction) {
@@ -184,6 +204,13 @@ public class Player : NetworkBehaviour {
         m_health = PlayerDefs.CONST_PLAYER_MAX_HEALTH;
         updateHealthBar();
         ItemManager.getInstance().resetItemManager();
+    }
+
+    public void onEnemyDeath() {
+        m_health += m_healthDegradeFactor * 5.0f;
+        if (m_health > PlayerDefs.CONST_PLAYER_MAX_HEALTH)
+            m_health = PlayerDefs.CONST_PLAYER_MAX_HEALTH;
+        updateHealthBar();
     }
 
     private void onPlayerDied() {

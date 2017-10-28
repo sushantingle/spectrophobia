@@ -364,6 +364,7 @@ public class EnemyManager : NetworkBehaviour{
             GameManager.getInstance().addScore(obj.GetComponent<EnemyBase>().m_points);
             m_spawnedEnemyList.Remove(obj);
             ObjectPool.Despawn(obj);
+            GameManager.getInstance().m_player.onEnemyDeath();
         }
         else
         {
@@ -392,6 +393,7 @@ public class EnemyManager : NetworkBehaviour{
         {
             m_spawnedEnemyList.Remove(obj);
             ObjectPool.Despawn(obj);
+            GameManager.getInstance().m_player.onEnemyDeath();
         }
         else
         {
