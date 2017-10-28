@@ -344,6 +344,16 @@ public class EnemyManager : NetworkBehaviour{
         }
     }
 
+    private void setupBoss(BOSS_TYPE type, GameObject e)
+    {
+        switch (type)
+        {
+            case BOSS_TYPE.BOSS_NORMAL:
+                //Setup
+                e.GetComponent<LinearBoss>().setup(m_player);
+                break;
+        }
+    }
     public void onCustomEnemySpawned(GameObject obj)
     {
         m_spawnedEnemyList.Add(obj);
@@ -472,6 +482,7 @@ public class EnemyManager : NetworkBehaviour{
                 {
                     GameObject e = (GameObject)ObjectPool.Spawn(getBossPrefab((BOSS_TYPE)bossId), worldPos, Quaternion.identity);
                     m_spawnedEnemyList.Add(e);
+                    setupBoss((BOSS_TYPE)bossId, e);
                 }
                 spawn = false;
                 
