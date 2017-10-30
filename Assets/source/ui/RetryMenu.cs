@@ -8,7 +8,7 @@ public class RetryMenu : MonoBehaviour {
     public Text m_retryText;
     // Use this for initialization
     void Start() {
-        m_retryText.text = "Retry : " + PlayerDefs.CONST_RETRY_GAME_PRICE + " candy";
+        m_retryText.text = "Retry : " + PlayerDefs.CONST_RETRY_GAME_PRICE;
     }
 
     // Update is called once per frame
