@@ -47,4 +47,18 @@ public class MainMenu : MonoBehaviour {
     {
         StateManager.getInstance().pushState(StateManager.MenuState.STATE_SETTINGS);
     }
+
+    public void onClickGoogleLogin()
+    {
+        // authenticate user:
+        Social.localUser.Authenticate((bool success) => {
+            // handle success or failure
+            if (success)
+                CustomDebug.Log("Login Success");
+            else
+                CustomDebug.Log("Login Failed");
+        });
+        
+        // TODO: call login function in GPGS
+    }
 }

@@ -47,7 +47,8 @@ public class GameManager : MonoBehaviour {
         {
             ObjectPool.Preload(obj, m_particlePreloadCount);
         }
-	}
+
+    }
 	
 	// Update is called once per frame
 	void Update () {
