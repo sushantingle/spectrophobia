@@ -55,7 +55,7 @@ public class Player : NetworkBehaviour {
 		Vector3 pos = transform.position;
 #if UNITY_ANDROID
         Vector3 deltaTargetPos = (new Vector3(CrossPlatformInputManager.GetAxis("Horizontal"), CrossPlatformInputManager.GetAxis("Vertical"), transform.position.z)) * m_speed;
-        CustomDebug.Log("Target Position: " + deltaTargetPos);
+        //CustomDebug.Log("Target Position: " + deltaTargetPos);
         if ((deltaTargetPos.x > 0.0f && !m_hitRight) || (deltaTargetPos.x < 0.0f && !m_hitLeft))
             pos.x += deltaTargetPos.x;
 

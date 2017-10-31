@@ -6,9 +6,21 @@ using UnityEngine.UI;
 public class RetryMenu : MonoBehaviour {
 
     public Text m_retryText;
+    public GameObject m_soulIcon;
+
     // Use this for initialization
-    void Start() {
-        m_retryText.text = "Retry : " + PlayerDefs.CONST_RETRY_GAME_PRICE;
+    void OnEnable() {
+
+        if (GameStats.SOULS > PlayerDefs.CONST_RETRY_GAME_PRICE)
+        {
+            m_retryText.text = "Continue : " + PlayerDefs.CONST_RETRY_GAME_PRICE;
+            m_soulIcon.SetActive(true);
+        }
+        else
+        {
+            m_retryText.text = "Watch Ad To Continue";
+            m_soulIcon.SetActive(false);
+        }
     }
 
     // Update is called once per frame
@@ -18,10 +30,17 @@ public class RetryMenu : MonoBehaviour {
 
     public void OnClickYes()
     {
-        GameManager.getInstance().pauseGame(false);
-        GameManager.getInstance().m_player.onResumeGame();
-        ItemManager.getInstance().usedCandy(PlayerDefs.CONST_RETRY_GAME_PRICE);
-        StateManager.getInstance().pushState(StateManager.MenuState.STATE_HUD);
+        if (GameStats.SOULS > PlayerDefs.CONST_RETRY_GAME_PRICE)
+        {
+            GameManager.getInstance().continueGame();
+        }
+        else
+        {
+            if (AdsManager.showRewardedAd(AdsManager.AD_REQUEST_ID.AD_REQUEST_CONTINUE_GAME) == false)
+            {
+                StateManager.getInstance().pushState(StateManager.MenuState.STATE_RESULT);
+            }
+        }
     }
 
     public void onClickNo()

@@ -42,6 +42,10 @@ public class MainMenu : MonoBehaviour {
     {
         GameManager.getInstance().setGameplayMode(GameManager.GameplayMode.SINGLE_PLAYER);
         DerivedNetworManager.getInstance().startHost();
+
+        #if UNITY_ANDROID
+            AdsManager.requestRewardedAd();
+        #endif
     }
 
     public void onClickMultiplayer()

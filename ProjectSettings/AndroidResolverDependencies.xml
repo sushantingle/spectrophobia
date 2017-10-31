@@ -1,5 +1,6 @@
 <dependencies>
   <packages>
+    <package>com.google.android.gms:play-services-ads:11.2.2</package>
     <package>com.google.android.gms:play-services-auth:10+</package>
     <package>com.google.android.gms:play-services-games:10+</package>
     <package>com.google.android.gms:play-services-nearby:10+</package>
@@ -7,14 +8,17 @@
   </packages>
   <files>
     <file>Assets/Plugins/Android/gpgs-plugin-support-0.9.42</file>
-    <file>Assets/Plugins/Android/play-services-auth-10.2.6.aar</file>
-    <file>Assets/Plugins/Android/play-services-auth-base-10.2.6.aar</file>
-    <file>Assets/Plugins/Android/play-services-base-10.2.6.aar</file>
-    <file>Assets/Plugins/Android/play-services-basement-10.2.6.aar</file>
-    <file>Assets/Plugins/Android/play-services-drive-10.2.6.aar</file>
-    <file>Assets/Plugins/Android/play-services-games-10.2.6.aar</file>
-    <file>Assets/Plugins/Android/play-services-nearby-10.2.6.aar</file>
-    <file>Assets/Plugins/Android/play-services-tasks-10.2.6.aar</file>
+    <file>Assets/Plugins/Android/play-services-ads-11.2.2.aar</file>
+    <file>Assets/Plugins/Android/play-services-ads-lite-11.2.2.aar</file>
+    <file>Assets/Plugins/Android/play-services-auth-11.2.2.aar</file>
+    <file>Assets/Plugins/Android/play-services-auth-base-11.2.2.aar</file>
+    <file>Assets/Plugins/Android/play-services-base-11.2.2.aar</file>
+    <file>Assets/Plugins/Android/play-services-basement-11.2.2.aar</file>
+    <file>Assets/Plugins/Android/play-services-drive-11.2.2.aar</file>
+    <file>Assets/Plugins/Android/play-services-games-11.2.2.aar</file>
+    <file>Assets/Plugins/Android/play-services-gass-11.2.2.aar</file>
+    <file>Assets/Plugins/Android/play-services-nearby-11.2.2.aar</file>
+    <file>Assets/Plugins/Android/play-services-tasks-11.2.2.aar</file>
     <file>Assets/Plugins/Android/support-annotations-25.2.0.jar</file>
     <file>Assets/Plugins/Android/support-compat-25.2.0.aar</file>
     <file>Assets/Plugins/Android/support-core-ui-25.2.0.aar</file>

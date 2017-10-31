@@ -52,6 +52,7 @@ public class GameManager : MonoBehaviour {
 
         #if UNITY_ANDROID
             GPGSInterface.init();
+            AdsManager.init();
         #endif
     }
 	
@@ -164,5 +165,13 @@ public class GameManager : MonoBehaviour {
         m_player.resetPlayer();
         m_player = null;
         m_mainCamera.GetComponent<CameraFollower>().setTarget(null);
+    }
+
+    public void continueGame()
+    {
+        GameManager.getInstance().pauseGame(false);
+        GameManager.getInstance().m_player.onResumeGame();
+        ItemManager.getInstance().usedCandy(PlayerDefs.CONST_RETRY_GAME_PRICE);
+        StateManager.getInstance().pushState(StateManager.MenuState.STATE_HUD);
     }
 }
