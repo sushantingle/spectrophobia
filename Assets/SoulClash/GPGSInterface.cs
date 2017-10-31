@@ -1,7 +1,7 @@
 ﻿using GooglePlayGames;
 using GooglePlayGames.BasicApi;
 using UnityEngine.SocialPlatforms;
-
+using UnityEngine;
 namespace SoulClash
 {
     public class GPGSInterface

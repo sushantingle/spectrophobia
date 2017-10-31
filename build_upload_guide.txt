@@ -1,0 +1,7 @@
+Sign build with keystore:
+jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore testapp-key.keystore E:\Projects\unity\Spectrophobia\spectrophobia\test_1.apk testapp-key
+
+Zipalign : 
+zipalign -f -v 4 E:\Projects\unity\Spectrophobia\spectrophobia\test_1.apk E:\Projects\unity\Spectrophobia\spectrophobia\test_1_align.apk
+
+upload
