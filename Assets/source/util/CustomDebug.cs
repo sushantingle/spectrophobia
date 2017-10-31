@@ -1,5 +1,5 @@
-﻿#define UNITY_DEBUG
-#define DEBUG_BUILD
+﻿#define UNITY_RELEASE
+#define RELEASE_BUILD
 
 using UnityEngine;
 using System.Collections;

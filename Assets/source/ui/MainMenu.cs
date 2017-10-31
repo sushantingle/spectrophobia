@@ -51,15 +51,8 @@ public class MainMenu : MonoBehaviour {
 
     public void onClickGoogleLogin()
     {
-        // authenticate user:
-        /*Social.localUser.Authenticate((bool success) => {
-            // handle success or failure
-            if (success)
-                CustomDebug.Log("Login Success");
-            else
-                CustomDebug.Log("Login Failed");
-        });*/
-        
-        // TODO: call login function in GPGS
+        #if  UNITY_ANDROID
+            GPGSInterface.loginGPGS();
+        #endif
     }
 }
