@@ -51,7 +51,7 @@ public class GameManager : MonoBehaviour {
         }
         PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder()
            // enables saving game progress.
-           .EnableSavedGames()
+          // .EnableSavedGames()
            // requests the email address of the player be available.
            // Will bring up a prompt for consent.
            .RequestEmail()
