@@ -8,6 +8,8 @@ public class MainMenu : MonoBehaviour {
 
     private bool toggleAutoAim = true;
     public GameObject m_multiplayerBtn;
+    public GameObject m_GPGSBtn;
+    public GameObject m_lbBtn;
 	// Use this for initialization
 	void Start () {
 		
@@ -17,6 +19,11 @@ public class MainMenu : MonoBehaviour {
     {
 #if !ENABLE_MULTIPLAYER
         m_multiplayerBtn.SetActive(false);
+#endif
+
+#if !UNITY_ANDROID
+        m_GPGSBtn.SetActive(false);
+        m_lbBtn.SetActive(false);
 #endif
     }
     // Update is called once per frame
@@ -51,8 +58,15 @@ public class MainMenu : MonoBehaviour {
 
     public void onClickGoogleLogin()
     {
-        #if  UNITY_ANDROID
+#if UNITY_ANDROID
             GPGSInterface.loginGPGS();
-        #endif
+#endif
+    }
+
+    public void onClickGlobalLB()
+    {
+#if UNITY_ANDROID
+            GPGSInterface.showGlobalLeaderboard();
+#endif
     }
 }

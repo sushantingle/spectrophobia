@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class GPGSInterface
 {
+
+    private static string GLOBAL_LEADERBOARD_ID = "CgkIzI3HzbcZEAIQAg";
+
     public static void init()
     {
         PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder()
@@ -38,5 +41,22 @@ public class GPGSInterface
             else
                 CustomDebug.Log("Login Failed");
         });
+    }
+
+    public static void postScore(int score)
+    {
+        // post score 12345 to leaderboard ID "Cfji293fjsie_QA")
+        Social.ReportScore(score, GLOBAL_LEADERBOARD_ID, (bool success) => {
+            // handle success or failure
+            if (success)
+                CustomDebug.Log("Score Submitted succesfully");
+            else
+                CustomDebug.Log("Score submission failed");
+        });
+    }
+
+    public static void showGlobalLeaderboard()
+    {
+        PlayGamesPlatform.Instance.ShowLeaderboardUI(GLOBAL_LEADERBOARD_ID);
     }
 }

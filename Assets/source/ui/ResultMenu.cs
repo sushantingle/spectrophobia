@@ -8,6 +8,7 @@ public class ResultMenu : MonoBehaviour {
     public Text m_playerScore;
     public Text m_highScore;
     public GameObject m_rewardText;
+    public GameObject m_lbBtn;
 	// Use this for initialization
 	void Start () {
 
@@ -27,6 +28,12 @@ public class ResultMenu : MonoBehaviour {
 
         m_playerScore.text = "Your Score : " + GameManager.getInstance().getGlobalScore();
         m_highScore.text = "HighScore : " + GameStats.HIGHSCORE;
+
+        #if UNITY_ANDROID
+            GPGSInterface.postScore(GameManager.getInstance().getGlobalScore());
+        #else
+            m_lbBtn.SetActive(false);
+        #endif
     }
     // Update is called once per frame
     void Update () {
@@ -37,5 +44,12 @@ public class ResultMenu : MonoBehaviour {
     {
         GameManager.getInstance().exitGame();
         DerivedNetworManager.getInstance().stopHost();
+    }
+
+    public void onClickGlobalLB()
+    {
+        #if UNITY_ANDROID
+            GPGSInterface.showGlobalLeaderboard();
+        #endif
     }
 }
