@@ -7,6 +7,7 @@ public class SettingsMenu : MonoBehaviour {
 
     public Toggle m_autoAimToggle;
     public Toggle m_soundToggle;
+
 	// Use this for initialization
 	void Start () {
 		

@@ -9,13 +9,24 @@ public class MenuHeader : MonoBehaviour {
     public Text     m_globalScore;
 
     public Text     m_xp;
+    public GameObject m_joystick;
 	// Use this for initialization
 	void Start () {
 		
 	}
-	
-	// Update is called once per frame
-	void Update () {
+
+    private void OnEnable()
+    {
+        m_joystick.SetActive(true);
+    }
+
+    private void OnDisable()
+    {
+        m_joystick.SetActive(false);
+    }
+
+    // Update is called once per frame
+    void Update () {
         m_candyCount.text = "" + GameStats.SOULS;
         m_globalScore.text = "" + GameManager.getInstance().getGlobalScore();
         m_xp.text = "" + GameManager.getInstance().getXp();

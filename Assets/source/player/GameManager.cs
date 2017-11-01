@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using GooglePlayGames;
 using GooglePlayGames.BasicApi;
 using UnityEngine.SocialPlatforms;
+using UnityEngine.UI;
 /// <summary>
 /// /class : GameManager
 /// /brief : starting point of game. handles add on functionalities such as pause game
@@ -31,6 +32,7 @@ public class GameManager : MonoBehaviour {
     public List<GameObject> m_particlePrefabList;
     public int m_particlePreloadCount = 100;
     private NetworkObjectPool m_networkObjectPool;
+    public GameObject m_rightJoystick;
 
     public NetworkObjectPool getNetworkPool() { return m_networkObjectPool; }
 
@@ -152,11 +154,14 @@ public class GameManager : MonoBehaviour {
         m_player.onStartGame();
         m_mainCamera.GetComponent<CameraFollower>().setTarget(m_player.transform);
 
+        CustomDebug.Log("Auto Aim Enabled : " + GameSettings.AUTOAIM);
+        enableRightJoystick(GameSettings.AUTOAIM == false);
         EnemyManager.getInstance().reset();
         EnemyManager.getInstance().setPlayer(m_player.transform);
         StateManager.getInstance().pushState(StateManager.MenuState.STATE_HUD);
         ItemManager.getInstance().usedCandy(PlayerDefs.CONST_START_GAME_PRICE);
         BulletManager.getInstance().setOnlineManager(m_player.gameObject);
+        
     }
 
     private void reset()
@@ -180,5 +185,10 @@ public class GameManager : MonoBehaviour {
     {
        setGameplayMode(GameManager.GameplayMode.SINGLE_PLAYER);
         DerivedNetworManager.getInstance().startHost();
+    }
+
+    public void enableRightJoystick(bool enable)
+    {
+        m_rightJoystick.GetComponent<Image>().enabled = enable;
     }
 }
