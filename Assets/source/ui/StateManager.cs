@@ -5,6 +5,9 @@ using UnityEngine;
 [System.Serializable]
 public class StateDictionary : DictionaryTemplate<StateManager.MenuState, GameObject> { }
 
+[System.Serializable]
+public class PopupDictionary : DictionaryTemplate<StateManager.PopupType, GameObject> { }
+
 public class StateManager : MonoBehaviour {
 
     public enum MenuState {
@@ -20,10 +23,20 @@ public class StateManager : MonoBehaviour {
         STATE_SETTINGS,
     }
 
+    public enum PopupType {
+        POPUP_NONE,
+        POPUP_RECEIVED_REWARD,
+        POPUP_NO_AD_AVAILABLE,
+        POPUP_NOT_ENOUGH_SOUL,
+        POPUP_WATCH_AD,
+    }
+
     private static StateManager m_instance;
     private MenuState           m_currentStateId = MenuState.STATE_NONE;
+    private PopupType           m_popupId = PopupType.POPUP_NONE;
 
     public List<StateDictionary> m_stateArray;
+    public List<PopupDictionary> m_popupArray;
 
     public static StateManager getInstance()
     {
@@ -64,6 +77,41 @@ public class StateManager : MonoBehaviour {
     public GameObject getStateObject(MenuState id)
     {
         var obj = m_stateArray.Find(item => item._key == id);
+        if (obj != null)
+            return obj._value;
+        return null;
+    }
+
+
+    // Popup
+
+    public PopupType getCurrentPopup()
+    {
+        return m_popupId;
+    }
+
+    public void pushPopup(PopupType type)
+    {
+        if (m_popupId != PopupType.POPUP_NONE)
+            getPopupObject(m_popupId).SetActive(false);
+
+        if (type != PopupType.POPUP_NONE)
+            getPopupObject(type).SetActive(true);
+
+        m_popupId = type;
+    }
+
+    public void popPopup()
+    {
+        if(m_popupId != PopupType.POPUP_NONE)
+            getPopupObject(m_popupId).SetActive(false);
+
+        m_popupId = PopupType.POPUP_NONE;
+    }
+
+    public GameObject getPopupObject(PopupType id)
+    {
+        var obj = m_popupArray.Find(item => item._key == id);
         if (obj != null)
             return obj._value;
         return null;

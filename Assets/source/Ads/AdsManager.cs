@@ -8,6 +8,7 @@ public class AdsManager {
     public enum AD_REQUEST_ID {
         AD_REQUEST_NONE,
         AD_REQUEST_CONTINUE_GAME,
+        AD_REQUEST_MAINMENU,
     }
 
     static AD_REQUEST_ID m_lastRequestId = AD_REQUEST_ID.AD_REQUEST_NONE;
@@ -42,15 +43,11 @@ public class AdsManager {
         switch (m_lastRequestId)
         {
             case AD_REQUEST_ID.AD_REQUEST_CONTINUE_GAME:
+            case AD_REQUEST_ID.AD_REQUEST_MAINMENU:
                 {
-                    if (GameStats.SOULS > PlayerDefs.CONST_RETRY_GAME_PRICE)
-                    {
-                        GameManager.getInstance().continueGame();
-                    }
-                    else
-                    {
-                        StateManager.getInstance().pushState(StateManager.MenuState.STATE_RESULT);
-                    }
+                    GameObject state = StateManager.getInstance().getPopupObject(StateManager.PopupType.POPUP_NOT_ENOUGH_SOUL);
+                    state.GetComponent<OKPopup>().setup("Received Reward : 1 Soul");
+                    StateManager.getInstance().pushPopup(StateManager.PopupType.POPUP_RECEIVED_REWARD);
                 }
                 break;
         }

@@ -53,11 +53,12 @@ public class GameManager : MonoBehaviour {
         #if UNITY_ANDROID
             GPGSInterface.init();
             AdsManager.init();
+            AdsManager.requestRewardedAd();
         #endif
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update () {
 	
 	}
     
@@ -173,5 +174,11 @@ public class GameManager : MonoBehaviour {
         GameManager.getInstance().m_player.onResumeGame();
         ItemManager.getInstance().usedCandy(PlayerDefs.CONST_RETRY_GAME_PRICE);
         StateManager.getInstance().pushState(StateManager.MenuState.STATE_HUD);
+    }
+
+    public void startSinglePlayerGame()
+    {
+       setGameplayMode(GameManager.GameplayMode.SINGLE_PLAYER);
+        DerivedNetworManager.getInstance().startHost();
     }
 }

@@ -40,12 +40,12 @@ public class MainMenu : MonoBehaviour {
 
     public void onClickSinglePlayer()
     {
-        GameManager.getInstance().setGameplayMode(GameManager.GameplayMode.SINGLE_PLAYER);
-        DerivedNetworManager.getInstance().startHost();
-
-        #if UNITY_ANDROID
-            AdsManager.requestRewardedAd();
-        #endif
+#if UNITY_ANDROID
+        if (GameStats.SOULS < PlayerDefs.CONST_START_GAME_PRICE)
+            StateManager.getInstance().pushPopup(StateManager.PopupType.POPUP_WATCH_AD);
+        else
+#endif
+            GameManager.getInstance().startSinglePlayerGame();
     }
 
     public void onClickMultiplayer()

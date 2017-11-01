@@ -395,6 +395,8 @@
     <Compile Include="Assets\source\ui\MenuHeader.cs" />
     <Compile Include="Assets\source\ui\MultiplayerMenu.cs" />
     <Compile Include="Assets\source\ui\PauseMenu.cs" />
+    <Compile Include="Assets\source\ui\Popups\OKPopup.cs" />
+    <Compile Include="Assets\source\ui\Popups\WatchAdPopup.cs" />
     <Compile Include="Assets\source\ui\ResultMenu.cs" />
     <Compile Include="Assets\source\ui\RetryMenu.cs" />
     <Compile Include="Assets\source\ui\SettingsMenu.cs" />
