@@ -200,7 +200,7 @@ public class SpawnerEnemy : EnemyBase {
                 child.GetComponent<RandomPathEnemy>().setup(m_childSpeed, m_childHealth, m_childChangeTimeOffset, m_childBulletType);
                 break;
             case EnemyManager.ENEMY_TYPE.ENEMY_RANDOM_SHOOTER:
-                child.GetComponent<RandomPathEnemy>().setup(m_childSpeed, m_childHealth, m_childChangeTimeOffset, m_childBulletType, m_childBulletPrefab, m_childBulletInterval, m_childBulletSpeed);
+                child.GetComponent<RandomPathEnemy>().setup(m_childSpeed, m_childHealth, m_childChangeTimeOffset, m_childBulletType, m_childBulletPrefab, target, m_childBulletInterval, m_childBulletSpeed);
                 break;
             case EnemyManager.ENEMY_TYPE.ENEMY_RUNAWAY:
                 child.GetComponent<RunawayEnemy>().setup(m_childSpeed, m_childHealth, m_childChangeTimeOffset, m_childSafeDistance, m_childBulletType, m_childBulletPrefab, target, m_childBulletInterval, m_childBulletSpeed);

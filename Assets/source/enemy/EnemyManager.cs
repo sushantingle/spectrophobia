@@ -30,6 +30,8 @@ public class EnemyManager : NetworkBehaviour{
 
 	public enum BOSS_TYPE {
 		BOSS_NORMAL = 0,
+        BOSS_RANDOM_PATH,
+        BOSS_SPAWN_ONHIT_RANDOM_PATH,
 		BOSS_COUNT,
 	}
 
@@ -350,8 +352,15 @@ public class EnemyManager : NetworkBehaviour{
         {
             case BOSS_TYPE.BOSS_NORMAL:
                 //Setup
-                e.GetComponent<LinearBoss>().setup(m_player);
+                e.GetComponent<LinearEnemy>().setup(m_player);
                 break;
+            case BOSS_TYPE.BOSS_RANDOM_PATH:
+                e.GetComponent<RandomPathEnemy>().setup(m_player);
+                break;
+            case BOSS_TYPE.BOSS_SPAWN_ONHIT_RANDOM_PATH:
+                e.GetComponent<SpawnerEnemy>().setup(m_player);
+                break;
+
         }
     }
     public void onCustomEnemySpawned(GameObject obj)
@@ -434,7 +443,8 @@ public class EnemyManager : NetworkBehaviour{
         
 	public void spawnBoss()
 	{
-			int bossId = 0;
+            int bossId = Random.Range(0, 100);
+            bossId = bossId % (int)m_bossPrefabs.Count;
 			//enemyId = enemyId % (int)ENEMY_TYPE.ENEMY_COUNT;
 
 			bool spawn = true;

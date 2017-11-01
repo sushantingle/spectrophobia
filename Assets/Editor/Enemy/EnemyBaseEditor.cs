@@ -29,7 +29,8 @@ public class EnemyBaseEditor : Editor
         m_explosionDamage_Prop,
         m_points_Prop,
         m_Team_Prop,
-        m_damage_Prop;
+        m_damage_Prop,
+        m_isBoss_Prop;
 
     protected virtual void OnEnable()
     {
@@ -54,6 +55,7 @@ public class EnemyBaseEditor : Editor
         m_points_Prop = serializedObject.FindProperty("m_points");
         m_Team_Prop = serializedObject.FindProperty("m_team");
         m_damage_Prop = serializedObject.FindProperty("m_damage");
+        m_isBoss_Prop = serializedObject.FindProperty("m_isBoss");
     }
 
     public override void OnInspectorGUI()
@@ -63,6 +65,7 @@ public class EnemyBaseEditor : Editor
         EditorGUILayout.PropertyField(m_speed_Prop);
         EditorGUILayout.PropertyField(m_maxhealth_Prop);
         EditorGUILayout.PropertyField(m_damage_Prop);
+        EditorGUILayout.PropertyField(m_isBoss_Prop);
         EditorGUILayout.PropertyField(m_bulletType_Prop);
 
         BulletManager.BulletType bulletType = (BulletManager.BulletType)m_bulletType_Prop.enumValueIndex;

@@ -143,4 +143,9 @@ public class PathBase {
     {
         return (m_moveStatus != 0);
     }
+
+    public void setSpeed(float speed)
+    {
+        m_speed = speed;
+    }
 }

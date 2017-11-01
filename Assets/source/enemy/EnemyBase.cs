@@ -38,7 +38,7 @@ public class EnemyBase : NetworkBehaviour {
     public float m_bulletInterval = 1.0f;
     [SyncVar]
     public float m_bulletSpeed = 0.2f;
-    
+
     // Linear N Bullet Type
     [SyncVar]
     public int m_bulletCount = 4;
@@ -58,9 +58,9 @@ public class EnemyBase : NetworkBehaviour {
     public float m_bulletProjectionAngle = 30.0f;
 
     protected float m_fireStartTime;
-    protected bool m_isBoss = false;
+    public bool m_isBoss = false;
 
-    [HideInInspector]public PathDefs.AI_PATH_TYPE m_pathType = PathDefs.AI_PATH_TYPE.PATH_LINEAR;
+    [HideInInspector] public PathDefs.AI_PATH_TYPE m_pathType = PathDefs.AI_PATH_TYPE.PATH_LINEAR;
 
     protected int m_hitStatus = 0;
     protected int m_moveStatus = 0;
@@ -68,7 +68,7 @@ public class EnemyBase : NetworkBehaviour {
     public BulletManager.BulletType m_bulletType = BulletManager.BulletType.BULLET_NONE;
 
     protected PathBase m_path = null;
-    [SyncVar (hook = "OnSetPlayerInstanceId")]
+    [SyncVar(hook = "OnSetPlayerInstanceId")]
     public NetworkInstanceId m_playerInstanceId;
 
     public float m_damage = 1.0f;
@@ -95,15 +95,15 @@ public class EnemyBase : NetworkBehaviour {
     public float m_explosionDamage;
 
     public int m_points = 0;
-    [SyncVar (hook = "OnSetParentInstanceId")]
+    [SyncVar(hook = "OnSetParentInstanceId")]
     public NetworkInstanceId m_parentInstanceId = NetworkInstanceId.Invalid;
 
-    [SyncVar (hook = "OnSetCardData")]
+    [SyncVar(hook = "OnSetCardData")]
     public CardData m_cardData;
 
     // Use this for initialization
     protected virtual void EStart() {
-        
+
         // special power
         m_health = m_maxHealth;
     }
@@ -154,7 +154,7 @@ public class EnemyBase : NetworkBehaviour {
     {
         if (m_bulletType != BulletManager.BulletType.BULLET_NONE)
         {
-            if(m_pathType != PathDefs.AI_PATH_TYPE.PATH_RABBIT)
+            if (m_pathType != PathDefs.AI_PATH_TYPE.PATH_RABBIT)
                 updateBullet();
         }
 
@@ -225,7 +225,7 @@ public class EnemyBase : NetworkBehaviour {
         CustomDebug.Log("Base Speed : " + speed);
         CustomDebug.Log("Bullet Type: " + bulletType);
         CustomDebug.Log("Bullet Prefab: " + prefab.name);
-        
+
         m_speed = speed;
         m_health = health;
         m_bulletInterval = bulletInterval;
@@ -272,7 +272,7 @@ public class EnemyBase : NetworkBehaviour {
 
     protected virtual void OnETriggerEnter(Collider2D col)
     {
-        
+
         if (col.gameObject.layer == LayerMask.NameToLayer("playerbullet"))
         {
             BulletBase bulletBase = col.gameObject.GetComponent<BulletBase>();
@@ -471,7 +471,7 @@ public class EnemyBase : NetworkBehaviour {
     {
         if (isCustomLocalPlayer() == false)
         {
-			// TODO : Need to check
+            // TODO : Need to check
             CustomDebug.Log("On External Damage Enemy Base Not a local player");
             return;
         }
@@ -488,12 +488,12 @@ public class EnemyBase : NetworkBehaviour {
 
     protected void setHitStatus(PathDefs.AI_Direction flag)
     {
-        m_hitStatus =  m_hitStatus | (int)flag;
+        m_hitStatus = m_hitStatus | (int)flag;
     }
 
     protected void resetHitStatus(PathDefs.AI_Direction flag)
     {
-        m_hitStatus = m_hitStatus & ~ (int)flag;
+        m_hitStatus = m_hitStatus & ~(int)flag;
     }
 
     protected bool isHitStatusSet(PathDefs.AI_Direction flag)
@@ -509,12 +509,12 @@ public class EnemyBase : NetworkBehaviour {
 
     protected void setMoveStatus(PathDefs.AI_Direction flag)
     {
-        m_moveStatus = m_moveStatus | (int) flag;
+        m_moveStatus = m_moveStatus | (int)flag;
     }
 
     protected void resetMoveStatus(PathDefs.AI_Direction flag)
     {
-        m_moveStatus = m_moveStatus & ~(int) flag;
+        m_moveStatus = m_moveStatus & ~(int)flag;
     }
 
     protected bool isMovingInDirection(PathDefs.AI_Direction flag)
@@ -576,7 +576,7 @@ public class EnemyBase : NetworkBehaviour {
     public override void OnStartClient()
     {
         base.OnStartClient();
-        CustomDebug.Log("Enemy Base : On Start Client : "+m_team);
+        CustomDebug.Log("Enemy Base : On Start Client : " + m_team);
         if (m_team != Player.Player_Team.TEAM_NONE)
         {
             OnSetTeam(m_team);
@@ -598,13 +598,13 @@ public class EnemyBase : NetworkBehaviour {
     private void OnSetPlayerInstanceId(NetworkInstanceId netId)
     {
         m_playerInstanceId = netId;
-        CustomDebug.Log("OnSetPlayerInstance Id : " + netId.Value+ "    m_playerInstance Id : "+m_playerInstanceId);
+        CustomDebug.Log("OnSetPlayerInstance Id : " + netId.Value + "    m_playerInstance Id : " + m_playerInstanceId);
         GameObject obj = null;
-        if(GameManager.getInstance().isServer())
+        if (GameManager.getInstance().isServer())
             obj = NetworkServer.FindLocalObject(netId);
         else
-           obj = ClientScene.FindLocalObject(netId);
-    
+            obj = ClientScene.FindLocalObject(netId);
+
         if (obj != null)
         {
             CustomDebug.Log("Network Player found");
@@ -691,7 +691,7 @@ public class EnemyBase : NetworkBehaviour {
     public void checkForNPCTargets()
     {
         m_NPCTargetList.Clear();
-        
+
         List<Transform> targetList = Util.getTransformListWithLayer(LayerMask.NameToLayer("player"));
         //CustomDebug.Log("Player Target List Size : " + targetList.Count);
         if (isNPCKiller()) // pick same team mate to kill
@@ -717,7 +717,7 @@ public class EnemyBase : NetworkBehaviour {
                 }
             }
         }
-        
+
         if (isNPCArmy())
         {
             List<Transform> playerTargetList = Util.getTransformListWithLayer(LayerMask.NameToLayer("player"));
@@ -768,6 +768,12 @@ public class EnemyBase : NetworkBehaviour {
 
         m_lookAt = target;
         m_path.init(transform, m_speed, m_lookAt);
+    }
+
+    protected void changeSpeed(float speed)
+    {
+        m_speed = speed;
+        m_path.setSpeed(speed);
     }
 }
 	
