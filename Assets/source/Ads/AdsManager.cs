@@ -12,6 +12,8 @@ public class AdsManager {
     }
 
     static AD_REQUEST_ID m_lastRequestId = AD_REQUEST_ID.AD_REQUEST_NONE;
+    private static bool m_adLoaded = false;
+    private static bool m_hasRequested = false;
 
     public static void init()
     {
@@ -21,18 +23,27 @@ public class AdsManager {
     // Request
     public static void requestRewardedAd()
     {
+        if (m_hasRequested)
+        {
+            CustomDebug.Log("Ad Already requested");
+            return;
+        }
         CustomDebug.Log("Request Rewarded Ad");
         m_googleAdsInterface.requestRewardedVideo();
+        m_adLoaded = false;
+        m_hasRequested = true;
+        m_lastRequestId = AD_REQUEST_ID.AD_REQUEST_NONE;
     }
 
     public static bool showRewardedAd(AD_REQUEST_ID requestId)
     {
         CustomDebug.Log("show rewarde ad");
-        if (m_googleAdsInterface.isLoaded())
+        if (m_adLoaded)
         {
             CustomDebug.Log("Ad lOaded");
             m_lastRequestId = requestId;
             m_googleAdsInterface.showRewardedAd();
+            m_hasRequested = false;
             return true;
         }
         return false;
@@ -45,27 +56,25 @@ public class AdsManager {
             case AD_REQUEST_ID.AD_REQUEST_CONTINUE_GAME:
             case AD_REQUEST_ID.AD_REQUEST_MAINMENU:
                 {
-                    GameObject state = StateManager.getInstance().getPopupObject(StateManager.PopupType.POPUP_NOT_ENOUGH_SOUL);
+                    GameObject state = StateManager.getInstance().getPopupObject(StateManager.PopupType.POPUP_RECEIVED_REWARD);
                     state.GetComponent<OKPopup>().setup("Received Reward : 1 Soul");
                     StateManager.getInstance().pushPopup(StateManager.PopupType.POPUP_RECEIVED_REWARD);
                 }
                 break;
         }
-
-        m_lastRequestId = AD_REQUEST_ID.AD_REQUEST_NONE;
-        m_googleAdsInterface.requestRewardedVideo();
     }
 
     // Callback
 
     public static void OnRewardedAdClosed()
     {
-
+        requestRewardedAd();
     }
 
     public static void OnRewardedAdLoaded()
     {
-
+        m_adLoaded = true;
+        CustomDebug.Log("Ad Loaded successfully");
     }
 
     public static void OnRewardedAdStarted()
@@ -91,6 +100,6 @@ public class AdsManager {
 
     public static void OnRewardedAdFailedToLoad()
     {
-        m_googleAdsInterface.requestRewardedVideo();
+        requestRewardedAd();
     }
 }

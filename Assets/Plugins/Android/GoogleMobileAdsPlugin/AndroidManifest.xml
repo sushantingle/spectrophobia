@@ -12,4 +12,12 @@ required for displaying ads.
       android:targetSdkVersion="19" />
   <application>
   </application>
+  <activity android:name="com.adcolony.sdk.AdColonyInterstitialActivity"
+      android:configChanges="keyboardHidden|orientation|screenSize"
+      android:hardwareAccelerated="true"/>
+  <activity android:name="com.adcolony.sdk.AdColonyAdViewActivity"
+      android:configChanges="keyboardHidden|orientation|screenSize"
+      android:hardwareAccelerated="true"/>
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+<uses-permission android:name="android.permission.VIBRATE" />
 </manifest>

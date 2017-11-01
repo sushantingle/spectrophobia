@@ -31,7 +31,7 @@ public class RetryMenu : MonoBehaviour {
     public void OnClickYes()
     {
 #if UNITY_ANDROID
-        if (GameStats.SOULS > PlayerDefs.CONST_RETRY_GAME_PRICE)
+        if (GameStats.SOULS >= PlayerDefs.CONST_RETRY_GAME_PRICE)
         {
             GameManager.getInstance().continueGame();
         }

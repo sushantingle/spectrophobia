@@ -50,7 +50,7 @@ public class GoogleAdsInterface {
 
     public void showRewardedAd()
     {
-        if (m_rewardBasedVideoAd.IsLoaded())
+        //if (m_rewardBasedVideoAd.IsLoaded())
         {
             m_rewardBasedVideoAd.Show();
         }
