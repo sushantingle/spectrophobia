@@ -131,6 +131,13 @@ public class BulletManager : NetworkBehaviour {
 
         Vector3 direction = _direction.normalized;
 
+        if (GameManager.getInstance().isSinglePlayer())
+            Local_LinearBullet(_type, layer, _spawner.position, _direction.normalized, _speed, _parentNetId);
+        #if ENABLE_MULTIPLAYER
+            else if (GameManager.getInstance().isMultiplayer())
+                m_onlineBulletManager.Cmd_LinearBullet(_type, layer, _spawner.position, _direction.normalized, _speed, _parentNetId);
+        #endif
+
         for (int i = 0; i < _count; i++)
         {
             float x1 = direction.x * Mathf.Cos(angle) - direction.y * Mathf.Sin(angle);

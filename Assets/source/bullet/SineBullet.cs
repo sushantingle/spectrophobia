@@ -49,7 +49,7 @@ public class SineBullet : BulletBase {
 
     public void setup(Vector3 direction, float speed, float amplitude, NetworkInstanceId _parentNetId, float lifeStartPoint = Mathf.PI)
     {
-        Vector3 dir = (direction == Vector3.zero) ? Vector3.right : direction;
+        Vector3 dir = (direction.x > 0.0f) ? Vector3.right : Vector3.left;
         base.setup(_parentNetId, dir, speed);
         m_amplitude = amplitude;
         m_life = lifeStartPoint;
