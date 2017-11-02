@@ -5,10 +5,6 @@ using UnityEngine;
 public class RandomPathEnemy : EnemyBase {
 
     public float m_changeTimeOffset = 0.2f;
-    public float m_bonusSpeed = 1.0f;
-    public float m_bonusSpeedDuration = 0.0f;
-    private float m_bonusSpeedStartTime;
-    private float m_originalSpeed;
 
     private void Awake()
     {
@@ -25,26 +21,12 @@ public class RandomPathEnemy : EnemyBase {
     {
         base.OnEnable();
         EStart();
-        m_bonusSpeedStartTime = Time.time;
-        m_originalSpeed = m_speed;
     }
 
-    private void OnDisable()
-    {
-        m_speed = m_originalSpeed;
-    }
     protected override void EUpdate()
     {
         base.EUpdate();
         m_path.update();
-
-        if (m_isBoss)
-        {
-            if (Time.time - m_bonusSpeedStartTime > m_bonusSpeedDuration)
-            {
-                base.changeSpeed(m_originalSpeed);
-            }
-        }
     }
 
     protected override void EFixedUpdate()
@@ -63,13 +45,5 @@ public class RandomPathEnemy : EnemyBase {
     private void OnTriggerEnter2D(Collider2D collider)
     {
         base.OnETriggerEnter(collider);
-        if (m_isBoss)
-        {
-            if (collider.gameObject.layer == LayerMask.NameToLayer("playerbullet"))
-            {
-                base.changeSpeed(m_originalSpeed + m_bonusSpeed);
-                m_bonusSpeedStartTime = Time.time;
-            }
-        }
     }
 }

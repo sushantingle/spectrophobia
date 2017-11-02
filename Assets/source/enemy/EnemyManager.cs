@@ -32,6 +32,7 @@ public class EnemyManager : NetworkBehaviour{
 		BOSS_NORMAL = 0,
         BOSS_RANDOM_PATH,
         BOSS_SPAWN_ONHIT_RANDOM_PATH,
+        BOSS_FOLLOWER_PATH,
 		BOSS_COUNT,
 	}
 
@@ -359,6 +360,9 @@ public class EnemyManager : NetworkBehaviour{
                 break;
             case BOSS_TYPE.BOSS_SPAWN_ONHIT_RANDOM_PATH:
                 e.GetComponent<SpawnerEnemy>().setup(m_player);
+                break;
+            case BOSS_TYPE.BOSS_FOLLOWER_PATH:
+                e.GetComponent<FollowerEnemy>().setup(m_player);
                 break;
 
         }

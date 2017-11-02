@@ -83,6 +83,7 @@ public class EnemyBase : NetworkBehaviour {
         POWER_EXPLODE_ON_DEATH,
     }
     public SpecialPower m_specialPower;
+
     // Auto Recovery Power
     private float m_lastHitTime;
     public float m_recoveryRate;
@@ -93,6 +94,24 @@ public class EnemyBase : NetworkBehaviour {
     public float m_explosionRange;
     public float m_explosionDelay;
     public float m_explosionDamage;
+
+    // Special Ability
+    public enum SpecialAbility
+    {
+        ABILITY_NONE,
+        ABILITY_MOVE_FAST_RANDOM_ON_HIT,
+        ABILITY_MOVE_FAST_TOWARDS_ON_HIT,
+    }
+    public SpecialAbility m_specialAbility = SpecialAbility.ABILITY_NONE;
+
+    // Ability generic
+    private float m_abilityStartTime;
+    private float m_originalSpeed;
+
+    // Ability Move Fast
+    public float m_abilitySpeed;
+    public float m_abilityDuration;
+    
 
     public int m_points = 0;
     [SyncVar(hook = "OnSetParentInstanceId")]
@@ -114,6 +133,12 @@ public class EnemyBase : NetworkBehaviour {
         m_animator = GetComponent<Animator>();
         createPath();
         m_health = m_maxHealth;
+        m_originalSpeed = m_speed;
+        m_abilityStartTime = Time.time;
+    }
+
+    protected virtual void OnDisable() {
+        m_speed = m_originalSpeed;
     }
 
     private void createPath()
@@ -159,6 +184,7 @@ public class EnemyBase : NetworkBehaviour {
         }
 
         updateSpecialPower();
+        updateSpecialAbility();
 #if ENABLE_MULTIPLAYER
         if (GameManager.getInstance().isMultiplayer())
         {
@@ -285,6 +311,9 @@ public class EnemyBase : NetworkBehaviour {
                 }
             }
 
+            if(m_specialAbility == SpecialAbility.ABILITY_MOVE_FAST_RANDOM_ON_HIT || m_specialAbility == SpecialAbility.ABILITY_MOVE_FAST_TOWARDS_ON_HIT)
+                triggerSpecialAbility();
+           
             //Destroy(col.gameObject);
 #if ENABLE_MULTIPLAYER
             if (GameManager.getInstance().isMultiplayer() && bulletBase.getParentTeam() == Team)
@@ -774,6 +803,36 @@ public class EnemyBase : NetworkBehaviour {
     {
         m_speed = speed;
         m_path.setSpeed(speed);
+    }
+
+    protected void updateSpecialAbility()
+    {
+        switch (m_specialAbility)
+        {
+            case SpecialAbility.ABILITY_MOVE_FAST_RANDOM_ON_HIT:
+            case SpecialAbility.ABILITY_MOVE_FAST_TOWARDS_ON_HIT:
+                {
+                    if (Time.time - m_abilityStartTime > m_abilityDuration)
+                    {
+                        changeSpeed(m_originalSpeed);
+                    }
+                }
+                break;
+        }
+    }
+
+    protected void triggerSpecialAbility()
+    {
+        switch (m_specialAbility)
+        {
+            case SpecialAbility.ABILITY_MOVE_FAST_RANDOM_ON_HIT:
+            case SpecialAbility.ABILITY_MOVE_FAST_TOWARDS_ON_HIT:
+                {
+                    changeSpeed(m_originalSpeed + m_abilitySpeed);
+                    m_abilityStartTime = Time.time;
+                }
+                break;
+        }
     }
 }
 	

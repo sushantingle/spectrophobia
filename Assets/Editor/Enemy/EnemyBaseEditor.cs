@@ -30,7 +30,10 @@ public class EnemyBaseEditor : Editor
         m_points_Prop,
         m_Team_Prop,
         m_damage_Prop,
-        m_isBoss_Prop;
+        m_isBoss_Prop,
+        m_specialAbility_Prop,
+        m_abilitySpeed_Prop,
+        m_abilityDuration_Prop;
 
     protected virtual void OnEnable()
     {
@@ -56,6 +59,9 @@ public class EnemyBaseEditor : Editor
         m_Team_Prop = serializedObject.FindProperty("m_team");
         m_damage_Prop = serializedObject.FindProperty("m_damage");
         m_isBoss_Prop = serializedObject.FindProperty("m_isBoss");
+        m_specialAbility_Prop = serializedObject.FindProperty("m_specialAbility");
+        m_abilityDuration_Prop = serializedObject.FindProperty("m_abilityDuration");
+        m_abilitySpeed_Prop = serializedObject.FindProperty("m_abilitySpeed");
     }
 
     public override void OnInspectorGUI()
@@ -119,6 +125,23 @@ public class EnemyBaseEditor : Editor
         enemyBase.m_cardData.m_npcType = (CardDataBase.NPC_TYPE)EditorGUILayout.EnumPopup("NpcType", enemyBase.m_cardData.m_npcType);
         enemyBase.m_cardData.m_healFactor = EditorGUILayout.FloatField("Heal Factor", enemyBase.m_cardData.m_healFactor);
         enemyBase.m_cardData.m_damageFactor = EditorGUILayout.FloatField("Damage Factor", enemyBase.m_cardData.m_damageFactor);
+
+        EditorGUILayout.PropertyField(m_specialAbility_Prop);
+        EnemyBase.SpecialAbility abilityType = (EnemyBase.SpecialAbility) m_specialAbility_Prop.enumValueIndex;
+
+        if (abilityType != EnemyBase.SpecialAbility.ABILITY_NONE)
+        {
+            
+            switch (abilityType)
+            {
+                case EnemyBase.SpecialAbility.ABILITY_MOVE_FAST_RANDOM_ON_HIT:
+                case EnemyBase.SpecialAbility.ABILITY_MOVE_FAST_TOWARDS_ON_HIT:
+                    EditorGUILayout.PropertyField(m_abilityDuration_Prop);
+                    EditorGUILayout.PropertyField(m_abilitySpeed_Prop);
+                    break;
+            }
+        }
+
         serializedObject.ApplyModifiedProperties();
     }
 }
