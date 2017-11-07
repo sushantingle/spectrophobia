@@ -5,16 +5,30 @@ using UnityEngine;
 public class BaseItemData {
     protected bool m_isActive;
     protected ItemManager.ITEM_TYPE m_type;
+    public float m_duration = -1;
+    private float m_startTime;
 
-    public void init(ItemManager.ITEM_TYPE _type)
+    public void init(ItemManager.ITEM_TYPE _type, float duration = -1)
     {
+        m_startTime = Time.time;
         m_isActive = true;
         m_type = _type;
+        m_duration = duration;
         CustomDebug.Log("Activated : " + m_type);
     }
 
     public virtual void update()
     {
+        if (m_duration >= 0.0f)
+        {
+            if (m_startTime + m_duration < Time.time)
+                onDeactivate();
+
+            if (GameManager.getInstance().m_player != null)
+            {
+                GameManager.getInstance().m_player.updatePowerBar(1 - ((Time.time - m_startTime) / m_duration));
+            }
+        }
 
     }
 

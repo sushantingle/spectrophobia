@@ -35,6 +35,7 @@ public class Player : NetworkBehaviour {
     public float            m_healthDegradeFactor = 0.01f;
     private float m_degradeStartTime;
 
+    public ProgressBar      m_powerBar;
     public bool m_autoAim = false;
     private Vector3 m_lastFireDirection = Vector3.zero;
 	// Use this for initialization
@@ -351,5 +352,20 @@ public class Player : NetworkBehaviour {
     public Player.Player_Team getTeam()
     {
         return m_team;
+    }
+
+    public void updatePowerBar(float value)
+    {
+       m_powerBar.setValue(value);
+    }
+
+    public void onAddedPower()
+    {
+        m_powerBar.gameObject.SetActive(true);
+    }
+
+    public void onRemovedPower()
+    {
+        m_powerBar.gameObject.SetActive(false);
     }
 }

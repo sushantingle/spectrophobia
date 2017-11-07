@@ -61,15 +61,7 @@ public class ItemManager : MonoBehaviour {
         // update itemdata of specific items only
         foreach (BaseItemData itemData in m_ownedItemList)
         {
-            switch (itemData.getItemType())
-            {
-                case ITEM_TYPE.ITEM_D:
-                    itemData.update();
-                    break;
-                case ITEM_TYPE.ITEM_INVINCIBLE:
-                    (itemData as InvincibleItemData).update();
-                    break;
-            }
+            itemData.update();
         }
     }
     /*
@@ -154,24 +146,38 @@ public class ItemManager : MonoBehaviour {
                     break;
                 case ITEM_TYPE.ITEM_D:
                     {
-                        BaseItemData itemData = new BaseItemData();
-                        itemData.init(ITEM_TYPE.ITEM_D);
-
                         removeItemOtherThan(ITEM_TYPE.ITEM_D);
 
                         if (!hasItemActive(ITEM_TYPE.ITEM_D))
+                        {
+                            BaseItemData itemData = new BaseItemData();
+                            itemData.init(ITEM_TYPE.ITEM_D, itemObj.m_activeDuration);
                             m_ownedItemList.Add(itemData);
+                        }
+                        else
+                        {
+                            BaseItemData itemData = getItemData(ITEM_TYPE.ITEM_D);
+                            itemData.init(ITEM_TYPE.ITEM_D, itemObj.m_activeDuration);
+                        }
+                        GameManager.getInstance().m_player.onAddedPower();
                     }
                     break;
                 case ITEM_TYPE.ITEM_SINE:
                     {
-                        BaseItemData itemData = new BaseItemData();
-                        itemData.init(ITEM_TYPE.ITEM_SINE);
-
                         removeItemOtherThan(ITEM_TYPE.ITEM_SINE);
 
                         if (!hasItemActive(ITEM_TYPE.ITEM_SINE))
+                        {
+                            BaseItemData itemData = new BaseItemData();
+                            itemData.init(ITEM_TYPE.ITEM_SINE, itemObj.m_activeDuration);
                             m_ownedItemList.Add(itemData);
+                        }
+                        else
+                        {
+                            BaseItemData itemData = getItemData(ITEM_TYPE.ITEM_SINE);
+                            itemData.init(ITEM_TYPE.ITEM_SINE, itemObj.m_activeDuration);
+                        }
+                        GameManager.getInstance().m_player.onAddedPower();
                     }
                     break;
 
@@ -208,24 +214,40 @@ public class ItemManager : MonoBehaviour {
                     break;
                 case ITEM_TYPE.ITEM_S:
                     {
-                        BaseItemData itemData = new BaseItemData();
-                        itemData.init(ITEM_TYPE.ITEM_S);
-
                         removeItemOtherThan(ITEM_TYPE.ITEM_S);
 
                         if (!hasItemActive(ITEM_TYPE.ITEM_S))
+                        {
+                            BaseItemData itemData = new BaseItemData();
+                            itemData.init(ITEM_TYPE.ITEM_S, itemObj.m_activeDuration);
                             m_ownedItemList.Add(itemData);
+                        }
+                        else
+                        {
+                            BaseItemData itemData = getItemData(ITEM_TYPE.ITEM_S);
+                            itemData.init(ITEM_TYPE.ITEM_S, itemObj.m_activeDuration);
+                        }
+
+                        GameManager.getInstance().m_player.onAddedPower();
                     }
                     break;
                 case ITEM_TYPE.ITEM_T:
                     {
-                        BaseItemData itemData = new BaseItemData();
-                        itemData.init(ITEM_TYPE.ITEM_T);
-
                         removeItemOtherThan(ITEM_TYPE.ITEM_T);
 
                         if (!hasItemActive(ITEM_TYPE.ITEM_T))
+                        {
+                            BaseItemData itemData = new BaseItemData();
+                            itemData.init(ITEM_TYPE.ITEM_T, itemObj.m_activeDuration);
                             m_ownedItemList.Add(itemData);
+                        }
+                        else
+                        {
+                            BaseItemData itemData = getItemData(ITEM_TYPE.ITEM_T);
+                            itemData.init(ITEM_TYPE.ITEM_T, itemObj.m_activeDuration);
+                        }
+
+                        GameManager.getInstance().m_player.onAddedPower();
                     }
                     break;
             }
@@ -234,12 +256,18 @@ public class ItemManager : MonoBehaviour {
 
     private void removeItemOtherThan(ITEM_TYPE type)
     {
-        m_ownedItemList.RemoveAll(item => ((item.getItemType() != type) && (item.getItemType() == ITEM_TYPE.ITEM_D || item.getItemType() == ITEM_TYPE.ITEM_S || item.getItemType() == ITEM_TYPE.ITEM_T)));
-    }
+        if (type != ITEM_TYPE.ITEM_D)
+            removeItem(ITEM_TYPE.ITEM_D);
 
-    private bool cnaRemoveType(BaseItemData item)
-    {
-        return ((item.getItemType() == ITEM_TYPE.ITEM_D || item.getItemType() == ITEM_TYPE.ITEM_S || item.getItemType() == ITEM_TYPE.ITEM_T));
+        if (type != ITEM_TYPE.ITEM_S)
+            removeItem(ITEM_TYPE.ITEM_S);
+
+        if (type != ITEM_TYPE.ITEM_SINE)
+            removeItem(ITEM_TYPE.ITEM_SINE);
+
+        if (type != ITEM_TYPE.ITEM_T)
+            removeItem(ITEM_TYPE.ITEM_T);
+
     }
 
     public void removeItem(BaseItemData itemData) {
@@ -260,6 +288,8 @@ public class ItemManager : MonoBehaviour {
                 GameManager.getInstance().m_player.onRemovedInvincible();
                 break;
         }
+
+        GameManager.getInstance().m_player.onRemovedPower();
     }
 
 	public void collectedCandy(int count) {
@@ -286,6 +316,12 @@ public class ItemManager : MonoBehaviour {
 		}
 		return false;
 	}
+
+    private BaseItemData getItemData(ITEM_TYPE type)
+    {
+        var itemData = m_ownedItemList.Find(item => (item.getItemType() == type));
+        return itemData;
+    }
 
 	public BaseItemData getItemOfType(ITEM_TYPE itemType) {
 		foreach (BaseItemData item in m_ownedItemList) {
