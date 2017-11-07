@@ -7,7 +7,6 @@ public class SBulletItem : ItemBase {
     protected override void Start()
     {
         base.Start();
-        m_type = ItemManager.ITEM_TYPE.ITEM_S;
     }
 
     protected override void Update()

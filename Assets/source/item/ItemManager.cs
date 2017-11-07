@@ -23,6 +23,8 @@ public class ItemManager : MonoBehaviour {
         ITEM_C, // Shockwave
         ITEM_S, // 4 bullets
         ITEM_A, // increase bullet speed
+        ITEM_T, // 3 bullets
+        ITEM_SINE, // sine bullet
 		ITEM_COUNT,
 	}
     
@@ -155,14 +157,24 @@ public class ItemManager : MonoBehaviour {
                         BaseItemData itemData = new BaseItemData();
                         itemData.init(ITEM_TYPE.ITEM_D);
 
-                        //remove S power
-                        if (hasItemActive(ITEM_TYPE.ITEM_S))
-                            removeItem(ITEM_TYPE.ITEM_S);
+                        removeItemOtherThan(ITEM_TYPE.ITEM_D);
 
                         if (!hasItemActive(ITEM_TYPE.ITEM_D))
                             m_ownedItemList.Add(itemData);
                     }
                     break;
+                case ITEM_TYPE.ITEM_SINE:
+                    {
+                        BaseItemData itemData = new BaseItemData();
+                        itemData.init(ITEM_TYPE.ITEM_SINE);
+
+                        removeItemOtherThan(ITEM_TYPE.ITEM_SINE);
+
+                        if (!hasItemActive(ITEM_TYPE.ITEM_SINE))
+                            m_ownedItemList.Add(itemData);
+                    }
+                    break;
+
                 case ITEM_TYPE.ITEM_INVINCIBLE:
                     {
                         InvincibleItem invincibleItem = (InvincibleItem) itemObj;
@@ -199,16 +211,35 @@ public class ItemManager : MonoBehaviour {
                         BaseItemData itemData = new BaseItemData();
                         itemData.init(ITEM_TYPE.ITEM_S);
 
-                        // if has D power, then remove it
-                        if (hasItemActive(ITEM_TYPE.ITEM_D))
-                            removeItem(ITEM_TYPE.ITEM_D);
+                        removeItemOtherThan(ITEM_TYPE.ITEM_S);
 
-                        if(!hasItemActive(ITEM_TYPE.ITEM_S))
+                        if (!hasItemActive(ITEM_TYPE.ITEM_S))
+                            m_ownedItemList.Add(itemData);
+                    }
+                    break;
+                case ITEM_TYPE.ITEM_T:
+                    {
+                        BaseItemData itemData = new BaseItemData();
+                        itemData.init(ITEM_TYPE.ITEM_T);
+
+                        removeItemOtherThan(ITEM_TYPE.ITEM_T);
+
+                        if (!hasItemActive(ITEM_TYPE.ITEM_T))
                             m_ownedItemList.Add(itemData);
                     }
                     break;
             }
         }
+    }
+
+    private void removeItemOtherThan(ITEM_TYPE type)
+    {
+        m_ownedItemList.RemoveAll(item => ((item.getItemType() != type) && (item.getItemType() == ITEM_TYPE.ITEM_D || item.getItemType() == ITEM_TYPE.ITEM_S || item.getItemType() == ITEM_TYPE.ITEM_T)));
+    }
+
+    private bool cnaRemoveType(BaseItemData item)
+    {
+        return ((item.getItemType() == ITEM_TYPE.ITEM_D || item.getItemType() == ITEM_TYPE.ITEM_S || item.getItemType() == ITEM_TYPE.ITEM_T));
     }
 
     public void removeItem(BaseItemData itemData) {

@@ -6,7 +6,6 @@ public class GrandpaItem : ItemBase {
 	// Use this for initialization
 	protected override void Start () {
         base.Start();
-        m_type = ItemManager.ITEM_TYPE.ITEM_D;
     }
 	
 	// Update is called once per frame

@@ -3,7 +3,7 @@ using System.Collections;
 
 public abstract class ItemBase : MonoBehaviour {
 
-	protected ItemManager.ITEM_TYPE m_type;
+	public ItemManager.ITEM_TYPE m_type;
 	public float 	m_activeDuration;
 	protected float	m_startTime;
     protected bool m_isCollected = false;

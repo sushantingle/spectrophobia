@@ -153,6 +153,14 @@ public class Player : NetworkBehaviour {
         {
             BulletManager.getInstance().initBullet(BulletManager.BulletType.BULLET_SPIRAL, layer, transform, direction, m_bulletSpeed, 1.0f, parentNetId);
         }
+        else if (ItemManager.getInstance().hasItemActive(ItemManager.ITEM_TYPE.ITEM_T))
+        {
+            BulletManager.getInstance().initBullet(BulletManager.BulletType.BULLET_LINEAR_N_PI, layer, transform, direction, m_bulletSpeed, 2, parentNetId);
+        }
+        else if (ItemManager.getInstance().hasItemActive(ItemManager.ITEM_TYPE.ITEM_SINE))
+        {
+            BulletManager.getInstance().initBullet(BulletManager.BulletType.BULLET_SINE, layer, transform, direction, m_bulletSpeed, 1.0f, parentNetId);
+        }
         else
         {
             BulletManager.getInstance().initBullet(BulletManager.BulletType.BULLET_LINEAR, layer, transform, direction, m_bulletSpeed, parentNetId);

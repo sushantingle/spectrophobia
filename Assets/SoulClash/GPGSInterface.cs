@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class GPGSInterface
 {
-
+#if UNITY_ANDROID
     private static string GLOBAL_LEADERBOARD_ID = "CgkIzI3HzbcZEAIQAg";
 
     public static void init()
@@ -59,4 +59,5 @@ public class GPGSInterface
     {
         PlayGamesPlatform.Instance.ShowLeaderboardUI(GLOBAL_LEADERBOARD_ID);
     }
+#endif
 }
