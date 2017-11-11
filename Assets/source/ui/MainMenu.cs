@@ -33,9 +33,11 @@ public class MainMenu : MonoBehaviour {
 
     public void OnGUI()
     {
-        //toggleAutoAim = GUI.Toggle(new Rect(Screen.width - 80, 5, 80, 50), toggleAutoAim, "Auto Aim");
-        //if(GameManager.getInstance() != null && GameManager.getInstance().m_player != null)
-        //    GameManager.getInstance().m_player.m_autoAim = toggleAutoAim; // TODO
+        if (GUI.Button(new Rect(10, 10, 100, 100), "add soul"))
+        {
+            GameStats.SOULS += 1;
+            CustomDebug.Log("Gamestats Soul: " + GameStats.SOULS);
+        }
     }
 
     public void onClickSinglePlayer()
