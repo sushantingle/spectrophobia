@@ -18,6 +18,7 @@ public class Player : NetworkBehaviour {
     [SyncVar(hook = "OnSetTeam")]
     public Player_Team m_team = Player_Team.TEAM_NONE;
     public float 		m_speed 		= 0.1f;
+    public float        m_damage        = 1.0f;
 	public 	float 		m_fireInterval 	= 0.5f;
     public float        m_bulletSpeed   = 0.1f;
 	private float 		m_lastFireTime 	= 0;	
@@ -38,6 +39,8 @@ public class Player : NetworkBehaviour {
     public ProgressBar      m_powerBar;
     public bool m_autoAim = false;
     private Vector3 m_lastFireDirection = Vector3.zero;
+    private Vector3 m_movementDirection = Vector3.zero;
+
 	// Use this for initialization
 	void Start () {
 		m_boxCollider = GetComponent<BoxCollider2D> ();
@@ -72,6 +75,7 @@ public class Player : NetworkBehaviour {
         if ((deltaTargetPos.y > 0.0f && !m_hitUp) || (deltaTargetPos.y < 0.0f && !m_hitDown))
             pos.y += deltaTargetPos.y;
 #endif
+        m_movementDirection = deltaTargetPos.normalized;
         // update player position on key press
         transform.position = pos;
 
@@ -367,5 +371,19 @@ public class Player : NetworkBehaviour {
     public void onRemovedPower()
     {
         m_powerBar.gameObject.SetActive(false);
+    }
+
+    public void onChangedXP() {
+        /*GetComponent<PolygonParticleEmitter>().m_particlePrefab.GetComponent<SpriteRenderer>().sharedMaterial.color = new Color(Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f), 1.0f);
+
+        Vector3 localScale = transform.localScale;
+        transform.localScale += 0.01f * new Vector3(localScale.x, localScale.y, 0.0f);
+
+        m_damage += m_damage * 0.1f;*/
+    }
+
+    public Vector3 getMovementDirection()
+    {
+        return m_movementDirection;
     }
 }

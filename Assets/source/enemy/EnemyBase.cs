@@ -336,7 +336,7 @@ public class EnemyBase : NetworkBehaviour {
             animData.m_position = transform.position;
             AnimationManager.getInstance().startAnim(AnimationManager.AnimType.ANIM_HIT, animData);
 
-            m_health--;
+            m_health -= 1.0f * GameManager.getInstance().m_player.m_damage;
             if (m_health <= 0)
             {
                 if (m_specialPower == SpecialPower.POWER_EXPLODE_ON_DEATH)
@@ -833,6 +833,11 @@ public class EnemyBase : NetworkBehaviour {
                 }
                 break;
         }
+    }
+
+    public Vector3 getMovingDirection()
+    {
+        return m_path.getMovingDirection().normalized;
     }
 }
 	

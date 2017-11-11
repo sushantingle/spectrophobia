@@ -3,8 +3,6 @@ using System.Collections;
 
 public class InvincibleItem : ItemBase {
 
-	public float	m_time;
-
 	// Use this for initialization
 	protected override void Start () {
         base.Start();

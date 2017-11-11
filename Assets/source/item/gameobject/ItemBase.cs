@@ -4,9 +4,10 @@ using System.Collections;
 public abstract class ItemBase : MonoBehaviour {
 
 	public ItemManager.ITEM_TYPE m_type;
-	public float 	m_activeDuration;
+	public float 	m_spawnDuration;
 	protected float	m_startTime;
     protected bool m_isCollected = false;
+    public float    m_activeDuration;
 
 	// Use this for initialization
 	protected virtual void Start () {
@@ -18,7 +19,7 @@ public abstract class ItemBase : MonoBehaviour {
         // move item downwards (as in under gravity)
         transform.position = Vector3.Lerp(transform.position, transform.position - Vector3.up, Time.deltaTime * 0.25f);
 
-        if (Time.time - m_startTime > m_activeDuration)
+        if (Time.time - m_startTime > m_spawnDuration)
         {
             AnimData animData = new AnimData();
             animData.m_duration = 0.3f;
