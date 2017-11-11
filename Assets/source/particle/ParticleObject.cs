@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ParticleObject : MonoBehaviour {
     public enum AlphaFalloff { NONE, LINEAR, SQRT };
+    public enum ScaleFallOff { NONE, LINEAR, SQRT};
 
     private Vector2 m_minVelocity = new Vector2(-0.05f, 0.1f);
     private Vector2 m_maxVelocity = new Vector2(0.05f, 0.2f);
@@ -15,12 +16,25 @@ public class ParticleObject : MonoBehaviour {
     private Color m_originalColor;
     private Vector2 m_velocity;
     private bool m_isAlive = false;
+    public ScaleFallOff m_scaleFallOff = ScaleFallOff.NONE;
+    private Vector3 m_originalScale;
 
     // This only runs ONCE -- not on every Spawn
     void Awake()
     {
         m_spriteRenderer = GetComponent<SpriteRenderer>();
         m_originalColor = m_spriteRenderer.color;
+        m_originalScale = transform.localScale;
+    }
+
+    private void OnEnable()
+    {
+        
+    }
+
+    private void OnDisable()
+    {
+        transform.localScale = m_originalScale;    
     }
 
     // TODO: Change function name
@@ -71,7 +85,24 @@ public class ParticleObject : MonoBehaviour {
             m_spriteRenderer.color = newColor;
         }
 
+        updateScaleFallOff();
+
         this.transform.Translate(m_velocity * Time.deltaTime);
+    }
+
+    private void updateScaleFallOff()
+    {
+        if (m_scaleFallOff == ScaleFallOff.LINEAR)
+        {
+            float scale = Mathf.Clamp01(1 - (m_timeAlive / m_actualLifeSpan));
+            transform.localScale = m_originalScale * scale;
+        }
+        else if (m_scaleFallOff == ScaleFallOff.SQRT)
+        {
+            float scale = Mathf.Clamp01(1 - (m_timeAlive / m_actualLifeSpan));
+            scale = Mathf.Sqrt(scale);
+            transform.localScale = m_originalScale * scale;
+        }
     }
 
     public void setup(Vector2 minVelocity, Vector2 maxVelocity, float life, AlphaFalloff alphaFallOff = AlphaFalloff.NONE)
