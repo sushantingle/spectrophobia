@@ -24,7 +24,9 @@ public class BaseParticleEmitter : MonoBehaviour {
 
         float correctTimeBetweenSpawns = 1f / m_rate;
 
-        while (m_timeSinceLastSpawn > correctTimeBetweenSpawns)
+		// while loop changed to if
+		// TODO : check reason for while loop
+        if (m_timeSinceLastSpawn > correctTimeBetweenSpawns)
         {
             // Time to spawn a particle
             spawnParticle();
