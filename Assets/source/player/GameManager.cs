@@ -98,6 +98,7 @@ public class GameManager : MonoBehaviour {
     public void incrementXP(int value = 1)
     {
         m_xp += value;
+        m_player.onChangedXP();
     }
 
     public int getXp() { return m_xp; }
