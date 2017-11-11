@@ -36,4 +36,9 @@ public class FollowerPath : PathBase {
     {
         base.fixedUpdate();
     }
+
+    public override Vector3 getMovingDirection()
+    {
+        return m_targetPosition.normalized;
+    }
 }

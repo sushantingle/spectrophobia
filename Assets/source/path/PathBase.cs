@@ -148,4 +148,9 @@ public class PathBase {
     {
         m_speed = speed;
     }
+
+    public virtual Vector3 getMovingDirection()
+    {
+        return Vector3.zero;
+    }
 }

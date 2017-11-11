@@ -4,10 +4,13 @@ using UnityEngine;
 
 public class LinearPath : PathBase {
 
+    private Vector3 m_lastPosition = Vector3.zero;
+
     public override void init(Transform _transform, float _speed)
     {
         base.init(_transform, _speed);
         m_pathType = PathDefs.AI_PATH_TYPE.PATH_LINEAR;
+        m_lastPosition = _transform.position;
     }
     public override void update()
     {
@@ -17,6 +20,7 @@ public class LinearPath : PathBase {
 
         updateLinearPath();
         Vector3 pos = m_transform.position;
+        m_lastPosition = pos;
 
         if (isMovingInDirection(PathDefs.AI_Direction.MOVE_LEFT))
         {
@@ -36,6 +40,11 @@ public class LinearPath : PathBase {
         }
 
         m_transform.position = pos;
+    }
+
+    public override Vector3 getMovingDirection()
+    {
+        return (m_transform.position - m_lastPosition).normalized;
     }
 
     public override void fixedUpdate()

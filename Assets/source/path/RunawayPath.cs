@@ -122,4 +122,18 @@ public class RunawayPath : PathBase {
     {
         base.fixedUpdate();
     }
+
+    public override Vector3 getMovingDirection()
+    {
+        if (isMovingInDirection(PathDefs.AI_Direction.MOVE_DOWN))
+            return Vector3.down;
+        if (isMovingInDirection(PathDefs.AI_Direction.MOVE_UP))
+            return Vector3.up;
+        if (isMovingInDirection(PathDefs.AI_Direction.MOVE_LEFT))
+            return Vector3.left;
+        if (isMovingInDirection(PathDefs.AI_Direction.MOVE_RIGHT))
+            return Vector3.right;
+
+        return Vector3.zero;
+    }
 }

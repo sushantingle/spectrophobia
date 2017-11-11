@@ -8,12 +8,14 @@ public class RandomPath : PathBase {
     public float m_changeTimeOffset = 0.2f;
     private float m_changeDirectionTime = 0;
     private PathDefs.AI_Direction m_lastDirection = PathDefs.AI_Direction.MOVE_NONE;
+    private Vector3 m_lastPosition = Vector3.zero;
 
     public override void init(Transform _transform, float _speed, float _changeTimeOffset)
     {
         base.init(_transform, _speed);
         m_changeTimeOffset = _changeTimeOffset;
         m_randomSeed = generateSeed();
+        m_lastPosition = _transform.position;
     }
 
     private int generateSeed()
@@ -40,6 +42,7 @@ public class RandomPath : PathBase {
 
         // update pod
         Vector3 pos = m_transform.position;
+        m_lastPosition = pos;
 
         if (isMovingInDirection(PathDefs.AI_Direction.MOVE_LEFT) && !isHitStatusSet(PathDefs.AI_Direction.MOVE_LEFT))
         {
@@ -59,6 +62,11 @@ public class RandomPath : PathBase {
         }
 
         m_transform.position = pos;
+    }
+
+    public override Vector3 getMovingDirection()
+    {
+        return (m_transform.position - m_lastPosition).normalized;
     }
 
     private void changeDirection()
